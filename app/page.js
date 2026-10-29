@@ -70,7 +70,8 @@ export default function Home() {
       const json = await res.json();
       if (!res.ok) throw new Error(json.error || "Terjadi kesalahan.");
       setData(json);
-      const next = [{ form, ...json, at: Date.now() }, ...history].slice(0, 5);
+      const others = history.filter((h) => h.form.nama !== form.nama);
+      const next = [{ form, ...json, at: Date.now() }, ...others].slice(0, 5);
       setHistory(next);
       try {
         localStorage.setItem(HISTORY_KEY, JSON.stringify(next));
