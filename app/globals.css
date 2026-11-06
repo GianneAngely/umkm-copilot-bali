@@ -226,8 +226,7 @@ mark, .stabilo { background: var(--stabilo); color: var(--stabilo-teks); padding
 .karbon .stempel { border-color: var(--kunyit); outline-color: var(--kunyit); color: var(--kunyit); }
 .karbon .stempel b { color: var(--band-teks); }
 .sorot-judul { background: var(--kunyit); color: #173b2f; padding: 0 0.15em; border-radius: 3px; box-decoration-break: clone; -webkit-box-decoration-break: clone; }
-.rata-kanan > .wrap { text-align: right; }
-.rata-kanan h2, .rata-kanan .intro { margin-left: auto; }
+.rata-kanan > .wrap { text-align: left; }
 .rata-tengah > .wrap { text-align: center; }
 .rata-tengah h2, .rata-tengah .intro { margin-inline: auto; }
 .karbon { background-color: var(--band); color: var(--band-teks); background-image: repeating-linear-gradient(0deg, var(--band-tekstur) 0 1px, transparent 1px 5px); }
