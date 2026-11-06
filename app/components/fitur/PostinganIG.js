@@ -17,13 +17,13 @@ const TEMPLATE = [
 // Warna nota: kertas krem, tinta hijau daun, aksen kunyit.
 const W = {
   kertas: "#f4efe3",
-  garisKertas: "rgba(47, 93, 52, 0.07)",
+  garisKertas: "rgba(23, 59, 47, 0.06)",
   panel: "#fffaf0",
-  hijau: "#2f5d34",
-  hijauTua: "#1f4227",
-  pudar: "#5d6b58",
-  kunyit: "#e3a018",
-  kunyitTua: "#a86d05",
+  hijau: "#24503f",
+  hijauTua: "#173b2f",
+  pudar: "#5f746a",
+  kunyit: "#e3a21a",
+  kunyitTua: "#8a5a06",
 };
 
 function rupiah(n) {

@@ -21,8 +21,8 @@
   font-size: 0.95rem;
   cursor: pointer;
 }
-.tombol { background: var(--aksi); color: var(--aksi-teks); border: 1.5px solid var(--aksi); }
-.tombolGaris { background: transparent; color: var(--tinta); border: 1.5px solid var(--garis-2); }
+.tombol { background: var(--tinta); color: var(--kertas); border: 1.5px solid var(--tinta); }
+.tombolGaris { background: transparent; color: var(--tinta); border: 1.5px solid var(--garis); }
 .tombol:hover { opacity: 0.9; }
 .tombolGaris:hover { border-color: var(--tinta); }
 .tombol:disabled, .tombolGaris:disabled { opacity: 0.55; cursor: progress; }
@@ -40,17 +40,17 @@
   margin: 12px 0 0;
   padding: 10px 12px;
   border-radius: 8px;
-  border: 1px solid var(--merah);
-  color: var(--merah-tua);
+  border: 1px solid var(--bata);
+  color: var(--bata);
   font-weight: 600;
 }
 
 /* ---------- Isi dari foto ---------- */
 .foto {
   padding: 14px;
-  border: 1.5px dashed var(--garis-2);
+  border: 1.5px dashed var(--garis);
   border-radius: 12px;
-  background: var(--putih);
+  background: var(--kertas-hi);
   color: var(--tinta);
 }
 .fotoBaris { display: flex; gap: 14px; align-items: flex-start; }
@@ -59,7 +59,7 @@
   width: 84px; height: 84px; flex: none;
   border-radius: 8px;
   object-fit: cover;
-  border: 1px solid var(--garis);
+  border: 1px solid var(--garis-soft);
 }
 .pratinjauKosong {
   display: grid; place-items: center;
@@ -74,8 +74,8 @@
   font-size: 0.92rem;
   line-height: 1.45;
 }
-.catatan { background: var(--hijau-muda); color: var(--hijau-tua); }
-.catatanContoh { background: var(--kertas-2); color: var(--tinta); border-left: 3px solid var(--stabilo); }
+.catatan { background: color-mix(in srgb, var(--tinta) 9%, var(--kertas-hi)); color: var(--tinta); }
+.catatanContoh { background: var(--kertas-2); color: var(--tinta); border-left: 3px solid var(--kunyit); }
 
 /* ---------- Postingan IG ---------- */
 .ig { color: var(--tinta); }
@@ -84,16 +84,62 @@
 .pilih, .pilihAktif {
   min-height: 40px; padding: 8px 14px;
   border-radius: 999px; font: inherit; font-size: 0.9rem; font-weight: 600; cursor: pointer;
-  border: 1.5px solid var(--garis-2);
+  border: 1.5px solid var(--garis);
 }
 .pilih { background: transparent; color: var(--tinta); }
-.pilihAktif { background: var(--aksi); color: var(--aksi-teks); border-color: var(--aksi); }
+.pilihAktif { background: var(--tinta); color: var(--kertas); border-color: var(--tinta); }
 .igKanvas { display: grid; grid-template-columns: 1fr; gap: 16px; align-items: start; }
 @media (min-width: 640px) { .igKanvas { grid-template-columns: 1.6fr 1fr; } }
 .igFeed, .igStory { margin: 0; display: flex; flex-direction: column; gap: 10px; }
 .igStory { max-width: 320px; }
 .kanvas {
   width: 100%; height: auto; display: block;
-  border-radius: 8px; border: 1px solid var(--garis);
+  border-radius: 8px; border: 1px solid var(--garis-soft);
   background: var(--kertas-2);
 }
+
+/* ---------- Kalender konten ---------- */
+.kal { color: var(--tinta); }
+.kalKepala { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: flex-end; gap: 12px; }
+.kalAksi { display: flex; flex-wrap: wrap; align-items: flex-end; gap: 8px; }
+.kalTanggal { display: flex; flex-direction: column; gap: 4px; font-family: var(--mono); font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.06em; color: var(--tinta-2); }
+.kalTanggal input {
+  min-height: 44px; padding: 8px 10px;
+  border: 1.5px solid var(--garis); border-radius: 8px;
+  background: var(--kertas-hi); color: var(--tinta); font: inherit; font-size: 0.95rem; text-transform: none; letter-spacing: 0;
+}
+.kalDaftar {
+  list-style: none; margin: 16px 0 0; padding: 0;
+  display: grid; grid-template-columns: 1fr; gap: 10px;
+}
+@media (min-width: 720px) { .kalDaftar { grid-template-columns: repeat(2, 1fr); } }
+@media (min-width: 1100px) { .kalDaftar { grid-template-columns: repeat(3, 1fr); } }
+.kalKartu {
+  display: flex; gap: 14px;
+  padding: 14px; border-radius: 10px;
+  background: var(--kertas-hi); border: 1px solid var(--garis-soft);
+}
+.kalTgl {
+  flex: none; width: 74px;
+  display: flex; flex-direction: column; gap: 2px;
+  padding-right: 12px; border-right: 1.5px dashed var(--garis);
+}
+.kalHari { font-family: var(--mono); font-size: 0.75rem; text-transform: uppercase; color: var(--tinta-2); }
+.kalAngka { font-weight: 800; font-size: 1.15rem; line-height: 1.2; }
+.kalFormat {
+  margin-top: 6px; align-self: flex-start;
+  padding: 2px 8px; border-radius: 999px;
+  background: var(--kertas-2); font-family: var(--mono); font-size: 0.72rem;
+}
+.kalIsi { min-width: 0; display: flex; flex-direction: column; gap: 6px; }
+.kalRaya, .kalLibur {
+  align-self: flex-start;
+  padding: 2px 8px; border-radius: 4px;
+  font-size: 0.8rem; font-weight: 700;
+}
+.kalRaya { background: var(--kunyit); color: #173b2f; }
+.kalLibur { background: color-mix(in srgb, var(--tinta) 9%, var(--kertas-hi)); color: var(--tinta); }
+.kalIde { margin: 0; font-weight: 700; line-height: 1.35; }
+.kalCaption { margin: 0; font-size: 0.95rem; line-height: 1.45; }
+.kalAlasan { margin: 0; font-size: 0.88rem; color: var(--tinta-2); line-height: 1.4; }
+.kal .catatanContoh { margin-top: 14px; }
