@@ -1,0 +1,78 @@
+/* Gaya komponen fitur (foto, postingan IG, kalender). Memakai variabel warna dari globals.css. */
+
+/* ---------- Bersama ---------- */
+.label {
+  margin: 0;
+  font-family: var(--mono);
+  font-size: 0.78rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--tinta-2);
+}
+.bantu { margin: 4px 0 0; color: var(--tinta-2); font-size: 0.92rem; line-height: 1.45; }
+
+.tombolBaris { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; }
+.tombol, .tombolGaris {
+  min-height: 44px;
+  padding: 10px 16px;
+  border-radius: 8px;
+  font: inherit;
+  font-weight: 600;
+  font-size: 0.95rem;
+  cursor: pointer;
+}
+.tombol { background: var(--aksi); color: var(--aksi-teks); border: 1.5px solid var(--aksi); }
+.tombolGaris { background: transparent; color: var(--tinta); border: 1.5px solid var(--garis-2); }
+.tombol:hover { opacity: 0.9; }
+.tombolGaris:hover { border-color: var(--tinta); }
+.tombol:disabled, .tombolGaris:disabled { opacity: 0.55; cursor: progress; }
+
+.status { display: flex; align-items: center; gap: 8px; margin: 12px 0 0; color: var(--tinta-2); }
+.spinner {
+  width: 16px; height: 16px; flex: none;
+  border: 2px solid currentColor; border-right-color: transparent; border-radius: 50%;
+  animation: putar 0.8s linear infinite;
+}
+@keyframes putar { to { transform: rotate(360deg); } }
+@media (prefers-reduced-motion: reduce) { .spinner { animation-duration: 2.4s; } }
+
+.error {
+  margin: 12px 0 0;
+  padding: 10px 12px;
+  border-radius: 8px;
+  border: 1px solid var(--merah);
+  color: var(--merah-tua);
+  font-weight: 600;
+}
+
+/* ---------- Isi dari foto ---------- */
+.foto {
+  padding: 14px;
+  border: 1.5px dashed var(--garis-2);
+  border-radius: 12px;
+  background: var(--putih);
+  color: var(--tinta);
+}
+.fotoBaris { display: flex; gap: 14px; align-items: flex-start; }
+.fotoAksi { min-width: 0; flex: 1; }
+.pratinjau, .pratinjauKosong {
+  width: 84px; height: 84px; flex: none;
+  border-radius: 8px;
+  object-fit: cover;
+  border: 1px solid var(--garis);
+}
+.pratinjauKosong {
+  display: grid; place-items: center;
+  background: var(--kertas-2);
+  color: var(--tinta-3);
+  font-family: var(--mono); font-size: 0.75rem; text-transform: uppercase;
+}
+.catatan, .catatanContoh {
+  margin-top: 12px;
+  padding: 10px 12px;
+  border-radius: 8px;
+  font-size: 0.92rem;
+  line-height: 1.45;
+}
+.catatan { background: var(--hijau-muda); color: var(--hijau-tua); }
+.catatanContoh { background: var(--kertas-2); color: var(--tinta); border-left: 3px solid var(--stabilo); }
