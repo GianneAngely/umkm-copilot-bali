@@ -39,7 +39,7 @@ const SIAPA = [
 ];
 
 const ALUR = [
-  ["Tulis nota", "Nama, kategori, keunggulan, dan modal. Atau foto produknya.", "pasar", "50% 55%"],
+  ["Tulis apa adanya", "Nama, kategori, keunggulan, dan modal. Atau foto produknya.", "pasar", "50% 55%"],
   ["Pena merah menyunting", "Klaim kosong dicoret, fakta Anda distabilo dan dipakai apa adanya.", "kerajinan", "55% 50%"],
   ["Empat tulisan jadi", "Deskripsi, caption dan hashtag, saran harga, dan versi Inggris.", "kuliner", "50% 45%"],
   ["Salin dan posting", "Ke Instagram, WhatsApp, atau marketplace. Bisa juga jadi gambar IG.", "oleh-oleh", "50% 45%"],
@@ -48,7 +48,7 @@ const ALUR = [
 const PERCAYA = [
   ["Instruksi dikunci di server", "Model gemini-3.8-flash, jawaban wajib berbentuk JSON tetap dan dicek ulang di server. API key tidak pernah sampai ke peramban."],
   ["Nol klaim karangan", "AI dilarang menambah sertifikat, penghargaan, atau lokasi toko. Kata dari isian Anda diberi stabilo supaya mudah dicek."],
-  ["Data tidak disimpan", "Tidak ada database. Isian diteruskan ke Gemini untuk diproses, dan riwayat lima nota tersimpan di peramban Anda sendiri."],
+  ["Data tidak disimpan", "Tidak ada database. Isian diteruskan ke Gemini untuk diproses, dan riwayat lima tulisan tersimpan di peramban Anda sendiri."],
 ];
 
 const FAQ = [
@@ -67,13 +67,13 @@ export default function Beranda() {
           <div className="hero-kiri">
             <p className="kicker" data-intro><b>Wicara</b><span className="kicker-ekor">Asisten tulis jualan untuk UMKM Bali</span></p>
             <h1 id="hero-judul" className="hero-judul">
-              {"Tulisan jualan yang".split(" ").map((k, i) => <span className="hk" key={i}>{k} </span>)}
+              {"Copywriting jualan yang".split(" ").map((k, i) => <span className="hk" key={i}>{k} </span>)}
               <span className="hk"><span className="kunci">rapi dan jujur
                 <svg viewBox="0 0 300 14" preserveAspectRatio="none" aria-hidden="true"><path pathLength="1" d="M3 9 C 80 3, 200 3, 297 8" /></svg>
               </span>.</span>
             </h1>
             <p className="hero-sub" data-intro>
-              Tulis seadanya seperti mengisi nota. Pena merah mencoret klaim kosong, stabilo menandai fakta Anda, lalu
+              Tulis apa adanya tentang produkmu. Pena merah mencoret klaim kosong, stabilo menandai fakta Anda, lalu
               deskripsi, caption, saran harga, dan versi Inggris siap disalin.
             </p>
             <form className="hero-form" action="/app" method="get" data-intro>
@@ -134,7 +134,7 @@ export default function Beranda() {
       <section className="sec karbon rata-tengah" id="cara-kerja" aria-labelledby="cara-judul">
         <div className="wrap">
           <Pemisah no={2} nama="Cara kerja" />
-          <h2 id="cara-judul" data-muncul>Menyusun tulisan semudah mengisi nota.</h2>
+          <h2 id="cara-judul" data-muncul>Menulis copy jualan semudah bercerita.</h2>
           <p className="intro" data-muncul>Lima isian singkat. Sisanya disunting dan ditulis, Anda tinggal membaca lalu menyalin.</p>
           <Sulur className="band-sulur" />
           <ol className="langkah">
@@ -156,7 +156,7 @@ export default function Beranda() {
       <section className="sec latar-2" id="fitur" aria-labelledby="fitur-judul">
         <div className="wrap">
           <Pemisah no={3} nama="Fitur" />
-          <h2 id="fitur-judul" data-muncul>Empat tulisan jualan dari <span className="sorot-judul">satu nota</span>.</h2>
+          <h2 id="fitur-judul" data-muncul>Empat tulisan jualan dari <span className="sorot-judul">satu draf</span>.</h2>
           <p className="intro" data-muncul>Yang distabilo kuning selalu berasal dari isian Anda. Yang tidak bisa dibuktikan, dicoret.</p>
           <div className="fitur-grid">
             <FiturAkordion />
@@ -178,8 +178,8 @@ export default function Beranda() {
       <section className="sec latar-hi" id="teknologi" aria-labelledby="tek-judul">
         <div className="wrap">
           <Pemisah no={4} nama="Di balik layar" />
-          <h2 id="tek-judul" data-muncul>Dari nota sampai <span className="sorot-judul">siap posting</span>.</h2>
-          <p className="intro" data-muncul>Gulir untuk mengikuti satu nota melewati server, Gemini, dan pemeriksaan fakta.</p>
+          <h2 id="tek-judul" data-muncul>Dari draf sampai <span className="sorot-judul">siap posting</span>.</h2>
+          <p className="intro" data-muncul>Gulir untuk mengikuti satu draf melewati server, Gemini, dan pemeriksaan fakta.</p>
           <AlurWicara />
         </div>
       </section>
@@ -196,7 +196,7 @@ export default function Beranda() {
       <section className="sec rata-kanan sec-galeri" id="contoh" aria-labelledby="contoh-judul">
         <div className="wrap">
           <Pemisah no={6} nama="Contoh" />
-          <h2 id="contoh-judul" data-muncul>Nota yang sudah disunting.</h2>
+          <h2 id="contoh-judul" data-muncul>Copy jualan yang sudah disunting.</h2>
           <p className="intro" data-muncul>Contoh ilustrasi dengan format yang sama seperti keluaran app. Bukan hasil milik pelanggan.</p>
         </div>
         <GaleriNota />
@@ -228,7 +228,7 @@ export default function Beranda() {
 
       <section className="sec karbon rata-tengah cta" aria-labelledby="akhir-judul">
         <div className="wrap">
-          <h2 id="akhir-judul" data-muncul>Mulai dari satu nota, gratis.</h2>
+          <h2 id="akhir-judul" data-muncul>Mulai dari satu kalimat, gratis.</h2>
           <p className="intro" data-muncul>Tanpa daftar akun. Hasilnya langsung bisa disalin ke Instagram, WhatsApp, atau marketplace.</p>
           <div className="cta-aksi" data-muncul>
             <Link className="btn-kunyit" href="/app" data-magnet>Buka app <span className="panah">→</span></Link>

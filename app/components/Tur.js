@@ -19,7 +19,7 @@ const LANGKAH = [
   { id: "hasil", judul: "Hasilnya sudah jadi", teks: "Tekan Salin semua, lalu tempel di Instagram, WhatsApp, atau marketplace.", tunggu: true },
   { id: "ig", judul: "Gambar postingan Instagram", teks: "Tekan tab ini untuk membuat gambar postingan, lalu unduh PNG-nya.", klik: true },
   { id: "kalender", judul: "Kalender 7 hari", teks: "Tekan tab ini. AI menyusun rencana posting seminggu, termasuk hari raya Bali.", klik: true },
-  { id: "riwayat", judul: "Riwayat", teks: "Nota yang pernah dibuat tersimpan di sini. Tekan untuk membukanya lagi." },
+  { id: "riwayat", judul: "Riwayat", teks: "Tulisan yang pernah dibuat tersimpan di sini. Tekan untuk membukanya lagi." },
 ];
 
 const JARAK = 12;
@@ -209,10 +209,10 @@ export default function Tur() {
   }, [aktif, langkah.id, lanjut, kembali, tutup]);
 
   const pesanKondisi = {
-    menunggu: "Isi nama produk lalu tekan tombol Sunting dan cetak dulu. Hasilnya akan muncul di sini.",
+    menunggu: "Isi nama produk lalu tekan tombol Sunting dan tulis dulu. Hasilnya akan muncul di sini.",
     menyusun: "Sebentar, AI sedang menyusun tulisannya...",
-    galat: "Belum berhasil. Coba tekan tombol Sunting dan cetak sekali lagi.",
-    hilang: "Bagian ini belum tampil di layar. Buka Nota baru dan buat hasil dulu, atau tekan Lanjut.",
+    galat: "Belum berhasil. Coba tekan tombol Sunting dan tulis sekali lagi.",
+    hilang: "Bagian ini belum tampil di layar. Buka Tulisan baru dan buat hasil dulu, atau tekan Lanjut.",
   }[kondisi];
 
   const lapisan = aktif && (

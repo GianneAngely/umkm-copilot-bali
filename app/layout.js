@@ -16,7 +16,7 @@ const mono = localFont({
 
 export const metadata = {
   title: { default: "Wicara, asisten tulis jualan untuk UMKM Bali", template: "%s · Wicara" },
-  description: "Wicara membantu UMKM Bali menyusun deskripsi produk, caption, saran harga, dan versi Inggris dari satu nota.",
+  description: "Wicara membantu UMKM Bali menyusun deskripsi produk, caption, saran harga, dan versi Inggris dari satu kalimat tentang produk.",
 };
 
 export const viewport = {

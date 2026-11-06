@@ -43,7 +43,7 @@ function Garis({ nama }) {
 }
 
 const MENU = [
-  ["nota", "Nota baru"],
+  ["nota", "Tulisan baru"],
   ["riwayat", "Riwayat"],
   ["contoh", "Contoh produk"],
 ];
@@ -161,9 +161,9 @@ export default function Aplikasi() {
       ? ["contoh", "Mode contoh"]
       : data?.mode === "ai"
         ? ["aktif", "AI aktif · Gemini"]
-        : ["siap", "Siap menerima nota"];
+        : ["siap", "Siap menerima tulisan"];
 
-  const judul = { nota: "Nota baru", riwayat: "Riwayat nota", contoh: "Contoh produk" }[tampil];
+  const judul = { nota: "Tulisan baru", riwayat: "Riwayat tulisan", contoh: "Contoh produk" }[tampil];
 
   return (
     <div className="aplikasi">
@@ -197,7 +197,7 @@ export default function Aplikasi() {
         </header>
 
         {tampil === "riwayat" && (
-          <section className="panel-daftar" aria-label="Riwayat nota">
+          <section className="panel-daftar" aria-label="Riwayat tulisan">
             {history.length > 0 ? (
               <ul className="daftar-nota">
                 {history.map((h) => (
@@ -213,9 +213,9 @@ export default function Aplikasi() {
               </ul>
             ) : (
               <div className="kosong-app">
-                <p className="ka-judul">Belum ada nota.</p>
-                <p>Lima nota terakhir akan tersimpan di peramban ini setelah Anda menekan Sunting dan cetak.</p>
-                <button type="button" className="btn-hijau" onClick={notaBaru}>Tulis nota pertama</button>
+                <p className="ka-judul">Belum ada tulisan.</p>
+                <p>Lima tulisan terakhir akan tersimpan di peramban ini setelah Anda menekan Sunting dan tulis.</p>
+                <button type="button" className="btn-hijau" onClick={notaBaru}>Tulis copy pertama</button>
               </div>
             )}
           </section>
@@ -223,7 +223,7 @@ export default function Aplikasi() {
 
         {tampil === "contoh" && (
           <section className="panel-daftar" aria-label="Contoh produk">
-            <p className="panel-catat">Pilih contoh untuk mengisi formulir. Tulisannya baru disusun setelah Anda menekan Sunting dan cetak.</p>
+            <p className="panel-catat">Pilih contoh untuk mengisi formulir. Tulisannya baru disusun setelah Anda menekan Sunting dan tulis.</p>
             <ul className="kartu-contoh">
               {CONTOH.map((c) => (
                 <li key={c.id}>
@@ -231,7 +231,7 @@ export default function Aplikasi() {
                   <h2>{c.form.nama}</h2>
                   <p className="kc-isi">{c.form.keunggulan}</p>
                   <p className="kc-meta">Modal {rupiah(c.form.modal)} · {c.form.target === "turis" ? "wisatawan" : "warga lokal"}</p>
-                  <button type="button" className="btn-garis" onClick={() => muatContoh(c)}>Muat ke nota ↗</button>
+                  <button type="button" className="btn-garis" onClick={() => muatContoh(c)}>Pakai contoh ini ↗</button>
                 </li>
               ))}
             </ul>
@@ -245,7 +245,7 @@ export default function Aplikasi() {
               <FotoKeForm onIsi={isiDariFoto} onFoto={setFoto} />
             </div>
             <form className="kertas-form" onSubmit={submit}>
-              <p className="kf-kepala"><span>NOTA PRODUK</span><span>5 ISIAN</span></p>
+              <p className="kf-kepala"><span>DRAF COPY</span><span>5 ISIAN</span></p>
               <label className="field" data-tur="nama">
                 <span className="field-label">Nama produk</span>
                 <input ref={namaRef} name="nama" value={form.nama} onChange={update} required maxLength={100}
@@ -287,7 +287,7 @@ export default function Aplikasi() {
               </fieldset>
               <button type="submit" className="btn-hijau btn-blok" disabled={loading} data-tur="buat">
                 {loading && <span className="spinner" aria-hidden="true" />}
-                {loading ? "Sedang menyunting..." : "Sunting dan cetak ↗"}
+                {loading ? "Sedang menyunting..." : "Sunting dan tulis ↗"}
               </button>
               {error && (
                 <div className="galat" role="alert">
@@ -309,10 +309,10 @@ export default function Aplikasi() {
                   <p className="ka-judul">Struknya tercetak di sini.</p>
                   <ol className="ka-langkah">
                     <li><span>01</span>Isi nama dan keunggulan produk</li>
-                    <li><span>02</span>Tekan Sunting dan cetak</li>
+                    <li><span>02</span>Tekan Sunting dan tulis</li>
                     <li><span>03</span>Salin per bagian, atau sekaligus</li>
                   </ol>
-                  <p className="ka-pilih">Belum ada ide? Klik salah satu nota contoh:</p>
+                  <p className="ka-pilih">Belum ada ide? Klik salah satu contoh:</p>
                   <ul className="ka-nota">
                     {CONTOH.map((c) => (
                       <li key={c.id}>
@@ -320,7 +320,7 @@ export default function Aplikasi() {
                           <span className="kn-kat">{c.form.kategori.toUpperCase()}</span>
                           <b>{c.form.nama}</b>
                           <span className="kn-isi">{c.form.keunggulan}</span>
-                          <span className="kn-muat">Muat ke nota →</span>
+                          <span className="kn-muat">Pakai contoh ini →</span>
                         </button>
                       </li>
                     ))}
@@ -330,7 +330,7 @@ export default function Aplikasi() {
               {!r && loading && (
                 <div className="kertas-hasil cetak" role="status">
                   <p className="kf-kepala"><span>STRUK PROMOSI</span><span>MENCETAK</span></p>
-                  <p className="cetak-catat"><span className="spinner" aria-hidden="true" />Pena merah sedang menyunting nota Anda...</p>
+                  <p className="cetak-catat"><span className="spinner" aria-hidden="true" />Pena merah sedang menyunting tulisan Anda...</p>
                   <div className="pena-sunting" aria-hidden="true">
                     {[form.nama, ...String(form.keunggulan || "").split(/[,;\n]/)].map((b) => b.trim()).filter(Boolean).slice(0, 4).map((b, i) => (
                       <p key={i} style={{ "--i": i }}><span>{b}</span><i /></p>
@@ -396,7 +396,7 @@ export default function Aplikasi() {
           <button key={id} type="button" aria-current={tampil === id ? "page" : undefined} data-tur={id === "riwayat" ? "riwayat" : undefined}
             onClick={() => (id === "nota" ? notaBaru() : setTampil(id))}>
             <Garis nama={id} />
-            <span>{id === "contoh" ? "Contoh" : id === "nota" ? "Nota" : label}</span>
+            <span>{id === "contoh" ? "Contoh" : id === "nota" ? "Tulis" : label}</span>
           </button>
         ))}
         <Link href="/"><Garis nama="rumah" /><span>Beranda</span></Link>

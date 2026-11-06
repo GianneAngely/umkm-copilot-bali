@@ -6,14 +6,14 @@ export default function StrukHero() {
   return (
     <figure className="nota">
       <div className="nota-kertas" data-nota role="img"
-        aria-label="Contoh nota produk Pie Susu Bu Made. Tulisan pedagang berisi klaim enak murah dan pokoknya mantap yang dicoret, serta fakta susu sapi asli dan tahan 7 hari yang distabilo. Hasil suntingan: deskripsi, caption, versi Inggris, dan saran harga Rp27.000 sampai Rp35.000.">
+        aria-label="Contoh draf copy produk Pie Susu Bu Made. Tulisan pedagang berisi klaim enak murah dan pokoknya mantap yang dicoret, serta fakta susu sapi asli dan tahan 7 hari yang distabilo. Hasil suntingan: deskripsi, caption, versi Inggris, dan saran harga Rp27.000 sampai Rp35.000.">
         <div aria-hidden="true">
           <i className="nota-sinar" data-n="sinar" />
           <Patra className="nota-patra" />
           <div className="nota-kepala" data-n="baris">
             <span className="nota-toko">WARUNG<br />BU MADE</span>
             <div>
-              <b>NOTA PRODUK</b>
+              <b>DRAF COPY</b>
               <span>No. 0142 · Gianyar, Bali</span>
             </div>
           </div>
@@ -51,7 +51,7 @@ export default function StrukHero() {
           <span className="nota-cap" data-n="cap">SIAP POSTING</span>
         </div>
       </div>
-      <figcaption>Contoh nota · klik untuk memutar ulang</figcaption>
+      <figcaption>Contoh suntingan · klik untuk memutar ulang</figcaption>
     </figure>
   );
 }

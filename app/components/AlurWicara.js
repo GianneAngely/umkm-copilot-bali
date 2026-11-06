@@ -6,9 +6,9 @@ import { useEffect, useRef, useState } from "react";
 // Semua angka diambil dari kode (lib/gemini.js, lib/generate.js, app/app/Aplikasi.js).
 const LANGKAH = [
   {
-    judul: "Pedagang menulis nota",
+    judul: "Pedagang menulis draf",
     teks: "Lima isian singkat, atau foto produk yang dibaca AI untuk mengisi nama, kategori, dan keunggulan.",
-    angka: [["5", "isian nota"], ["1", "foto cukup"]],
+    angka: [["5", "isian draf"], ["1", "foto cukup"]],
   },
   {
     judul: "Server mengunci instruksi",
@@ -33,7 +33,7 @@ const LANGKAH = [
 ];
 
 const NODE = [
-  { x: 150, y: 20, w: 220, h: 56, label: "Nota", sub: "isian · foto" },
+  { x: 150, y: 20, w: 220, h: 56, label: "Draf copy", sub: "isian · foto" },
   { x: 150, y: 128, w: 220, h: 56, label: "Server Wicara", sub: "validasi · instruksi terkunci" },
   { x: 150, y: 236, w: 220, h: 56, label: "Gemini", sub: "3.8-flash ⇢ cadangan" },
   { x: 150, y: 344, w: 220, h: 56, label: "Pena & stabilo", sub: "cek fakta · Zod" },
@@ -60,7 +60,7 @@ export default function AlurWicara() {
   return (
     <div className="aw">
       <div className="aw-diagram">
-        <svg viewBox="0 0 520 540" role="img" aria-label="Alur Wicara: nota, server Wicara, Gemini, pena merah dan stabilo, lalu empat struk, postingan IG, dan kalender tujuh hari">
+        <svg viewBox="0 0 520 540" role="img" aria-label="Alur Wicara: draf copy, server Wicara, Gemini, pena merah dan stabilo, lalu empat struk, postingan IG, dan kalender tujuh hari">
           {NODE.slice(0, 3).map((n, i) => (
             <g key={"g" + i}>
               <line x1="260" y1={n.y + n.h} x2="260" y2={NODE[i + 1].y} className="aw-garis" />
