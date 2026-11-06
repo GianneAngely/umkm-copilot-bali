@@ -115,6 +115,14 @@ export default function BerandaGerak() {
         scrollTrigger: { trigger: ".seratus-grid", start: "top 88%", once: true },
       });
 
+      // Grafik batang tumbuh, garis waktu kalender tergambar, penanda muncul satu-satu.
+      gsap.utils.toArray("[data-batang]").forEach((el, i) => {
+        gsap.from(el, { scaleX: 0, duration: 1.2, delay: i * 0.15, ease: "power3.out", scrollTrigger: { trigger: el, start: "top 92%", once: true } });
+      });
+      gsap.from("[data-kb-sumbu]", { scaleX: 0, duration: 1.2, ease: "power2.inOut", scrollTrigger: { trigger: ".kb", start: "top 85%", once: true } });
+      gsap.from("[data-kb-titik]", { scale: 0, opacity: 0, duration: 0.4, stagger: 0.08, delay: 0.6, ease: "back.out(2)", scrollTrigger: { trigger: ".kb", start: "top 85%", once: true } });
+      gsap.from("[data-kb-item]", { opacity: 0, y: 12, duration: 0.5, stagger: 0.06, delay: 0.6, ease: "power3.out", scrollTrigger: { trigger: ".kb", start: "top 85%", once: true } });
+
       // Foto kategori bergeser pelan di dalam bingkai.
       gsap.utils.toArray(".siapa-foto img").forEach((img) => {
         gsap.fromTo(img, { yPercent: -6, scale: 1.14 }, {

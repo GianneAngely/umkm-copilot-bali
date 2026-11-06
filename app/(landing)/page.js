@@ -1,6 +1,8 @@
 import Image from "next/image";
 import Link from "next/link";
+import AlurWicara from "../components/AlurWicara";
 import BerandaGerak from "../components/BerandaGerak";
+import KalenderBali from "../components/KalenderBali";
 import FiturAkordion from "../components/FiturAkordion";
 import GaleriNota from "../components/GaleriNota";
 import { Sulur } from "../components/Ornamen";
@@ -22,12 +24,11 @@ const TABEL = [
   [<>buat turis</>, <>Versi Inggris untuk wisatawan</>],
 ];
 
-// [teks akhir, label, pembanding, nilai hitung, desimal, awalan, akhiran]
-const ANGKA = [
-  ["448.734", "UMKM di Bali", "data 2025", 448734, 0, "", ""],
-  ["69%", "sudah punya NIB", "310.526 usaha", 69, 0, "", "%"],
-  ["±34%", "sudah masuk digital", "akhir 2024", 34, 0, "±", "%"],
-  ["6,33 jt", "wisatawan mancanegara", "sepanjang 2024", 6.33, 2, "", " jt"],
+// [label, nilai hitung, teks akhir, lebar relatif, warna]. 34% dari 448.734 = ±152.570.
+const BATANG = [
+  ["UMKM di Bali (2025)", 448734, "448.734", "100%", "b-tinta"],
+  ["Sudah punya NIB", 310526, "310.526", "69.2%", "b-hijau"],
+  ["Sudah masuk digital (akhir 2024)", 152570, "±152.570", "34%", "b-kunyit"],
 ];
 
 const SIAPA = [
@@ -106,15 +107,14 @@ export default function Beranda() {
           <h2 id="masalah-judul" data-muncul>Banyak yang berjualan, sedikit yang <span className="sorot-judul">terbaca</span> di internet.</h2>
           <p className="intro" data-muncul>Bali punya hampir setengah juta UMKM dan jutaan wisatawan tiap tahun. Hambatannya sering bukan produk, melainkan tulisan.</p>
           <div className="masalah-grid">
-            <dl className="hitung" data-muncul>
-              {ANGKA.map(([n, label, banding, nilai, desimal, awalan, akhiran]) => (
-                <div key={label}>
-                  <dt>{label}<small>{banding}</small></dt>
-                  <span className="titik" aria-hidden="true" />
-                  <dd data-hitung={nilai} data-desimal={desimal} data-awalan={awalan} data-akhiran={akhiran}>{n}</dd>
+            <div className="batang" data-muncul role="img" aria-label="UMKM di Bali: 448.734 usaha, 310.526 sudah punya NIB, sekitar 152 ribu atau 34 persen sudah masuk digital">
+              {BATANG.map(([label, nilai, teks, lebar, warna]) => (
+                <div className="batang-baris" key={label}>
+                  <p className="batang-label"><span>{label}</span><b data-hitung={nilai} data-awalan={teks.startsWith("±") ? "±" : ""}>{teks}</b></p>
+                  <span className="batang-jalur"><i className={warna} style={{ "--w": lebar }} data-batang /></span>
                 </div>
               ))}
-            </dl>
+            </div>
             <div className="seratus" data-muncul role="img" aria-label="Dari setiap 100 UMKM di Bali, sekitar 34 sudah masuk digital">
               <div className="seratus-grid" aria-hidden="true">
                 {Array.from({ length: 100 }, (_, i) => <i key={i} className={i < 34 ? "isi" : ""} />)}
@@ -167,9 +167,27 @@ export default function Beranda() {
         </div>
       </section>
 
+      <section className="sec" id="teknologi" aria-labelledby="tek-judul">
+        <div className="wrap">
+          <Pemisah no={4} nama="Di balik layar" />
+          <h2 id="tek-judul" data-muncul>Dari nota sampai <span className="sorot-judul">siap posting</span>.</h2>
+          <p className="intro" data-muncul>Gulir untuk mengikuti satu nota melewati server, Gemini, dan pemeriksaan fakta.</p>
+          <AlurWicara />
+        </div>
+      </section>
+
+      <section className="sec karbon rata-tengah" id="kalender" aria-labelledby="kal-judul">
+        <div className="wrap">
+          <Pemisah no={5} nama="Kalender Bali" />
+          <h2 id="kal-judul" data-muncul>Wicara tahu kapan pembeli sedang ramai.</h2>
+          <p className="intro" data-muncul>Rencana posting tujuh hari di app memperhitungkan hari raya dan libur berikut. Tanggalnya diambil dari sumber resmi, bukan tebakan AI.</p>
+          <KalenderBali />
+        </div>
+      </section>
+
       <section className="sec rata-kanan sec-galeri" id="contoh" aria-labelledby="contoh-judul">
         <div className="wrap">
-          <Pemisah no={4} nama="Contoh" />
+          <Pemisah no={6} nama="Contoh" />
           <h2 id="contoh-judul" data-muncul>Nota yang sudah disunting.</h2>
           <p className="intro" data-muncul>Contoh ilustrasi dengan format yang sama seperti keluaran app. Bukan hasil milik pelanggan.</p>
         </div>
@@ -178,7 +196,7 @@ export default function Beranda() {
 
       <section className="sec rata-tengah" id="percaya" aria-labelledby="percaya-judul">
         <div className="wrap">
-          <Pemisah no={5} nama="Kenapa bisa dipercaya" />
+          <Pemisah no={7} nama="Kenapa bisa dipercaya" />
           <h2 id="percaya-judul" data-muncul>Tiga hal yang dikunci sejak awal.</h2>
           <ol className="percaya">
             {PERCAYA.map(([judul, teks], i) => (
