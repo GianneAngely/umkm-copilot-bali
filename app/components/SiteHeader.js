@@ -4,6 +4,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 import Icon from "./Icon";
+import TemaToggle from "./TemaToggle";
 
 const MENU = [
   ["/", "Beranda"],
@@ -36,7 +37,7 @@ export default function SiteHeader() {
   }, [buka]);
 
   return (
-    <header className={`nav${menyusut ? " is-pil" : ""}${buka ? " is-buka" : ""}`}>
+    <header className={`nav is-pil${menyusut ? " is-gulir" : ""}${path === "/" ? " di-hero" : ""}${buka ? " is-buka" : ""}`}>
       <a className="skip" href="#isi">Langsung ke isi</a>
       <div className="nav-bar">
         <Link className="logo" href="/" aria-label="UMKM Copilot Bali, beranda">
@@ -51,6 +52,7 @@ export default function SiteHeader() {
             </Link>
           ))}
         </nav>
+        <TemaToggle />
         <Link className="btn btn-utama btn-sm nav-cta" href="/studio">Buka Studio</Link>
         <button type="button" className="nav-toggle" aria-expanded={buka} aria-controls="menu-hp"
           aria-label={buka ? "Tutup menu" : "Buka menu"} onClick={() => setBuka(!buka)}>

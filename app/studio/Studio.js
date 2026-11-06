@@ -34,6 +34,12 @@ export default function Studio() {
 
   useEffect(() => setHistory(loadHistory()), []);
 
+  // Nama produk dari formulir di beranda (?nama=) hanya mengisi kolom, tidak langsung mengirim.
+  useEffect(() => {
+    const nama = new URLSearchParams(window.location.search).get("nama");
+    if (nama) setForm((f) => ({ ...f, nama: nama.slice(0, 100) }));
+  }, []);
+
   // Simpan isian yang menghasilkan struk ini untuk stabilo, lalu di HP geser ke hasil.
   useEffect(() => {
     if (!data) return;

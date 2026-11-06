@@ -37,11 +37,22 @@ export const metadata = {
   description: "Bantu UMKM Bali menyiapkan deskripsi produk, caption, dan saran harga.",
 };
 
-export const viewport = { themeColor: "#f7f3ec" };
+export const viewport = {
+  themeColor: [
+    { media: "(prefers-color-scheme: light)", color: "#f5efe1" },
+    { media: "(prefers-color-scheme: dark)", color: "#0f1217" },
+  ],
+};
+
+// Dipasang sebelum halaman digambar supaya tidak ada kedipan tema yang salah.
+const SKRIP_TEMA = `(function(){var t;try{t=localStorage.getItem("tema")}catch(e){}if(t!=="dark"&&t!=="light"){t=window.matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light"}document.documentElement.dataset.theme=t})();`;
 
 export default function RootLayout({ children }) {
   return (
-    <html lang="id" className={`${sans.variable} ${serif.variable} ${mono.variable} ${tangan.variable}`}>
+    <html lang="id" className={`${sans.variable} ${serif.variable} ${mono.variable} ${tangan.variable}`} suppressHydrationWarning>
+      <head>
+        <script dangerouslySetInnerHTML={{ __html: SKRIP_TEMA }} />
+      </head>
       <body>
         <SiteHeader />
         <main id="isi">{children}</main>
