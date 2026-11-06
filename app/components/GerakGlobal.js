@@ -36,10 +36,7 @@ export default function GerakGlobal() {
       };
     });
 
-    // Preloader beranda cukup tampil sekali per kunjungan.
-    const t = setTimeout(() => document.documentElement.classList.add("pl-skip"), 1500);
     return () => {
-      clearTimeout(t);
       st.kill();
       mm.revert();
     };

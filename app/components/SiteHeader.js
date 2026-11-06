@@ -37,14 +37,14 @@ export default function SiteHeader() {
   }, [buka]);
 
   return (
-    <header className={`nav nav-seg${menyusut ? " is-gulir" : ""}${buka ? " is-buka" : ""}`}>
+    <header className={`nav nav-p${menyusut ? " is-gulir" : ""}${buka ? " is-buka" : ""}`}>
       <a className="skip" href="#isi">Langsung ke isi</a>
       <div className="nav-bar">
-        <Link className="logo seg" href="/" aria-label="UMKM Copilot Bali, beranda">
-          <i className="logo-mark" aria-hidden="true" />
-          <span className="logo-text">UMKM Copilot</span>
+        <Link className="logo" href="/" aria-label="UMKM Copilot Bali, beranda">
+          <i className="logo-mark" aria-hidden="true">U</i>
+          <span className="logo-text">UMKM COPILOT</span>
         </Link>
-        <nav className="nav-links seg" aria-label="Navigasi utama">
+        <nav className="nav-links" aria-label="Navigasi utama">
           {MENU.map(([href, label]) => (
             <Link key={href} href={href} className="nav-link" aria-current={path === href ? "page" : undefined}>
               {label}
@@ -53,7 +53,7 @@ export default function SiteHeader() {
         </nav>
         <div className="nav-kanan">
           <TemaToggle />
-          <Link className="btn btn-utama btn-sm nav-cta" href="/studio">Buka Studio</Link>
+          <Link className="btn btn-utama btn-sm nav-cta" href="/studio">BUKA STUDIO ↗</Link>
           <button type="button" className="nav-toggle" aria-expanded={buka} aria-controls="menu-hp"
             aria-label={buka ? "Tutup menu" : "Buka menu"} onClick={() => setBuka(!buka)}>
             <Icon name={buka ? "close" : "menu"} />
