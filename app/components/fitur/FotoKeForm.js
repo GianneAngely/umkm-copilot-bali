@@ -59,7 +59,7 @@ export default function FotoKeForm({ onIsi, onFoto }) {
 
       const { nama, kategori, keunggulan, catatan_ketidakpastian } = json.result;
       onIsi?.({ nama, kategori, keunggulan });
-      setInfo({ mode: json.mode, catatan: catatan_ketidakpastian });
+      setInfo({ mode: json.mode, model: json.model, catatan: catatan_ketidakpastian });
     } catch (err) {
       setError(err.message);
     } finally {
@@ -104,6 +104,7 @@ export default function FotoKeForm({ onIsi, onFoto }) {
             {info.mode === "mock" && <strong>Mode contoh. </strong>}
             {info.mode === "ai" && <strong>Form sudah diisi dari foto. Periksa lagi sebelum lanjut. </strong>}
             {info.catatan}
+            {info.model && <span className={s.model}>AI aktif · {info.model}</span>}
           </div>
         )}
       </div>

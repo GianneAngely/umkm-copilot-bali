@@ -1,5 +1,7 @@
-import { AiError } from "@/lib/generate";
+import { AiError } from "@/lib/gemini";
 import { UKURAN_MAKS, bacaFoto, fotoContoh, jenisGambar } from "@/lib/foto";
+
+export const maxDuration = 30;
 
 // Menerima foto produk sebagai multipart (field "foto") atau JSON { gambar: "data:image/...;base64,..." }.
 export async function POST(request) {
@@ -35,7 +37,8 @@ export async function POST(request) {
   }
 
   try {
-    return Response.json({ mode: "ai", result: await bacaFoto(buf, mimeType) });
+    const { data, model } = await bacaFoto(buf, mimeType);
+    return Response.json({ mode: "ai", model, result: data });
   } catch (err) {
     if (err instanceof AiError) {
       return Response.json({ error: err.message }, { status: err.status });

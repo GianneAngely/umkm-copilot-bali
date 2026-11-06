@@ -1,5 +1,7 @@
-import { AiError } from "@/lib/generate";
+import { AiError } from "@/lib/gemini";
 import { buatKalender, kalenderContoh } from "@/lib/kalender";
+
+export const maxDuration = 30;
 
 const KATEGORI = ["Kuliner", "Kerajinan", "Fashion", "Oleh-oleh", "Lainnya"];
 
@@ -38,7 +40,8 @@ export async function POST(request) {
   }
 
   try {
-    return Response.json({ mode: "ai", result: await buatKalender(input) });
+    const { model, ...result } = await buatKalender(input);
+    return Response.json({ mode: "ai", model, result });
   } catch (err) {
     if (err instanceof AiError) {
       return Response.json({ error: err.message }, { status: err.status });

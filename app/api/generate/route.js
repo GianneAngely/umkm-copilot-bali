@@ -1,5 +1,7 @@
 import { AiError, generateMock, generateWithGemini } from "@/lib/generate";
 
+export const maxDuration = 30;
+
 const KATEGORI = ["Kuliner", "Kerajinan", "Fashion", "Oleh-oleh", "Lainnya"];
 
 export async function POST(request) {
@@ -26,8 +28,8 @@ export async function POST(request) {
   }
 
   try {
-    const result = await generateWithGemini(input);
-    return Response.json({ mode: "ai", result });
+    const { data, model } = await generateWithGemini(input);
+    return Response.json({ mode: "ai", model, result: data });
   } catch (err) {
     if (err instanceof AiError) {
       return Response.json({ error: err.message }, { status: err.status });
