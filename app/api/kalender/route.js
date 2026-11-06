@@ -30,7 +30,9 @@ export async function POST(request) {
   }
   const ringkasan = String(body.ringkasan || "").trim().slice(0, 600);
   const mulai = body.tanggalMulai || hariIniWita();
-  if (!/^\d{4}-\d{2}-\d{2}$/.test(mulai) || Number.isNaN(Date.parse(`${mulai}T00:00:00Z`))) {
+  // Cek bolak-balik supaya tanggal seperti 2027-02-30 (yang digeser JS ke Maret) ditolak.
+  const d = new Date(`${mulai}T00:00:00Z`);
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(mulai) || Number.isNaN(d.getTime()) || d.toISOString().slice(0, 10) !== mulai) {
     return Response.json({ error: "Tanggal mulai tidak valid." }, { status: 400 });
   }
 
