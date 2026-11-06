@@ -41,7 +41,9 @@ export async function POST(request) {
     return Response.json({ mode: "ai", model, result: data });
   } catch (err) {
     if (err instanceof AiError) {
-      return Response.json({ error: err.message }, { status: err.status });
+      // Saat kuota penuh, contoh ikut dikirim tapi hanya tampil kalau pengguna memilihnya.
+      const extra = err.status === 429 ? { contoh: fotoContoh() } : {};
+      return Response.json({ error: err.message, ...extra }, { status: err.status });
     }
     console.error(err);
     return Response.json({ error: "Terjadi kesalahan di server." }, { status: 500 });

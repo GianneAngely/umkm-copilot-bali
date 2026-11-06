@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import s from "./fitur.module.css";
+import { mintaJson } from "../../../lib/klien";
 
 const LABEL_FORMAT = { feed: "Feed", story: "Story", reels: "Reels" };
 
@@ -26,22 +27,18 @@ export default function KalenderKonten({ produk, ringkasan, tanggalMulai }) {
   const [mulai, setMulai] = useState(tanggalMulai || hariIniWita());
   const [memuat, setMemuat] = useState(false);
   const [error, setError] = useState("");
+  const [contoh, setContoh] = useState(null);
   const [data, setData] = useState(null);
 
   async function susun() {
     setMemuat(true);
     setError("");
+    setContoh(null);
     try {
-      const res = await fetch("/api/kalender", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ produk, ringkasan, tanggalMulai: mulai }),
-      });
-      const json = await res.json().catch(() => ({}));
-      if (!res.ok) throw new Error(json.error || "Kalender gagal disusun. Coba lagi.");
-      setData(json);
+      setData(await mintaJson("/api/kalender", { produk, ringkasan, tanggalMulai: mulai }));
     } catch (err) {
       setError(err.message);
+      setContoh(err.contoh || null);
     } finally {
       setMemuat(false);
     }
@@ -72,6 +69,11 @@ export default function KalenderKonten({ produk, ringkasan, tanggalMulai }) {
           </p>
         )}
         {error && <p className={s.error} role="alert">{error}</p>}
+        {contoh && (
+          <button type="button" className={s.tombolGaris} onClick={() => { setData({ mode: "mock", result: contoh }); setError(""); setContoh(null); }}>
+            Lihat contoh kalender (Contoh)
+          </button>
+        )}
       </div>
 
       {data && (

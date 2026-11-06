@@ -36,6 +36,7 @@ export default function FotoKeForm({ onIsi, onFoto }) {
   const [memuat, setMemuat] = useState(false);
   const [error, setError] = useState("");
   const [info, setInfo] = useState(null);
+  const [contoh, setContoh] = useState(null);
 
   async function pilih(e) {
     const file = e.target.files?.[0];
@@ -43,6 +44,7 @@ export default function FotoKeForm({ onIsi, onFoto }) {
     if (!file) return;
     setError("");
     setInfo(null);
+    setContoh(null);
     setMemuat(true);
     try {
       const blob = await kompres(file);
@@ -55,7 +57,10 @@ export default function FotoKeForm({ onIsi, onFoto }) {
       body.append("foto", blob, "foto.jpg");
       const res = await fetch("/api/foto", { method: "POST", body });
       const json = await res.json().catch(() => ({}));
-      if (!res.ok) throw new Error(json.error || "Foto gagal dibaca. Coba lagi.");
+      if (!res.ok) {
+        setContoh(json.contoh || null);
+        throw new Error(json.error || "Foto gagal dibaca. Coba lagi.");
+      }
 
       const { nama, kategori, keunggulan, catatan_ketidakpastian } = json.result;
       onIsi?.({ nama, kategori, keunggulan });
@@ -99,6 +104,20 @@ export default function FotoKeForm({ onIsi, onFoto }) {
           </p>
         )}
         {error && <p className={s.error} role="alert">{error}</p>}
+        {contoh && (
+          <button
+            type="button"
+            className={s.tombolGaris}
+            onClick={() => {
+              onIsi?.({ nama: contoh.nama, kategori: contoh.kategori, keunggulan: contoh.keunggulan });
+              setInfo({ mode: "mock", catatan: contoh.catatan_ketidakpastian });
+              setError("");
+              setContoh(null);
+            }}
+          >
+            Isi dengan contoh (Contoh)
+          </button>
+        )}
         {info && !memuat && (
           <div className={info.mode === "mock" ? s.catatanContoh : s.catatan}>
             {info.mode === "mock" && <strong>Mode contoh. </strong>}
