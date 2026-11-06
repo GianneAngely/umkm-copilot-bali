@@ -3,7 +3,8 @@ import BerandaGerak from "./components/BerandaGerak";
 import CeritaSticky from "./components/CeritaSticky";
 import DemoHidup from "./components/DemoHidup";
 import FotoSlot from "./components/FotoSlot";
-import HeroFoto from "./components/HeroFoto";
+import Bento from "./components/Bento";
+import HeroJualan from "./components/HeroJualan";
 import Icon from "./components/Icon";
 import { Jendela } from "./components/Jendela";
 import { CONTOH } from "./data/contoh";
@@ -15,8 +16,6 @@ const ANGKA = [
   ["±34%", "sudah masuk digital", "akhir 2024", 34, 0, "±", "%"],
   ["6,33 jt", "wisman datang ke Bali", "sepanjang 2024", 6.33, 2, "", " jt"],
 ];
-
-const JUDUL = "Tulisan jualan yang jujur, dari satu nota.";
 
 // Isi pita: produk dan hashtag dari data contoh, ditambah produk ilustrasi beranda.
 const PITA = [
@@ -75,22 +74,8 @@ export default function Beranda() {
         <span className="pl-bar"><i /></span>
       </div>
 
-      <section className="b-hero" aria-labelledby="hero-judul">
-        <HeroFoto />
-        <div className="b-hero-isi">
-          <p className="b-hero-cap">UMKM Copilot · Bali</p>
-          <h1 id="hero-judul">
-            {JUDUL.split(" ").map((k, i) => <span className="h-kata" key={i}>{k} </span>)}
-          </h1>
-          <p className="b-hero-sub">Tulis nama produk Anda. Deskripsi, caption, saran harga, dan versi Inggris disusun dalam hitungan detik.</p>
-          <form className="b-hero-form" action="/studio" method="get">
-            <label className="sr" htmlFor="hero-nama">Nama produk</label>
-            <input id="hero-nama" name="nama" maxLength={100} placeholder="Nama produk Anda…" autoComplete="off" />
-            <button type="submit" className="btn btn-hero" data-magnet>Tulis sekarang <Icon name="arrow" /></button>
-          </form>
-          <p className="b-hero-catat">Gratis, tanpa daftar akun.</p>
-        </div>
-      </section>
+      <HeroJualan />
+      <Bento />
 
       <section className="b-pamer" aria-label="Tampilan Studio">
         <p className="b-merek" aria-hidden="true">UMKM Copilot</p>

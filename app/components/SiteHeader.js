@@ -37,27 +37,28 @@ export default function SiteHeader() {
   }, [buka]);
 
   return (
-    <header className={`nav is-pil${menyusut ? " is-gulir" : ""}${path === "/" ? " di-hero" : ""}${buka ? " is-buka" : ""}`}>
+    <header className={`nav nav-seg${menyusut ? " is-gulir" : ""}${buka ? " is-buka" : ""}`}>
       <a className="skip" href="#isi">Langsung ke isi</a>
       <div className="nav-bar">
-        <Link className="logo" href="/" aria-label="UMKM Copilot Bali, beranda">
+        <Link className="logo seg" href="/" aria-label="UMKM Copilot Bali, beranda">
           <i className="logo-mark" aria-hidden="true" />
           <span className="logo-text">UMKM Copilot</span>
-          <span className="logo-cap">BALI · AI</span>
         </Link>
-        <nav className="nav-links" aria-label="Navigasi utama">
-          {MENU.slice(0, 5).map(([href, label]) => (
+        <nav className="nav-links seg" aria-label="Navigasi utama">
+          {MENU.map(([href, label]) => (
             <Link key={href} href={href} className="nav-link" aria-current={path === href ? "page" : undefined}>
               {label}
             </Link>
           ))}
         </nav>
-        <TemaToggle />
-        <Link className="btn btn-utama btn-sm nav-cta" href="/studio">Buka Studio</Link>
-        <button type="button" className="nav-toggle" aria-expanded={buka} aria-controls="menu-hp"
-          aria-label={buka ? "Tutup menu" : "Buka menu"} onClick={() => setBuka(!buka)}>
-          <Icon name={buka ? "close" : "menu"} />
-        </button>
+        <div className="nav-kanan">
+          <TemaToggle />
+          <Link className="btn btn-utama btn-sm nav-cta" href="/studio">Buka Studio</Link>
+          <button type="button" className="nav-toggle" aria-expanded={buka} aria-controls="menu-hp"
+            aria-label={buka ? "Tutup menu" : "Buka menu"} onClick={() => setBuka(!buka)}>
+            <Icon name={buka ? "close" : "menu"} />
+          </button>
+        </div>
       </div>
       <nav id="menu-hp" className="menu-hp" aria-label="Navigasi utama" hidden={!buka}>
         {MENU.map(([href, label]) => (

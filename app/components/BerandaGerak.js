@@ -3,7 +3,7 @@
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useEffect, useLayoutEffect } from "react";
-import { HERO_FOTO } from "./HeroFoto";
+import { KARTU } from "./HeroJualan";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -28,36 +28,42 @@ export default function BerandaGerak() {
         if (!gerak) return;
         const jedaAwal = document.documentElement.classList.contains("pl-skip") ? 0.1 : 0.85;
 
-        // Hero: judul per kata, lalu subjudul, isian, catatan.
+        // Hero: huruf JUALAN naik satu per satu, kartu foto masuk berputar, lalu pil dan isian.
         gsap.timeline({ defaults: { ease: "power3.out" }, delay: jedaAwal })
-          .from(".b-hero-cap", { y: 14, opacity: 0, duration: 0.5 })
-          .from(".b-hero h1 .h-kata", { yPercent: 70, opacity: 0, duration: 0.8, stagger: 0.06 }, "-=0.25")
-          .from(".b-hero-sub", { y: 18, opacity: 0, duration: 0.6 }, "-=0.45")
-          .from(".b-hero-form", { y: 18, opacity: 0, duration: 0.6 }, "-=0.4")
-          .from(".b-hero-catat, .b-hero-keterangan", { opacity: 0, duration: 0.5 }, "-=0.3");
+          .from(".v-huruf", { yPercent: 60, opacity: 0, duration: 0.9, stagger: 0.06 })
+          .from(".v-kartu-belakang", { rotation: 0, xPercent: 0, opacity: 0, duration: 0.8 }, "-=0.6")
+          .from(".v-kartu-depan", { rotation: -6, scale: 0.8, opacity: 0, duration: 0.9, ease: "back.out(1.4)" }, "-=0.65")
+          .from(".v-pil", { y: 16, opacity: 0, duration: 0.6, stagger: 0.12 }, "-=0.5")
+          .from(".v-bawah > *", { y: 20, opacity: 0, duration: 0.6, stagger: 0.1 }, "-=0.4");
 
-        // Parallax pelan foto hero.
-        gsap.to("[data-hero-tumpuk]", {
-          yPercent: 12, ease: "none",
-          scrollTrigger: { trigger: ".b-hero", start: "top top", end: "bottom top", scrub: true },
+        // Pil melayang pelan; kata raksasa sedikit bergeser saat digulir.
+        gsap.utils.toArray("[data-apung]").forEach((el, k) => {
+          gsap.to(el, { y: k % 2 ? 8 : -8, duration: 3 + k * 0.5, repeat: -1, yoyo: true, ease: "sine.inOut", delay: 1.5 });
+        });
+        gsap.to(".v-kata", {
+          xPercent: -4, ease: "none",
+          scrollTrigger: { trigger: ".v-hero", start: "top top", end: "bottom top", scrub: true },
+        });
+        gsap.to("[data-v-tumpuk]", {
+          yPercent: -18, rotation: 4, ease: "none",
+          scrollTrigger: { trigger: ".v-hero", start: "top top", end: "bottom top", scrub: true },
         });
 
-        // Foto hero berganti tiap ~4 detik, berhenti saat hero di luar layar.
-        const foto = gsap.utils.toArray("[data-hero-tumpuk] img");
-        const titik = gsap.utils.toArray(".b-hero-titik i");
-        const ket = document.querySelector("[data-hero-ket]");
+        // Kartu foto berganti tiap ~4 detik, berhenti saat hero di luar layar.
+        const foto = gsap.utils.toArray(".v-kartu-depan img");
+        const label = document.querySelector("[data-v-label]");
+        const depan = document.querySelector(".v-kartu-depan");
         let i = 0;
         let jalan = true;
         const ganti = setInterval(() => {
           if (!jalan || document.hidden) return;
           foto[i].classList.remove("on");
-          titik[i]?.classList.remove("on");
           i = (i + 1) % foto.length;
           foto[i].classList.add("on");
-          titik[i]?.classList.add("on");
-          if (ket) ket.textContent = `${HERO_FOTO[i][2]} · Foto: ${HERO_FOTO[i][3]} / Pexels`;
+          if (label) label.textContent = KARTU[i][2];
+          gsap.fromTo(depan, { rotation: 4 }, { rotation: 9, duration: 0.9, ease: "power3.out" });
         }, 4200);
-        ScrollTrigger.create({ trigger: ".b-hero", start: "top top", end: "bottom top", onToggle: (s) => (jalan = s.isActive) });
+        ScrollTrigger.create({ trigger: ".v-hero", start: "top top", end: "bottom top", onToggle: (s) => (jalan = s.isActive) });
 
         // Tombol magnetik.
         const magnet = [];
