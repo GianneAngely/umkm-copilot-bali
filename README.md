@@ -109,7 +109,7 @@ Versi produksi: `npm run build` lalu `npm start`. Untuk Vercel, cukup tambahkan 
 
 ## Deployment URL
 
-_[akan diisi setelah deploy]_
+https://umkm-copilot-bali.vercel.app (beranda) dan https://umkm-copilot-bali.vercel.app/app (aplikasi)
 
 ## Demo Account (jika diperlukan - jangan simpan password sensitif di public repo)
 
@@ -130,7 +130,8 @@ Tidak diperlukan. Aplikasi bisa dipakai tanpa login.
 - [Next.js](https://nextjs.org) dan [React](https://react.dev) (MIT)
 - [@google/genai](https://www.npmjs.com/package/@google/genai), SDK resmi Gemini (Apache-2.0)
 - [Zod](https://zod.dev) untuk skema dan validasi (MIT)
-- Font [Bricolage Grotesque](https://fonts.google.com/specimen/Bricolage+Grotesque) dan [Spline Sans Mono](https://fonts.google.com/specimen/Spline+Sans+Mono) dari Google Fonts (SIL Open Font License 1.1). Berkas WOFF2 subset Latin disimpan di `app/fonts/` dan dimuat lewat `next/font/local`, jadi build tidak bergantung pada server Google. Rincian lisensi di `app/fonts/LICENSE.md`
+- [GSAP](https://gsap.com) (lisensi standar GSAP, gratis) dan [Lenis](https://lenis.darkroom.engineering) (MIT) untuk animasi dan gulir halus
+- Font [Familjen Grotesk](https://fonts.google.com/specimen/Familjen+Grotesk), [Plus Jakarta Sans](https://fonts.google.com/specimen/Plus+Jakarta+Sans), dan [IBM Plex Mono](https://fonts.google.com/specimen/IBM+Plex+Mono) dari Google Fonts (SIL Open Font License 1.1). Berkas WOFF2 subset Latin disimpan di `app/fonts/` dan dimuat lewat `next/font/local`, jadi build tidak bergantung pada server Google. Rincian lisensi di `app/fonts/LICENSE.md`
 - Gemini API oleh Google
 - Struk contoh di beranda dan ikon digambar langsung dengan CSS dan SVG inline, tanpa pustaka ikon atau gambar hasil generator
 - Foto dari [Pexels](https://www.pexels.com) (lisensi Pexels), disimpan di `public/foto/`:
@@ -145,4 +146,4 @@ Tidak diperlukan. Aplikasi bisa dipakai tanpa login.
 
 | Nama | Peran |
 | --- | --- |
-| _[nama anggota]_ | _[peran]_ |
+| Gianne Angely Puspa Pilatus (tim Kopi Sisa Semalam, Teknik Informatika, Universitas Dhyana Pura) | Peserta individu: ide, desain, pengembangan, dan dokumentasi |
