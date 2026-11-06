@@ -76,3 +76,24 @@
 }
 .catatan { background: var(--hijau-muda); color: var(--hijau-tua); }
 .catatanContoh { background: var(--kertas-2); color: var(--tinta); border-left: 3px solid var(--stabilo); }
+
+/* ---------- Postingan IG ---------- */
+.ig { color: var(--tinta); }
+.igKepala { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 10px; margin-bottom: 14px; }
+.pilihan { display: flex; flex-wrap: wrap; gap: 6px; }
+.pilih, .pilihAktif {
+  min-height: 40px; padding: 8px 14px;
+  border-radius: 999px; font: inherit; font-size: 0.9rem; font-weight: 600; cursor: pointer;
+  border: 1.5px solid var(--garis-2);
+}
+.pilih { background: transparent; color: var(--tinta); }
+.pilihAktif { background: var(--aksi); color: var(--aksi-teks); border-color: var(--aksi); }
+.igKanvas { display: grid; grid-template-columns: 1fr; gap: 16px; align-items: start; }
+@media (min-width: 640px) { .igKanvas { grid-template-columns: 1.6fr 1fr; } }
+.igFeed, .igStory { margin: 0; display: flex; flex-direction: column; gap: 10px; }
+.igStory { max-width: 320px; }
+.kanvas {
+  width: 100%; height: auto; display: block;
+  border-radius: 8px; border: 1px solid var(--garis);
+  background: var(--kertas-2);
+}
