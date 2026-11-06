@@ -77,7 +77,7 @@ export default function BerandaGerak() {
 
       // Stempel kepala bagian: dicap, sedikit memantul.
       gsap.utils.toArray("[data-pemisah]").forEach((el) => {
-        gsap.fromTo(el, { opacity: 0, scale: 1.5, rotation: -10 }, {
+        gsap.fromTo(el, { opacity: 0, scale: 1.15, rotation: -8 }, {
           opacity: 1, scale: 1, rotation: -3, duration: 0.6, ease: "back.out(2)",
           scrollTrigger: { trigger: el, start: "top 90%", once: true },
         });

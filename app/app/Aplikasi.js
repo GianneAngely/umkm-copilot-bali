@@ -312,19 +312,32 @@ export default function Aplikasi() {
                     <li><span>02</span>Tekan Sunting dan cetak</li>
                     <li><span>03</span>Salin per bagian, atau sekaligus</li>
                   </ol>
-                  <div className="ka-coba">
-                    <span>Belum ada ide? Coba contoh:</span>
-                    {CONTOH.slice(0, 2).map((c) => (
-                      <button key={c.id} type="button" className="btn-garis btn-kecil" onClick={() => muatContoh(c)}>{c.form.nama}</button>
+                  <p className="ka-pilih">Belum ada ide? Klik salah satu nota contoh:</p>
+                  <ul className="ka-nota">
+                    {CONTOH.map((c) => (
+                      <li key={c.id}>
+                        <button type="button" onClick={() => muatContoh(c)}>
+                          <span className="kn-kat">{c.form.kategori.toUpperCase()}</span>
+                          <b>{c.form.nama}</b>
+                          <span className="kn-isi">{c.form.keunggulan}</span>
+                          <span className="kn-muat">Muat ke nota →</span>
+                        </button>
+                      </li>
                     ))}
-                  </div>
+                  </ul>
                 </div>
               )}
               {!r && loading && (
                 <div className="kertas-hasil cetak" role="status">
                   <p className="kf-kepala"><span>STRUK PROMOSI</span><span>MENCETAK</span></p>
                   <p className="cetak-catat"><span className="spinner" aria-hidden="true" />Pena merah sedang menyunting nota Anda...</p>
-                  {[0, 1, 2, 3].map((i) => <span key={i} className="cetak-baris" style={{ "--i": i }} />)}
+                  <div className="pena-sunting" aria-hidden="true">
+                    {[form.nama, ...String(form.keunggulan || "").split(/[,;\n]/)].map((b) => b.trim()).filter(Boolean).slice(0, 4).map((b, i) => (
+                      <p key={i} style={{ "--i": i }}><span>{b}</span><i /></p>
+                    ))}
+                    <svg className="pena-ikon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round"><path d="M4 20h4L19 9a2.8 2.8 0 0 0-4-4L4 16z" /><path d="M13.5 6.5l4 4" /></svg>
+                  </div>
+                  {[0, 1, 2].map((i) => <span key={i} className="cetak-baris" style={{ "--i": i }} />)}
                 </div>
               )}
               {r && (

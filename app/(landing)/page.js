@@ -5,7 +5,7 @@ import BerandaGerak from "../components/BerandaGerak";
 import KalenderBali from "../components/KalenderBali";
 import FiturAkordion from "../components/FiturAkordion";
 import GaleriNota from "../components/GaleriNota";
-import { Sulur } from "../components/Ornamen";
+import { Patra, Sulur } from "../components/Ornamen";
 import StrukHero from "../components/StrukHero";
 
 // Kepala bagian berupa stempel toko kecil yang sedikit miring.
@@ -62,6 +62,7 @@ export default function Beranda() {
   return (
     <>
       <section className="hero" aria-labelledby="hero-judul">
+        <Patra className="hero-patra" />
         <div className="wrap hero-grid">
           <div className="hero-kiri">
             <p className="kicker" data-intro><b>Wicara</b><span className="kicker-ekor">Asisten tulis jualan untuk UMKM Bali</span></p>
@@ -81,17 +82,11 @@ export default function Beranda() {
               <button type="submit" className="btn-hijau" data-magnet>Tulis sekarang <span className="panah">→</span></button>
             </form>
             <a className="tautan-garis" href="#cara-kerja" data-intro>Atau lihat cara kerja →</a>
-            <table className="tabel-nota" data-intro>
-              <thead><tr><th scope="col">Tulisan Anda</th><th scope="col">Hasil Wicara</th></tr></thead>
-              <tbody>
-                {TABEL.map(([a, b], i) => <tr key={i}><td>{a}</td><td>{b}</td></tr>)}
-              </tbody>
-            </table>
           </div>
           <div className="hero-panggung">
             <span className="hero-foto">
               <Image src="/foto/hero-umkm.jpg" alt="Pedagang sate tersenyum di pasar kuliner Bali" fill priority
-                sizes="(min-width: 960px) 520px, 92vw" style={{ objectFit: "cover", objectPosition: "42% 38%" }} />
+                sizes="(min-width: 960px) 50vw, 100vw" style={{ objectFit: "cover", objectPosition: "38% 40%" }} />
               <small>Pasar kuliner, Bali · Foto: G Y / Pexels</small>
             </span>
             <StrukHero />
@@ -158,16 +153,29 @@ export default function Beranda() {
         </div>
       </section>
 
-      <section className="sec" id="fitur" aria-labelledby="fitur-judul">
+      <section className="sec latar-2" id="fitur" aria-labelledby="fitur-judul">
         <div className="wrap">
           <Pemisah no={3} nama="Fitur" />
           <h2 id="fitur-judul" data-muncul>Empat tulisan jualan dari <span className="sorot-judul">satu nota</span>.</h2>
           <p className="intro" data-muncul>Yang distabilo kuning selalu berasal dari isian Anda. Yang tidak bisa dibuktikan, dicoret.</p>
-          <FiturAkordion />
+          <div className="fitur-grid">
+            <FiturAkordion />
+            <aside className="fitur-visual" data-muncul>
+              <span className="fv-foto">
+                <Image src="/foto/kuliner.jpg" alt="Lauk makanan jalanan Bali" fill sizes="(min-width: 960px) 420px, 92vw" style={{ objectFit: "cover", objectPosition: "50% 45%" }} />
+              </span>
+              <table className="tabel-nota">
+                <thead><tr><th scope="col">Tulisan Anda</th><th scope="col">Hasil Wicara</th></tr></thead>
+                <tbody>
+                  {TABEL.map(([a, b], i) => <tr key={i}><td>{a}</td><td>{b}</td></tr>)}
+                </tbody>
+              </table>
+            </aside>
+          </div>
         </div>
       </section>
 
-      <section className="sec" id="teknologi" aria-labelledby="tek-judul">
+      <section className="sec latar-hi" id="teknologi" aria-labelledby="tek-judul">
         <div className="wrap">
           <Pemisah no={4} nama="Di balik layar" />
           <h2 id="tek-judul" data-muncul>Dari nota sampai <span className="sorot-judul">siap posting</span>.</h2>
@@ -194,7 +202,7 @@ export default function Beranda() {
         <GaleriNota />
       </section>
 
-      <section className="sec rata-tengah" id="percaya" aria-labelledby="percaya-judul">
+      <section className="sec rata-tengah latar-2" id="percaya" aria-labelledby="percaya-judul">
         <div className="wrap">
           <Pemisah no={7} nama="Kenapa bisa dipercaya" />
           <h2 id="percaya-judul" data-muncul>Tiga hal yang dikunci sejak awal.</h2>
