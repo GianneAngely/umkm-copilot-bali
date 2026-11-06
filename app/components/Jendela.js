@@ -1,27 +1,16 @@
 // Bingkai jendela aplikasi (ala peramban) untuk memamerkan layar Studio.
 // Isinya markup statis yang memakai komponen visual yang sama dengan Studio.
 
-export function Jendela({ alamat = "umkmcopilot.id/studio", className = "", children }) {
+export function Jendela({ alamat = "umkmcopilot.id/studio", demo = false, className = "", children }) {
   return (
     <div className={`jendela ${className}`} aria-hidden={className.includes("jendela-cerita") || undefined}>
       <div className="jendela-bar" aria-hidden="true">
         <span className="jendela-titik"><i /><i /><i /></span>
         <span className="jendela-alamat">{alamat}</span>
-        <span className="jendela-ruang" />
+        <span className="jendela-ruang">{demo && <span className="jendela-demo"><i />Demo langsung</span>}</span>
       </div>
       <div className="jendela-isi">{children}</div>
     </div>
-  );
-}
-
-export function Stiker({ href = "/studio", children = "Coba" }) {
-  return (
-    <a className="stiker" href={href}>
-      <svg viewBox="0 0 100 100" aria-hidden="true">
-        <path d="M50 2l9 15 16-8 2 18 18 2-8 16 15 9-15 9 8 16-18 2-2 18-16-8-9 15-9-15-16 8-2-18-18-2 8-16L2 50l15-9-8-16 18-2 2-18 16 8z" />
-      </svg>
-      <span>{children} →</span>
-    </a>
   );
 }
 

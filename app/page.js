@@ -3,7 +3,7 @@ import Link from "next/link";
 import CeritaSticky from "./components/CeritaSticky";
 import FotoSlot from "./components/FotoSlot";
 import Icon from "./components/Icon";
-import { Jendela, LayarStudio, Stiker } from "./components/Jendela";
+import { Jendela, LayarStudio } from "./components/Jendela";
 import Reveal from "./components/Reveal";
 
 const ANGKA = [
@@ -78,10 +78,9 @@ export default function Beranda() {
       <section className="b-pamer" aria-label="Tampilan Studio">
         <p className="b-merek" aria-hidden="true">UMKM Copilot</p>
         <Reveal className="b-pamer-jendela">
-          <Jendela>
+          <Jendela demo>
             <LayarStudio />
           </Jendela>
-          <Stiker />
         </Reveal>
       </section>
 
