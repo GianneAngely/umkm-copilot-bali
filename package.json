@@ -8,10 +8,21 @@
     "start": "next start"
   },
   "dependencies": {
-    "@anthropic-ai/sdk": "^1.3.0",
+    "@google/genai": "^3.0.0",
     "next": "^15.5.28",
     "react": "^19.3.1",
     "react-dom": "^19.3.1",
     "zod": "^4.6.7"
-  }
+  },
+  "description": "UMKM Copilot Bali adalah web app yang membantu pelaku UMKM di Bali menyiapkan materi pemasaran digital. Pengguna cukup mengisi data singkat tentang produknya, lalu AI menyusun deskripsi produk, caption promosi beserta hashtag, saran harga jual, dan versi Bahasa Inggris untuk wisatawan. Semua hasil bisa langsung disalin ke marketplace, Instagram, atau WhatsApp.",
+  "main": "index.js",
+  "directories": {
+    "doc": "docs",
+    "lib": "lib"
+  },
+  "devDependencies": {},
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs"
 }

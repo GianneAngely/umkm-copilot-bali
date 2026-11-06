@@ -1,4 +1,4 @@
-import { generateMock, generateWithClaude } from "@/lib/generate";
+import { AiError, generateMock, generateWithGemini } from "@/lib/generate";
 
 const KATEGORI = ["Kuliner", "Kerajinan", "Fashion", "Oleh-oleh", "Lainnya"];
 
@@ -21,18 +21,18 @@ export async function POST(request) {
     return Response.json({ error: "Nama produk wajib diisi." }, { status: 400 });
   }
 
-  if (!process.env.ANTHROPIC_API_KEY) {
+  if (!process.env.GEMINI_API_KEY) {
     return Response.json({ mode: "mock", result: generateMock(input) });
   }
 
   try {
-    const result = await generateWithClaude(input);
+    const result = await generateWithGemini(input);
     return Response.json({ mode: "ai", result });
   } catch (err) {
+    if (err instanceof AiError) {
+      return Response.json({ error: err.message }, { status: err.status });
+    }
     console.error(err);
-    return Response.json(
-      { error: "Gagal menghubungi layanan AI. Coba lagi sebentar lagi." },
-      { status: 502 },
-    );
+    return Response.json({ error: "Terjadi kesalahan di server." }, { status: 500 });
   }
 }

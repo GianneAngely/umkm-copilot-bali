@@ -262,7 +262,7 @@ export default function Home() {
       </main>
 
       <footer className="foot">
-        Teks dibuat dengan bantuan AI (Claude, Anthropic). Periksa kembali sebelum diunggah.
+        Teks dibuat dengan bantuan AI (Gemini, Google). Periksa kembali sebelum diunggah.
       </footer>
     </>
   );
