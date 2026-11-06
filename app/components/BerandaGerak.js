@@ -7,6 +7,8 @@ import { useEffect, useLayoutEffect } from "react";
 gsap.registerPlugin(ScrollTrigger);
 
 const useIsoLayoutEffect = typeof window === "undefined" ? useEffect : useLayoutEffect;
+const EASE = "expo.out";
+const ribu = (v) => Math.round(v / 1000) * 1000;
 
 function format(v, el) {
   const d = Number(el.dataset.desimal || 0);
@@ -14,42 +16,91 @@ function format(v, el) {
   return (el.dataset.awalan || "") + angka + (el.dataset.akhiran || "");
 }
 
-// Gerak beranda, seperlunya: intro hero, struk tercetak lalu disunting, muncul per bagian,
-// angka hitung naik. Isi sudah utuh di HTML; saat gerak dikurangi tidak ada yang dijalankan.
+// Semua gerak landing. Isi sudah ada di HTML; CSS menyembunyikan elemen yang akan dianimasikan
+// hanya kalau <html> berkelas "js" dan gerak tidak dikurangi, lalu skrip ini memunculkannya.
 export default function BerandaGerak() {
   useIsoLayoutEffect(() => {
+    window.__gerak = true;
     const mm = gsap.matchMedia();
-    mm.add("(prefers-reduced-motion: no-preference)", () => {
-      gsap.from("[data-intro]", { y: 22, opacity: 0, duration: 0.7, stagger: 0.09, ease: "power3.out", delay: 0.1 });
 
-      // Struk: tercetak dari atas, isi muncul, AI menyunting, hasil, total, cap. Diputar sekali,
-      // lalu bisa diputar ulang dengan klik.
-      const struk = document.querySelector("[data-struk]");
-      if (struk) {
-        const q = gsap.utils.selector(struk);
-        const tl = gsap.timeline({ delay: 0.35, defaults: { ease: "power2.out" } })
-          .from(struk, { clipPath: "inset(0 0 100% 0)", duration: 0.9, ease: "power2.inOut" })
-          .from(q('[data-s="kepala"]'), { opacity: 0, y: 6, duration: 0.3, stagger: 0.08 }, "-=0.45")
-          .from(q('[data-s="isi"]'), { opacity: 0, x: -8, duration: 0.3, stagger: 0.12 }, ">")
-          .from(q('[data-s="ai"]'), { opacity: 0, scaleX: 0.6, duration: 0.4 }, ">0.2")
-          .from(q('[data-s="coret"]'), { scaleX: 0, duration: 0.45 }, ">0.1")
-          .from(q('[data-s="sapu"]'), { scaleX: 0, duration: 0.4, stagger: 0.25, ease: "power1.inOut" }, ">0.05")
-          .from(q('[data-s="hasil"]'), { opacity: 0, x: -8, duration: 0.3, stagger: 0.14 }, ">0.1")
-          .from(q('[data-s="total"]'), { opacity: 0, y: 8, duration: 0.4, stagger: 0.1 }, ">0.1")
-          .from(q('[data-s="cap"]'), { opacity: 0, scale: 1.8, rotation: -24, duration: 0.45, ease: "back.out(1.6)" }, ">0.1");
-        const ulang = () => tl.restart(true);
-        struk.addEventListener("click", ulang);
-        struk.style.cursor = "pointer";
-        struk.title = "Klik untuk memutar ulang";
+    mm.add({ gerak: "(prefers-reduced-motion: no-preference)", lebar: "(min-width: 960px)", halus: "(pointer: fine)" }, (ctx) => {
+      const { gerak, lebar, halus } = ctx.conditions;
+      if (!gerak) return;
+
+      // Hero: kicker, judul per kata, garis kunyit tergambar, lalu isi lain.
+      gsap.timeline({ defaults: { ease: EASE }, delay: 0.05 })
+        .to(".hero .kicker", { opacity: 1, y: 0, duration: 0.75 })
+        .to(".hero .hk", { opacity: 1, yPercent: 0, duration: 0.9, stagger: 0.075 }, "-=0.5")
+        .fromTo(".hero .kunci path", { strokeDashoffset: 320 }, { strokeDashoffset: 0, duration: 0.8, ease: "power2.inOut" }, "-=0.35")
+        .to(".hero [data-intro]:not(.kicker)", { opacity: 1, y: 0, duration: 0.75, stagger: 0.075 }, "-=0.6")
+        .to(".hero .buku > div", { opacity: 1, duration: 0.4, stagger: 0.075 }, "-=0.4")
+        .fromTo(".hero .buku .titik", { scaleX: 0 }, { scaleX: 1, duration: 0.8, stagger: 0.12, ease: "power2.out" }, "<");
+
+      // Nota: cetak dari atas, baris muncul seperti printer, sinar pindai, coret, stabilo,
+      // hasil, harga hitung naik, cap turun. Berulang pelan, berhenti di luar layar.
+      const nota = document.querySelector("[data-nota]");
+      if (nota) {
+        const q = gsap.utils.selector(nota);
+        const min = q('[data-n="min"]')[0];
+        const max = q('[data-n="max"]')[0];
+        const h = { a: 0, b: 0 };
+        const tulisHarga = () => {
+          min.textContent = ribu(h.a).toLocaleString("id-ID");
+          max.textContent = ribu(h.b).toLocaleString("id-ID");
+        };
+        const tl = gsap.timeline({ repeat: -1, repeatDelay: 3, paused: true, defaults: { ease: "power2.out" } });
+        tl.set(nota, { clipPath: "inset(0 0 100% 0)" })
+          .set(q('[data-n="baris"], [data-n="hasil"], [data-n="scan"], [data-n="total"]'), { opacity: 0, y: 6 })
+          .set(q('[data-n="coret"], [data-n="sapu"]'), { scaleX: 0 })
+          .set(q('[data-n="cap"]'), { opacity: 0, y: -40, scale: 1.5 })
+          .set(q('[data-n="sinar"]'), { yPercent: -100, opacity: 0 })
+          .call(() => { h.a = 0; h.b = 0; tulisHarga(); })
+          .to(nota, { clipPath: "inset(0 0 0% 0)", duration: 1.1, ease: "power2.inOut" })
+          .to(q('[data-n="baris"]'), { opacity: 1, y: 0, duration: 0.18, stagger: 0.11, ease: "steps(3)" }, "-=0.75")
+          .to(q('[data-n="sinar"]'), { opacity: 1, duration: 0.1 }, ">0.1")
+          .to(q('[data-n="sinar"]'), { yPercent: 620, duration: 1.3, ease: "power1.inOut" }, "<")
+          .to(q('[data-n="sinar"]'), { opacity: 0, duration: 0.2 }, ">-0.2")
+          .to(q('[data-n="coret"]'), { scaleX: 1, duration: 0.42, stagger: 0.3 }, "<-0.9")
+          .to(q('[data-n="sapu"]'), { scaleX: 1, duration: 0.4, stagger: 0.25, ease: "power1.inOut" }, ">0.05")
+          .to(q('[data-n="scan"]'), { opacity: 1, y: 0, duration: 0.3 }, ">0.1")
+          .to(q('[data-n="hasil"]'), { opacity: 1, y: 0, duration: 0.25, stagger: 0.12, ease: "steps(3)" }, ">")
+          .to(q('[data-n="total"]'), { opacity: 1, y: 0, duration: 0.35, stagger: 0.1 }, ">0.1")
+          .to(h, { a: 27000, b: 35000, duration: 1, ease: "power2.out", onUpdate: tulisHarga }, "<")
+          .to(q('[data-n="cap"]'), { opacity: 0.92, y: 0, scale: 1, duration: 0.65, ease: "back.out(2.2)" }, ">-0.3")
+          .to({}, { duration: 3.2 })
+          .to(nota, { opacity: 0, duration: 0.45 })
+          .set(nota, { opacity: 1 });
+        ScrollTrigger.create({ trigger: nota, start: "top 95%", end: "bottom 5%", onToggle: (s) => (s.isActive ? tl.play() : tl.pause()) });
+        const ulang = () => tl.restart();
+        nota.addEventListener("click", ulang);
+        ctx.add(() => () => nota.removeEventListener("click", ulang));
       }
 
-      const muncul = gsap.utils.toArray("[data-muncul]");
-      gsap.set(muncul, { opacity: 0, y: 24 });
-      ScrollTrigger.batch(muncul, {
-        start: "top 88%",
-        onEnter: (el) => gsap.to(el, { opacity: 1, y: 0, duration: 0.7, stagger: 0.08, ease: "power3.out", overwrite: true }),
+      // Pemisah bagian: garis tergambar dari tengah, nomor tertulis.
+      gsap.utils.toArray("[data-pemisah]").forEach((el) => {
+        gsap.timeline({ scrollTrigger: { trigger: el, start: "top 88%", once: true } })
+          .fromTo(el.querySelectorAll("i"), { scaleX: 0 }, { scaleX: 1, duration: 0.9, ease: EASE })
+          .fromTo(el.querySelector("span"), { clipPath: "inset(0 100% 0 0)" }, { clipPath: "inset(0 0% 0 0)", duration: 0.6, ease: "steps(14)" }, "<0.15");
       });
 
+      // Muncul per elemen, bertahap.
+      ScrollTrigger.batch("[data-muncul]", {
+        start: "top 92%",
+        onEnter: (els) => gsap.to(els, { opacity: 1, y: 0, duration: 0.75, stagger: 0.075, ease: EASE, overwrite: true }),
+      });
+
+      // Daftar bertitik di luar hero: baris muncul, titik terisi kiri ke kanan.
+      gsap.utils.toArray("[data-buku]").forEach((list) => {
+        if (list.closest(".hero")) return;
+        gsap.timeline({ scrollTrigger: { trigger: list, start: "top 85%", once: true } })
+          .to(list.children, { opacity: 1, y: 0, duration: 0.6, stagger: 0.075, ease: EASE })
+          .fromTo(list.querySelectorAll(".titik"), { scaleX: 0 }, { scaleX: 1, duration: 0.7, stagger: 0.075, ease: "power2.out" }, "<0.1");
+      });
+      gsap.utils.toArray(".hitung .titik").forEach((t) => {
+        gsap.fromTo(t, { scaleX: 0 }, { scaleX: 1, duration: 0.8, ease: "power2.out", scrollTrigger: { trigger: t, start: "top 90%", once: true } });
+      });
+
+      // Angka data hitung naik, lalu 100 titik terisi sampai 34.
       gsap.utils.toArray("[data-hitung]").forEach((el) => {
         const akhir = Number(el.dataset.hitung);
         const o = { v: 0 };
@@ -59,14 +110,49 @@ export default function BerandaGerak() {
           onEnter: () => gsap.to(o, { v: akhir, duration: 1.4, ease: "power2.out", onUpdate: () => (el.textContent = format(o.v, el)) }),
         });
       });
-
-      gsap.from(".titik-isi", {
+      gsap.from(".seratus-grid .isi", {
         scale: 0, opacity: 0, duration: 0.3, stagger: 0.02, ease: "back.out(2)",
-        scrollTrigger: { trigger: ".titik-grid", start: "top 88%", once: true },
+        scrollTrigger: { trigger: ".seratus-grid", start: "top 88%", once: true },
       });
+
+      // Foto kategori bergeser pelan di dalam bingkai.
+      gsap.utils.toArray(".siapa-foto img").forEach((img) => {
+        gsap.fromTo(img, { yPercent: -6, scale: 1.14 }, {
+          yPercent: 6, scale: 1.14, ease: "none",
+          scrollTrigger: { trigger: img.parentElement, start: "top bottom", end: "bottom top", scrub: true },
+        });
+      });
+
+      // Galeri nota: dipaku dan bergeser mendatar di layar lebar.
+      const galeri = document.querySelector("[data-galeri]");
+      const jalur = document.querySelector("[data-galeri-jalur]");
+      if (lebar && galeri && jalur) {
+        const jarak = () => Math.max(0, jalur.scrollWidth - galeri.clientWidth);
+        if (jarak() > 0) {
+          gsap.to(jalur, {
+            x: () => -jarak(), ease: "none",
+            scrollTrigger: { trigger: galeri, start: "center center", end: () => "+=" + jarak(), pin: true, scrub: 0.6, invalidateOnRefresh: true },
+          });
+        }
+      }
+
+      // Tombol magnetik.
+      if (halus) {
+        gsap.utils.toArray("[data-magnet]").forEach((el) => {
+          const gerakkan = (e) => {
+            const r = el.getBoundingClientRect();
+            gsap.to(el, { x: (e.clientX - r.left - r.width / 2) * 0.22, y: (e.clientY - r.top - r.height / 2) * 0.3, duration: 0.4, ease: "power3.out" });
+          };
+          const lepas = () => gsap.to(el, { x: 0, y: 0, duration: 0.6, ease: "elastic.out(1, 0.45)" });
+          el.addEventListener("pointermove", gerakkan);
+          el.addEventListener("pointerleave", lepas);
+          ctx.add(() => () => { el.removeEventListener("pointermove", gerakkan); el.removeEventListener("pointerleave", lepas); });
+        });
+      }
 
       ScrollTrigger.refresh();
     });
+
     return () => mm.revert();
   }, []);
 

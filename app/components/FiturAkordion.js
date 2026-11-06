@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 const IKON = {
   doc: <path d="M6 4h9l3 3v13H6z M9 10h6 M9 14h6" />,
@@ -12,7 +12,7 @@ const IKON = {
 const FITUR = [
   {
     ikon: "doc", judul: "Deskripsi jujur", ket: "singkat + bercerita",
-    teks: <>Dua versi: singkat untuk kolom marketplace, bercerita untuk Instagram. Klaim seperti &ldquo;enak murah&rdquo; dicoret, fakta Anda seperti <mark>susu sapi asli</mark> dipakai apa adanya.</>,
+    teks: <>Dua versi: singkat untuk kolom marketplace, bercerita untuk Instagram. Klaim seperti <span className="coret-statis">enak murah</span> dicoret, fakta Anda seperti <mark>susu sapi asli</mark> dipakai apa adanya.</>,
     tag: "MARKETPLACE · INSTAGRAM · STABILO FAKTA",
   },
   {
@@ -32,28 +32,45 @@ const FITUR = [
   },
 ];
 
+// Akordion yang berganti sendiri pelan selama terlihat dan belum disentuh.
 export default function FiturAkordion() {
   const [buka, setBuka] = useState(0);
+  const [disentuh, setDisentuh] = useState(false);
+  const akar = useRef(null);
+
+  useEffect(() => {
+    if (disentuh || window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    let terlihat = false;
+    const io = new IntersectionObserver(([e]) => (terlihat = e.isIntersecting), { threshold: 0.3 });
+    io.observe(akar.current);
+    const t = setInterval(() => terlihat && !document.hidden && setBuka((b) => (b + 1) % FITUR.length), 4800);
+    return () => { clearInterval(t); io.disconnect(); };
+  }, [disentuh]);
+
+  const sentuh = () => setDisentuh(true);
+
   return (
-    <ul className="ak">
+    <ul className="ak" ref={akar} onPointerEnter={sentuh} onFocus={sentuh}>
       {FITUR.map((f, i) => {
         const terbuka = buka === i;
         return (
-          <li key={f.judul} className={terbuka ? "ak-item buka" : "ak-item"} data-muncul>
+          <li key={f.judul} className={terbuka ? "ak-item buka" : "ak-item"}>
             <h3>
               <button type="button" className="ak-tombol" aria-expanded={terbuka} aria-controls={`ak-${i}`} id={`ak-t-${i}`}
-                onClick={() => setBuka(terbuka ? -1 : i)}>
+                onClick={() => { sentuh(); setBuka(terbuka ? -1 : i); }}>
                 <span className="ak-ikon" aria-hidden="true">
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">{IKON[f.ikon]}</svg>
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">{IKON[f.ikon]}</svg>
                 </span>
                 <span className="ak-judul">{f.judul}</span>
-                <span className="ak-titik" aria-hidden="true" />
+                <span className="titik" aria-hidden="true" />
                 <span className="ak-ket">{f.ket}</span>
               </button>
             </h3>
-            <div className="ak-isi" id={`ak-${i}`} role="region" aria-labelledby={`ak-t-${i}`} hidden={!terbuka}>
-              <p>{f.teks}</p>
-              <p className="ak-tag">{f.tag}</p>
+            <div className="ak-isi" id={`ak-${i}`} role="region" aria-labelledby={`ak-t-${i}`} aria-hidden={!terbuka}>
+              <div>
+                <p>{f.teks}</p>
+                <p className="ak-tag">{f.tag}</p>
+              </div>
             </div>
           </li>
         );

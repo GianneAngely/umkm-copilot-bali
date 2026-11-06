@@ -1,42 +1,54 @@
-// Struk contoh di hero. Markup ini sudah keadaan akhir, jadi utuh tanpa JS atau saat gerak
-// dikurangi. BerandaGerak memutarnya: struk tercetak, AI menyunting, coretan dan stabilo,
-// hasil per bagian, cap SIAP POSTING, lalu saran harga di bawah.
+// Nota produk UMKM di hero. Markup sudah keadaan akhir (coretan, stabilo, hasil, cap), jadi
+// utuh tanpa JS atau saat gerak dikurangi. BerandaGerak memutarnya sebagai satu siklus cetak.
 export default function StrukHero() {
   return (
-    <figure className="sh">
-      <div className="sh-kertas" data-struk role="img"
-        aria-label="Contoh: nota Pie Susu Bu Made disunting AI. Klaim enak murah dicoret, fakta susu sapi asli dan tahan 7 hari distabilo, lalu tersusun deskripsi, caption, harga Rp27.000 sampai Rp35.000, dan versi Inggris.">
+    <figure className="nota">
+      <div className="nota-kertas" data-nota role="img"
+        aria-label="Contoh nota produk Pie Susu Bu Made. Tulisan pedagang berisi klaim enak murah dan pokoknya mantap yang dicoret, serta fakta susu sapi asli dan tahan 7 hari yang distabilo. Hasil suntingan: deskripsi, caption, versi Inggris, dan saran harga Rp27.000 sampai Rp35.000.">
         <div aria-hidden="true">
-          <p className="sh-judul" data-s="kepala">NOTA PRODUK</p>
-          <p className="sh-sub" data-s="kepala">UMKM COPILOT · BALI</p>
-          <p className="sh-meta" data-s="kepala"><span>06/11/2026</span><span>09:41 WITA</span></p>
+          <i className="nota-sinar" data-n="sinar" />
+          <div className="nota-kepala" data-n="baris">
+            <span className="nota-toko">WARUNG<br />BU MADE</span>
+            <div>
+              <b>NOTA PRODUK</b>
+              <span>No. 0142 · Gianyar, Bali</span>
+            </div>
+          </div>
+          <p className="nota-meta" data-n="baris"><span>06/11/2026</span><span>09.41 WITA</span></p>
 
-          <div className="sh-blok">
-            <p className="sh-baris" data-s="isi"><span>Nama</span><b>Pie Susu Bu Made</b></p>
-            <p className="sh-baris" data-s="isi"><span>Kategori</span><b>Oleh-oleh</b></p>
-            <p className="sh-baris sh-teks" data-s="isi">
-              pie susu <span className="sh-coret">enak murah<i data-s="coret" /></span>,{" "}
-              <span className="sh-sorot"><i data-s="sapu" />susu sapi asli</span>,{" "}
-              <span className="sh-sorot"><i data-s="sapu" />tahan 7 hari</span>
-            </p>
-            <p className="sh-baris" data-s="isi"><span>Modal</span><b>15.000</b></p>
+          <div className="nota-dua">
+            <div className="nota-kolom">
+              <p className="nota-label" data-n="baris">TULISAN ANDA</p>
+              <p className="nota-tangan" data-n="baris">
+                pie susu <span className="coret">enak murah<i data-n="coret" /></span>,{" "}
+                <span className="sorot"><i data-n="sapu" />susu sapi asli</span>,{" "}
+                <span className="sorot"><i data-n="sapu" />tahan 7 hari</span>,{" "}
+                <span className="coret">pokoknya mantap<i data-n="coret" /></span>
+              </p>
+            </div>
+            <div className="nota-kolom nota-kolom-hasil">
+              <p className="nota-label" data-n="baris">HASIL SUNTINGAN</p>
+              <p className="nota-jadi" data-n="hasil">
+                Pie susu dari <mark>susu sapi asli</mark>, renyah, dan <mark>tahan 7 hari</mark>. Pas dibawa pulang setelah liburan.
+              </p>
+            </div>
           </div>
 
-          <p className="sh-ai" data-s="ai">✂ AI MENYUNTING &amp; MENULIS ✂</p>
+          <p className="nota-scan" data-n="scan">» AI MENYUNTING &amp; MENULIS «</p>
 
-          <div className="sh-blok sh-hasil">
-            <p className="sh-baris" data-s="hasil"><span><i>»</i> Deskripsi</span><b>2 versi</b></p>
-            <p className="sh-baris" data-s="hasil"><span><i>»</i> Caption</span><b>10 tagar</b></p>
-            <p className="sh-baris" data-s="hasil"><span><i>»</i> Harga</span><b>Rp27–35rb</b></p>
-            <p className="sh-baris" data-s="hasil"><span><i>»</i> English</span><b>siap</b></p>
+          <div className="nota-baris" data-n="hasil"><span>Deskripsi</span><b>2 versi</b></div>
+          <div className="nota-baris" data-n="hasil"><span>Caption + tagar</span><b>10 tagar</b></div>
+          <div className="nota-baris" data-n="hasil"><span>English</span><b>siap</b></div>
+
+          <div className="nota-total" data-n="total">
+            <span>SARAN HARGA</span>
+            <b>Rp<span data-n="min">27.000</span>–<span data-n="max">35.000</span></b>
           </div>
-
-          <p className="sh-total" data-s="total"><span>SARAN HARGA</span><b>Rp27.000–35.000</b></p>
-          <p className="sh-kaki" data-s="total"><mark>2 fakta</mark> dari isian · 0 klaim karangan</p>
-          <span className="sh-cap" data-s="cap">SIAP POSTING ✓</span>
+          <p className="nota-kaki" data-n="total"><mark>2 fakta</mark> dipakai · 2 klaim dicoret</p>
+          <span className="nota-cap" data-n="cap">SIAP POSTING</span>
         </div>
       </div>
-      <figcaption>CONTOH TAMPILAN</figcaption>
+      <figcaption>CONTOH NOTA · KLIK UNTUK MEMUTAR ULANG</figcaption>
     </figure>
   );
 }

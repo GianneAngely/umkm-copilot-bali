@@ -1,25 +1,22 @@
 "use client";
 
 import Link from "next/link";
-import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 import Icon from "./Icon";
 import TemaToggle from "./TemaToggle";
 
 const MENU = [
-  ["/", "Beranda"],
-  ["/studio", "Studio"],
-  ["/contoh", "Contoh"],
-  ["/cara-kerja", "Cara kerja"],
-  ["/tentang", "Tentang"],
+  ["#masalah", "Masalah"],
+  ["#cara-kerja", "Cara kerja"],
+  ["#fitur", "Fitur"],
+  ["#contoh", "Contoh"],
 ];
 
 export default function SiteHeader() {
-  const path = usePathname();
   const [menyusut, setMenyusut] = useState(false);
   const [buka, setBuka] = useState(false);
 
-  // Navbar menyusut jadi pil setelah halaman digulir.
+  // Navbar menyusut setelah halaman digulir.
   useEffect(() => {
     const cek = () => setMenyusut(window.scrollY > 24);
     cek();
@@ -27,8 +24,6 @@ export default function SiteHeader() {
     return () => window.removeEventListener("scroll", cek);
   }, []);
 
-  // Menu HP tertutup saat pindah halaman atau menekan Escape.
-  useEffect(() => setBuka(false), [path]);
   useEffect(() => {
     if (!buka) return;
     const esc = (e) => e.key === "Escape" && setBuka(false);
@@ -37,23 +32,19 @@ export default function SiteHeader() {
   }, [buka]);
 
   return (
-    <header className={`nav nav-p${menyusut ? " is-gulir" : ""}${buka ? " is-buka" : ""}`}>
+    <header className={`nav${menyusut ? " is-gulir" : ""}${buka ? " is-buka" : ""}`}>
       <a className="skip" href="#isi">Langsung ke isi</a>
-      <div className="nav-bar">
-        <Link className="logo" href="/" aria-label="UMKM Copilot Bali, beranda">
-          <i className="logo-mark" aria-hidden="true">U</i>
-          <span className="logo-text">UMKM COPILOT</span>
+      <div className="wrap nav-bar">
+        <Link className="merek" href="/" aria-label="UMKM Copilot, ke atas">
+          <i className="merek-tanda" aria-hidden="true">U</i>
+          <span>UMKM COPILOT</span>
         </Link>
         <nav className="nav-links" aria-label="Navigasi utama">
-          {MENU.map(([href, label]) => (
-            <Link key={href} href={href} className="nav-link" aria-current={path === href ? "page" : undefined}>
-              {label}
-            </Link>
-          ))}
+          {MENU.map(([href, label]) => <a key={href} href={href}>{label}</a>)}
         </nav>
         <div className="nav-kanan">
           <TemaToggle />
-          <Link className="btn btn-utama btn-sm nav-cta" href="/studio">BUKA STUDIO ↗</Link>
+          <Link className="nav-cta" href="/app">Buka app ↗</Link>
           <button type="button" className="nav-toggle" aria-expanded={buka} aria-controls="menu-hp"
             aria-label={buka ? "Tutup menu" : "Buka menu"} onClick={() => setBuka(!buka)}>
             <Icon name={buka ? "close" : "menu"} />
@@ -61,10 +52,8 @@ export default function SiteHeader() {
         </div>
       </div>
       <nav id="menu-hp" className="menu-hp" aria-label="Navigasi utama" hidden={!buka}>
-        {MENU.map(([href, label]) => (
-          <Link key={href} href={href} aria-current={path === href ? "page" : undefined}>{label}</Link>
-        ))}
-        <Link className="btn btn-utama btn-lg" href="/studio">Buka Studio</Link>
+        {MENU.map(([href, label]) => <a key={href} href={href} onClick={() => setBuka(false)}>{label}</a>)}
+        <Link className="btn-kunyit" href="/app">Buka app ↗</Link>
       </nav>
     </header>
   );

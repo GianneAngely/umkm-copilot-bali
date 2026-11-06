@@ -7,7 +7,7 @@ export function rupiah(n) {
   return "Rp" + Number(n).toLocaleString("id-ID");
 }
 
-export function CopyButton({ text }) {
+export function CopyButton({ text, label = "Salin", className = "" }) {
   const [copied, setCopied] = useState(false);
   async function copy() {
     await navigator.clipboard.writeText(text);
@@ -15,16 +15,16 @@ export function CopyButton({ text }) {
     setTimeout(() => setCopied(false), 1500);
   }
   return (
-    <button type="button" className={copied ? "copy is-copied" : "copy"} onClick={copy}>
+    <button type="button" className={`copy${copied ? " is-copied" : ""} ${className}`} onClick={copy}>
       <Icon name={copied ? "check" : "copy"} />
-      {copied ? "Tersalin" : "Salin"}
+      {copied ? "Tersalin" : label}
     </button>
   );
 }
 
 export function Section({ title, text, className = "", children }) {
   return (
-    <section className={`kartu struk ${className}`}>
+    <section className={`struk ${className}`}>
       <div className="struk-head">
         <h3>{title}</h3>
         <CopyButton text={text} />
