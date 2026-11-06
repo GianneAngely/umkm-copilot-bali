@@ -381,7 +381,7 @@ mark, .stabilo { background: var(--stabilo); color: inherit; padding: 0 2px; bor
 @media (min-width: 640px) { .grid-4 { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
 @media (min-width: 1100px) { .grid-4 { grid-template-columns: repeat(4, minmax(0, 1fr)); } }
 .siapa { display: flex; flex-direction: column; overflow: hidden; }
-.siapa .foto-slot { border-radius: 11px 11px 0 0; border-bottom: 1px solid var(--garis); }
+.siapa .foto-slot { margin: 10px 10px 0; }
 .siapa-isi { padding: 20px 22px 26px; }
 .siapa h3 { font: 600 22px/1.2 var(--serif); }
 .siapa-contoh { margin-top: 4px; font: 500 13px/1.4 var(--mono); color: var(--tinta-3); }
@@ -391,7 +391,6 @@ mark, .stabilo { background: var(--stabilo); color: inherit; padding: 0 2px; bor
 .foto-slot { position: relative; overflow: hidden; background: #efe6d6; }
 .foto-slot svg { position: absolute; inset: 0; width: 100%; height: 100%; padding: 8% 12% 14%; }
 .foto-label { position: absolute; left: 12px; bottom: 10px; font: 600 11px/1 var(--mono); letter-spacing: 0.04em; color: var(--tinta-3); }
-.foto-isi { position: absolute; inset: 0; background: center / cover no-repeat; }
 .foto-kerajinan { background: #ece3d0; }
 .foto-fesyen { background: #e3e8ef; }
 .foto-oleh-oleh { background: #e6ede4; }
@@ -414,7 +413,18 @@ mark, .stabilo { background: var(--stabilo); color: inherit; padding: 0 2px; bor
 
 /* ---------- Beranda: studi kasus ---------- */
 .kasus { align-items: center; }
-.kasus-foto .foto-slot { border-radius: 12px; border: 1px solid var(--garis); }
+.foto-band { padding: 0 0 72px; }
+@media (min-width: 1024px) { .foto-band { padding-bottom: 96px; } }
+.foto-band figure { margin: 0 auto; }
+.foto-band figcaption, .foto-kecil { margin-top: 12px; font: 500 12.5px/1.55 var(--mono); color: var(--tinta-3); }
+@media (max-width: 767px) { .foto-band .foto-slot { aspect-ratio: 4 / 3 !important; } }
+.kredit { list-style: none; margin: 0; padding: 6px 24px 14px; }
+.kredit li { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 0 16px; padding: 6px 0; border-bottom: 1px dashed var(--garis-2); }
+.kredit li:last-child { border-bottom: 0; }
+.kredit li > span { color: var(--tinta-2); }
+.kredit a { display: inline-flex; align-items: center; gap: 8px; min-height: 44px; font-weight: 700; text-decoration: underline; text-decoration-color: var(--garis-2); text-underline-offset: 4px; }
+.kredit a:hover { text-decoration-color: var(--tinta); }
+.kredit-sumber { font: 600 11px/1 var(--mono); color: var(--tinta-3); }
 .kasus-angka { margin: 8px 0 0; display: grid; border-top: 1px solid var(--garis); }
 .kasus-angka div { display: grid; grid-template-columns: 140px 1fr; gap: 16px; align-items: baseline; padding: 16px 0; border-bottom: 1px solid var(--garis); }
 .kasus-angka dt { font: 700 28px/1.1 var(--serif); font-variant-numeric: tabular-nums; }

@@ -15,7 +15,7 @@ function Kartu({ c }) {
   return (
     <article className="kartu contoh">
       <div className="contoh-kiri">
-        <FotoSlot nama={c.foto} label={`Foto ${c.form.nama} menyusul`} />
+        <FotoSlot nama={c.foto} label="ILUSTRASI PRODUK" ilustrasi />
         <div className="contoh-nota">
           <p className="nota-judul"><span>NOTA PRODUK</span><span className="cap cap-kecil">CONTOH</span></p>
           <h2>{c.form.nama}</h2>

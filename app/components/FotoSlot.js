@@ -1,5 +1,17 @@
-// Bingkai foto dengan rasio tetap. Foto dari public/foto/<nama>.jpg menutupi ilustrasi
-// begitu filenya ada; selama belum ada, ilustrasi SVG dan labelnya yang terlihat.
+import Image from "next/image";
+
+// Bingkai foto dengan rasio tetap. Foto Pexels ada di public/foto/ (kredit di halaman Tentang).
+// Titik fokus diatur per foto supaya wajah atau objek utama tidak terpotong.
+// Untuk produk contoh yang tidak punya foto, bingkai menampilkan ilustrasi SVG.
+
+const FOTO = {
+  "hero-umkm": { alt: "Pedagang sate tersenyum di depan panggangan di pasar kuliner Bali", fokus: "42% 38%" },
+  pasar: { alt: "Kunyit, jeruk limau, dan ikan teri kering di lapak pasar Bali", fokus: "50% 55%" },
+  kuliner: { alt: "Deretan lauk makanan jalanan Bali di nampan logam", fokus: "50% 45%" },
+  kerajinan: { alt: "Pengrajin ukir kayu tersenyum sambil memahat di Ubud", fokus: "55% 55%" },
+  fesyen: { alt: "Penenun bekerja di alat tenun di depan kain tenun tangan", fokus: "50% 72%" },
+  "oleh-oleh": { alt: "Jaja Bali dalam takir daun pisang", fokus: "50% 45%" },
+};
 
 const GAMBAR = {
   kuliner: (
@@ -44,12 +56,19 @@ const GAMBAR = {
   ),
 };
 
-export default function FotoSlot({ nama, label, rasio = "16 / 10", className = "" }) {
+export default function FotoSlot({ nama, label, rasio = "16 / 10", sizes = "100vw", ilustrasi = false, prioritas = false, className = "" }) {
+  const foto = !ilustrasi && FOTO[nama];
   return (
     <div className={`foto-slot foto-${nama} ${className}`} style={{ aspectRatio: rasio }}>
-      <svg viewBox="0 0 200 125" preserveAspectRatio="xMidYMid meet" aria-hidden="true">{GAMBAR[nama] || GAMBAR.pasar}</svg>
-      <span className="foto-label">{label}</span>
-      <span className="foto-isi" style={{ backgroundImage: `url(/foto/${nama}.jpg)` }} role="img" aria-label={label} />
+      {foto ? (
+        <Image src={`/foto/${nama}.jpg`} alt={foto.alt} fill sizes={sizes} priority={prioritas}
+          style={{ objectFit: "cover", objectPosition: foto.fokus }} />
+      ) : (
+        <>
+          <svg viewBox="0 0 200 125" preserveAspectRatio="xMidYMid meet" aria-hidden="true">{GAMBAR[nama] || GAMBAR.pasar}</svg>
+          {label && <span className="foto-label">{label}</span>}
+        </>
+      )}
     </div>
   );
 }

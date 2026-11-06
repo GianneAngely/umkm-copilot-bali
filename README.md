@@ -118,7 +118,14 @@ Tidak diperlukan. Aplikasi bisa dipakai tanpa login.
 - [Zod](https://zod.dev) untuk skema dan validasi (MIT)
 - Font [Plus Jakarta Sans](https://fonts.google.com/specimen/Plus+Jakarta+Sans), [Newsreader](https://fonts.google.com/specimen/Newsreader), [IBM Plex Mono](https://fonts.google.com/specimen/IBM+Plex+Mono), dan [Caveat](https://fonts.google.com/specimen/Caveat) dari Google Fonts (SIL Open Font License 1.1). Berkas WOFF2 subset Latin disimpan di `app/fonts/` dan dimuat lewat `next/font/local`, jadi build tidak bergantung pada server Google. Rincian lisensi di `app/fonts/LICENSE.md`
 - Gemini API oleh Google
-- Ilustrasi hero (taplak kotak, nota, struk, label harga, HP, pena) dan ikon digambar langsung dengan CSS dan SVG inline, tanpa pustaka ikon, foto, atau gambar hasil generator
+- Ilustrasi hero (taplak kotak, nota, struk, label harga, HP, pena) dan ikon digambar langsung dengan CSS dan SVG inline, tanpa pustaka ikon atau gambar hasil generator
+- Foto dari [Pexels](https://www.pexels.com) (lisensi Pexels), disimpan di `public/foto/`:
+  - `hero-umkm.jpg`, pedagang sate di pasar kuliner Bali, oleh [G Y](https://www.pexels.com/photo/31246481/)
+  - `pasar.jpg`, kunyit, jeruk limau, dan ikan teri di pasar Bali, oleh [Stijn Dijkstra](https://www.pexels.com/photo/38330312/)
+  - `kuliner.jpg`, lauk makanan jalanan Bali, oleh [Kevin Yung](https://www.pexels.com/photo/36892251/)
+  - `kerajinan.jpg`, pengrajin ukir kayu di Ubud, oleh [Smaart](https://www.pexels.com/photo/32064709/)
+  - `fesyen.jpg`, penenun di depan kain tenun tangan, oleh [Andreas Suwardy](https://www.pexels.com/photo/40524482/)
+  - `oleh-oleh.jpg`, jaja Bali dalam takir daun pisang, oleh [Evert jan Hoek](https://www.pexels.com/photo/36858325/)
 
 ## Team Members
 

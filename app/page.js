@@ -64,7 +64,7 @@ const SEBELUM = [
 const SIAPA = [
   ["kuliner", "Kuliner", "Warung, kue, sambal, kopi.", "Menu baru langsung punya deskripsi dan caption."],
   ["kerajinan", "Kerajinan", "Anyaman, ukiran, perak.", "Proses pembuatan diceritakan tanpa dilebih-lebihkan."],
-  ["fesyen", "Fesyen", "Endek, songket, kebaya.", "Bahan dan motif tertulis jelas untuk pembeli."],
+  ["fesyen", "Fesyen", "Tenun, songket, kebaya.", "Bahan dan motif tertulis jelas untuk pembeli."],
   ["oleh-oleh", "Oleh-oleh", "Pie susu, pai, camilan.", "Versi Inggris siap untuk wisatawan."],
 ];
 
@@ -149,6 +149,13 @@ export default function Beranda() {
         </div>
       </section>
 
+      <section className="foto-band" aria-label="Foto pedagang di pasar Bali">
+        <figure className="wrap">
+          <FotoSlot nama="hero-umkm" rasio="12 / 5" sizes="(min-width: 1264px) 1200px, 100vw" />
+          <figcaption>Pedagang sate di pasar kuliner Bali. Usaha seperti ini yang paling butuh tulisan jualan yang cepat dan jujur.</figcaption>
+        </figure>
+      </section>
+
       <section className="bagian" aria-labelledby="sebelum-judul">
         <div className="wrap">
           <Kepala no={3} id="sebelum-judul" judul="Sebelum dan sesudah disunting"
@@ -178,7 +185,7 @@ export default function Beranda() {
           <ul className="grid-4">
             {SIAPA.map(([foto, judul, contoh, teks]) => (
               <Reveal as="li" className="kartu siapa" key={foto}>
-                <FotoSlot nama={foto} label={`Foto ${judul.toLowerCase()} menyusul`} />
+                <FotoSlot nama={foto} sizes="(min-width: 1100px) 280px, (min-width: 640px) 45vw, 92vw" />
                 <div className="siapa-isi">
                   <h3>{judul}</h3>
                   <p className="siapa-contoh">{contoh}</p>
@@ -223,7 +230,7 @@ export default function Beranda() {
       <section className="bagian" aria-labelledby="kasus-judul">
         <div className="wrap duo-57 kasus">
           <Reveal className="kasus-foto">
-            <FotoSlot nama="pasar" label="Foto lapak menyusul" rasio="4 / 5" />
+            <FotoSlot nama="pasar" rasio="4 / 5" sizes="(min-width: 1024px) 480px, 92vw" />
           </Reveal>
           <Reveal className="kolom-teks">
             <Cap>ILUSTRASI CONTOH</Cap>
@@ -238,7 +245,7 @@ export default function Beranda() {
               <div><dt>3 fakta</dt><dd>distabilo, <b>0 klaim</b> yang ditambahkan</dd></div>
               <div><dt>Rp15.000</dt><dd>modal, saran jual <b>Rp27.000 – Rp35.000</b></dd></div>
             </dl>
-            <p className="sumber">Tokoh dan isi bagian ini adalah ilustrasi, bukan testimoni pengguna.</p>
+            <p className="sumber">Tokoh dan isi bagian ini adalah ilustrasi, bukan testimoni pengguna. Foto: lapak di pasar Bali, bukan milik tokoh.</p>
           </Reveal>
         </div>
       </section>

@@ -4,6 +4,15 @@ import Icon from "../components/Icon";
 
 export const metadata = { title: "Tentang" };
 
+const KREDIT = [
+  ["Pedagang sate di pasar kuliner Bali", "G Y", "https://www.pexels.com/photo/31246481/"],
+  ["Lapak kunyit, limau, dan teri di pasar Bali", "Stijn Dijkstra", "https://www.pexels.com/photo/38330312/"],
+  ["Lauk makanan jalanan Bali", "Kevin Yung", "https://www.pexels.com/photo/36892251/"],
+  ["Pengrajin ukir kayu di Ubud", "Smaart", "https://www.pexels.com/photo/32064709/"],
+  ["Penenun di depan kain tenun tangan", "Andreas Suwardy", "https://www.pexels.com/photo/40524482/"],
+  ["Jaja Bali dalam takir daun pisang", "Evert jan Hoek", "https://www.pexels.com/photo/36858325/"],
+];
+
 export default function TentangPage() {
   return (
     <>
@@ -21,7 +30,7 @@ export default function TentangPage() {
 
       <section className="bagian" aria-labelledby="latar-judul">
         <div className="wrap duo-57">
-          <FotoSlot nama="pasar" label="Foto pasar menyusul" rasio="4 / 3" />
+          <FotoSlot nama="hero-umkm" rasio="4 / 3" sizes="(min-width: 1024px) 480px, 92vw" />
           <div className="kolom-teks">
             <div className="kepala">
               <span className="cap">NOTA No. 01</span>
@@ -62,6 +71,24 @@ export default function TentangPage() {
               <h3>Next.js dan Google Gemini</h3>
               <p>Teks disusun oleh Gemini dari sisi server. Penulisan kode aplikasi dibantu Claude Code dan ditinjau oleh pembuat.</p>
             </li>
+          </ul>
+        </div>
+      </section>
+
+      <section className="bagian" aria-labelledby="kredit-judul">
+        <div className="wrap duo-57">
+          <div className="kepala">
+            <span className="cap">NOTA No. 03</span>
+            <h2 id="kredit-judul">Kredit foto</h2>
+            <p className="kepala-lead">Semua foto di situs ini diambil dari Pexels dengan lisensi Pexels. Terima kasih kepada para fotografer.</p>
+          </div>
+          <ul className="kartu kredit">
+            {KREDIT.map(([isi, nama, url]) => (
+              <li key={url}>
+                <span>{isi}</span>
+                <a href={url} target="_blank" rel="noopener noreferrer">{nama} <span className="kredit-sumber">Pexels</span></a>
+              </li>
+            ))}
           </ul>
         </div>
       </section>
