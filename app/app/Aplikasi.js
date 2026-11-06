@@ -10,6 +10,7 @@ import FotoKeForm from "../components/fitur/FotoKeForm";
 import KalenderKonten from "../components/fitur/KalenderKonten";
 import PostinganIG from "../components/fitur/PostinganIG";
 import Tur from "../components/Tur";
+import { mintaJson } from "../../lib/klien";
 
 const KATEGORI = ["Kuliner", "Kerajinan", "Fashion", "Oleh-oleh", "Lainnya"];
 const HISTORY_KEY = "umkm-copilot-riwayat";
@@ -52,6 +53,7 @@ export default function Aplikasi() {
   const [form, setForm] = useState(EMPTY);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const [contohGalat, setContohGalat] = useState(null);
   const [data, setData] = useState(null);
   const [history, setHistory] = useState([]);
   const [faktaForm, setFaktaForm] = useState(null);
@@ -86,14 +88,9 @@ export default function Aplikasi() {
     e.preventDefault();
     setLoading(true);
     setError("");
+    setContohGalat(null);
     try {
-      const res = await fetch("/api/generate", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(form),
-      });
-      const json = await res.json();
-      if (!res.ok) throw new Error(json.error || "Terjadi kesalahan.");
+      const json = await mintaJson("/api/generate", form);
       setData(json);
       const others = history.filter((h) => h.form.nama !== form.nama);
       const next = [{ form, ...json, at: Date.now() }, ...others].slice(0, 5);
@@ -103,6 +100,7 @@ export default function Aplikasi() {
       } catch {}
     } catch (err) {
       setError(err.message);
+      setContohGalat(err.contoh || null);
     } finally {
       setLoading(false);
     }
@@ -295,6 +293,11 @@ export default function Aplikasi() {
                   <div>
                     <p className="galat-judul">Belum berhasil</p>
                     <p>{error}</p>
+                    {contohGalat && (
+                      <button type="button" className="btn-garis btn-kecil" onClick={() => { setData({ mode: "mock", result: contohGalat }); setError(""); setContohGalat(null); }}>
+                        Lihat contoh hasil (Contoh)
+                      </button>
+                    )}
                   </div>
                 </div>
               )}
