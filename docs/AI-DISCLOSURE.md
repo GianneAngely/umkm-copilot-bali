@@ -4,26 +4,26 @@ Disusun mengikuti Lampiran C Panduan Peserta AI Web Innovation Challenge, Bali D
 
 | Komponen | Isi Peserta |
 | --- | --- |
-| Nama Produk | UMKM Copilot Bali |
-| Framework / Frontend | Next.js 15 (App Router) dan React 19, dengan CSS biasa tanpa framework UI |
-| Backend / Runtime | Next.js Route Handler (`POST /api/generate`) di runtime Node.js. Endpoint ini memvalidasi input, memanggil Gemini, dan memvalidasi jawaban sebelum dikirim ke browser |
-| Database / Storage | Tidak memakai database. Riwayat lima produk terakhir disimpan di `localStorage` pada browser pengguna dan tidak dikirim ke server mana pun |
+| Nama Produk | Wicara |
+| Framework / Frontend | Next.js 15 (App Router) dan React 19, dengan CSS biasa dan CSS Modules tanpa framework UI. Postingan Instagram digambar dengan Canvas API bawaan browser |
+| Backend / Runtime | Next.js Route Handler di runtime Node.js: `POST /api/generate` (teks pemasaran), `POST /api/foto` (membaca foto produk), dan `POST /api/kalender` (rencana posting 7 hari). Setiap endpoint memvalidasi input, memanggil Gemini, dan memvalidasi jawaban sebelum dikirim ke browser |
+| Database / Storage | Tidak memakai database. Riwayat lima produk terakhir disimpan di `localStorage` pada browser pengguna dan tidak dikirim ke server mana pun. Foto produk tidak disimpan di server |
 | Hosting / Deployment | Vercel |
-| AI Model / API / Method | Google Gemini API, model `gemini-3.8-flash`, dipanggil dengan SDK resmi `@google/genai` dari sisi server. Metode: generative AI (LLM) dengan instruksi sistem dan *structured output* (`responseMimeType: application/json` + `responseJsonSchema`), lalu divalidasi ulang dengan Zod |
-| Peran AI dalam Produk | AI menyusun teks pemasaran dari data produk: deskripsi singkat, deskripsi bercerita, caption promosi dan hashtag Bali, saran rentang harga jual beserta alasannya, serta versi Bahasa Inggris untuk wisatawan. Ini adalah fungsi utama aplikasi. Kalau server belum diberi API key, aplikasi menampilkan hasil contoh statis yang diberi label "Mode contoh", sehingga tidak tertukar dengan hasil AI |
-| Dataset / Data Source | Tidak memakai dataset. Satu-satunya sumber data adalah isian form dari pengguna |
-| Open-source Libraries | `next` (MIT), `react` dan `react-dom` (MIT), `@google/genai` (Apache-2.0), `zod` (MIT) |
+| AI Model / API / Method | Google Gemini API, dipanggil dengan SDK resmi `@google/genai` dari sisi server memakai API key free tier. Model utama `gemini-3.8-flash`; kalau sibuk (503/429) atau tidak menjawab dalam 9 detik, server memakai cadangan `gemini-3.5-flash`, lalu `gemini-3.7-flash`, dengan batas total 25 detik. Respons API mencantumkan model yang benar-benar menjawab. Metode: generative AI multimodal (teks dan gambar) dengan instruksi sistem dan *structured output* (`responseMimeType: application/json` + `responseJsonSchema`), lalu divalidasi ulang dengan Zod |
+| Peran AI dalam Produk | AI adalah fungsi utama aplikasi. (1) Menyusun teks pemasaran dari data produk: deskripsi singkat dan bercerita, caption dan hashtag Bali, saran rentang harga jual beserta alasannya, serta versi Bahasa Inggris. (2) Membaca foto produk untuk mengisi nama, kategori, dan keunggulan, dengan instruksi hanya menulis yang terlihat dan mencatat keraguan. (3) Menyusun ide posting 7 hari yang memperhitungkan hari raya Bali dan libur yang disisipkan server dari data terverifikasi. Kalau server belum diberi API key, aplikasi menampilkan hasil contoh statis berlabel "Mode contoh", sehingga tidak tertukar dengan hasil AI |
+| Dataset / Data Source | Tidak memakai dataset pelatihan. Data yang diolah adalah isian form dan foto dari pengguna. Kalender memakai data statis `lib/hari-raya-bali.js` yang disusun dari SKB 3 Menteri tentang Hari Libur Nasional dan Cuti Bersama 2026 dan 2027 ([setneg.go.id](https://setneg.go.id/baca/index/inilah_skb_3_menteri_libur_nasional_dan_cuti_bersama_2027)), Kalender Pendidikan Provinsi Bali 2026/2027 (SK Kadis Dikpora Bali No. B.10.400.3/5892/UPTD.BPTP/DIKPORA), dan daftar hari raya Bali 2027 dari nusapenida.org. Sumber tiap tanggal dicatat di berkas tersebut |
+| Open-source Libraries | `next` (MIT), `react` dan `react-dom` (MIT), `@google/genai` (Apache-2.0), `zod` (MIT), `gsap` (lisensi standar GSAP, gratis), `lenis` (MIT) |
 | Template / Boilerplate | Tidak memakai template. Proyek disusun manual tanpa `create-next-app` |
 | AI Coding Assistant | Claude Code (Anthropic) dipakai untuk membantu menulis dan menguji kode aplikasi. Seluruh kode ditinjau, dijalankan, dan dipertanggungjawabkan oleh peserta |
 | Pre-existing Components | Tidak ada. Seluruh aplikasi dibuat selama periode kompetisi |
-| Third-party Assets / Credits | Font Plus Jakarta Sans dan Young Serif dari Google Fonts (SIL Open Font License), dimuat lewat `next/font`. Ikon dan motif ikat endek digambar langsung sebagai SVG inline |
+| Third-party Assets / Credits | Font Bricolage Grotesque dan Spline Sans Mono dari Google Fonts (SIL Open Font License 1.1), disimpan di `app/fonts/`. Foto di `public/foto/` dari Pexels (lisensi Pexels), nama fotografer dicantumkan di README. Ikon, struk, dan template postingan digambar sendiri dengan CSS, SVG inline, dan Canvas |
 
 ## Privasi dan penggunaan data
 
-- Data produk yang diisi pengguna (nama produk, kategori, bahan atau keunggulan, harga modal, dan target pasar) dikirim dari server aplikasi ke Gemini API untuk diproses. Aplikasi tidak menyimpan data ini di server.
+- Data produk yang diisi pengguna (nama produk, kategori, bahan atau keunggulan, harga modal, dan target pasar) dan foto produk yang diunggah dikirim dari server aplikasi ke Gemini API untuk diproses. Aplikasi tidak menyimpan data atau foto ini di server.
 - Aplikasi memakai **free tier (Unpaid Services)** Gemini API. Menurut [Gemini API Additional Terms of Service](https://ai.google.dev/gemini-api/terms), pada layanan tanpa biaya Google dapat memakai input dan output untuk mengembangkan dan meningkatkan produknya, dan peninjau manusia dapat membaca serta memberi anotasi pada input dan output tersebut setelah dipisahkan dari akun, API key, dan project. Google juga meminta agar informasi sensitif, rahasia, atau pribadi tidak dikirim ke layanan tanpa biaya.
-- Karena itu, form hanya meminta data produk, bukan data pribadi. Pengguna diimbau tidak menulis nama orang, nomor telepon, alamat, atau informasi rahasia lain di kolom isian.
-- Status free tier dan modelnya dicek pada [halaman harga Gemini API](https://ai.google.dev/gemini-api/docs/pricing). Di halaman itu, `gemini-3.8-flash` tercatat gratis untuk input dan output pada free tier, dengan keterangan "Used to improve our products: Yes" untuk free tier.
+- Karena itu, form hanya meminta data produk, bukan data pribadi. Pengguna diimbau tidak menulis nama orang, nomor telepon, alamat, atau informasi rahasia lain, dan tidak memotret wajah orang atau dokumen pribadi untuk fitur foto.
+- Status free tier dicek pada [halaman harga Gemini API](https://ai.google.dev/gemini-api/docs/pricing) tanggal 6 November 2026. Di halaman itu `gemini-3.8-flash` tercatat gratis untuk input dan output pada free tier, dengan keterangan "Used to improve our products: Yes". Dua model cadangan (`gemini-3.5-flash` dan `gemini-3.7-flash`) belum tercantum di halaman harga maupun daftar model resmi pada tanggal itu, tetapi dipanggil dengan API key free tier yang sama.
 - API key disimpan sebagai environment variable `GEMINI_API_KEY` di server dan tidak pernah dikirim ke browser atau dimasukkan ke repository. Repository hanya berisi `.env.example` tanpa nilai.
 
 ## Pernyataan

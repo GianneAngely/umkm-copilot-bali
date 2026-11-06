@@ -1,8 +1,10 @@
-# UMKM Copilot Bali
+# Wicara
 
 ## Description
 
-UMKM Copilot Bali adalah web app yang membantu pelaku UMKM di Bali menyiapkan materi pemasaran digital. Pengguna cukup mengisi data singkat tentang produknya, lalu AI menyusun deskripsi produk, caption promosi beserta hashtag, saran harga jual, dan versi Bahasa Inggris untuk wisatawan. Semua hasil bisa langsung disalin ke marketplace, Instagram, atau WhatsApp.
+Wicara adalah web app yang membantu pelaku UMKM di Bali menyiapkan materi pemasaran digital. Pengguna cukup mengisi data singkat tentang produknya, lalu AI menyusun deskripsi produk, caption promosi beserta hashtag, saran harga jual, dan versi Bahasa Inggris untuk wisatawan. Semua hasil bisa langsung disalin ke marketplace, Instagram, atau WhatsApp.
+
+Namanya diambil dari kata Jawa/Bali kuno *wicara*, yang berarti ucapan atau perkataan.
 
 Entri AI Web Innovation Challenge, Bali DigiFest 2026, kategori UMKM & Bisnis.
 
@@ -26,6 +28,9 @@ Fitur berikut sudah berfungsi:
   - versi Bahasa Inggris (deskripsi dan caption) untuk wisatawan asing.
 - **Tombol Salin** di setiap bagian hasil.
 - **Riwayat** lima produk terakhir, tersimpan di browser pengguna.
+- **Isi dari foto**: pengguna memotret atau memilih foto produk, lalu AI membaca foto dan mengisi nama, kategori, dan keunggulan di form. AI hanya menulis yang terlihat di foto dan mencatat bagian yang meragukan.
+- **Postingan Instagram siap unduh**: hasil generate digambar ke kanvas ukuran feed (1080×1080) dan story (1080×1920) dengan tiga template bergaya nota, lalu diunduh sebagai PNG. Semua proses ini terjadi di browser.
+- **Kalender konten 7 hari**: AI menyusun rencana posting seminggu yang memperhitungkan hari raya Bali (Galungan, Kuningan, Nyepi, Saraswati, Pagerwesi, Siwaratri), libur nasional, dan libur sekolah. Data tanggalnya disimpan di `lib/hari-raya-bali.js` beserta sumbernya.
 - **Mode contoh**: kalau server belum diberi API key, aplikasi tetap bisa dicoba dan menampilkan hasil contoh yang diberi label jelas.
 
 ## Tech Stack
@@ -33,8 +38,8 @@ Fitur berikut sudah berfungsi:
 | Bagian | Teknologi |
 | --- | --- |
 | Frontend | Next.js 15 (App Router), React 19, CSS biasa |
-| Backend | Next.js Route Handler (`POST /api/generate`) di runtime Node.js |
-| AI | Gemini API, model `gemini-3.8-flash`, lewat SDK resmi `@google/genai` |
+| Backend | Next.js Route Handler (`POST /api/generate`, `/api/foto`, `/api/kalender`) di runtime Node.js |
+| AI | Gemini API lewat SDK resmi `@google/genai`: model utama `gemini-3.8-flash`, cadangan `gemini-3.5-flash` dan `gemini-3.7-flash` |
 | Database / storage | Tidak memakai database. Riwayat disimpan di `localStorage` browser |
 | Hosting | Vercel |
 
@@ -42,10 +47,14 @@ Fitur berikut sudah berfungsi:
 
 AI adalah inti produk: tanpa model bahasa, aplikasi tidak bisa menyusun teks pemasaran yang menyesuaikan produk, kategori, dan target pasar.
 
-- **Model**: Google Gemini `gemini-3.8-flash` melalui Gemini API (free tier).
+- **Model**: Google Gemini lewat Gemini API dengan API key free tier. Model utama `gemini-3.8-flash`. Kalau model itu sibuk (503/429) atau tidak menjawab dalam 9 detik, server pindah ke `gemini-3.5-flash`, lalu `gemini-3.7-flash`. Tiap model paling banyak dicoba ulang sekali, dan total waktu tunggu dibatasi 25 detik. Respons API menyertakan field `model` berisi model yang benar-benar menjawab.
+- **Tiga fungsi AI**:
+  - `/api/generate`: teks pemasaran dari data produk.
+  - `/api/foto`: membaca foto produk (JPEG/PNG, maksimal 4 MB, diperkecil di browser sampai 1280 px) dan mengisi form.
+  - `/api/kalender`: rencana posting 7 hari. Server menyisipkan hari raya dan libur yang jatuh di rentang tanggal itu ke prompt, jadi AI tidak menebak tanggal hari raya sendiri.
 - **Input**: data produk dari form, disusun menjadi prompt pendek di server. Instruksi sistem meminta bahasa yang wajar, melarang klaim berlebihan, dan melarang AI mengarang fakta yang tidak ada di data (misalnya sertifikat atau penghargaan).
-- **Output**: JSON terstruktur yang dibatasi skema (`responseJsonSchema`), berisi `deskripsi_singkat`, `deskripsi_cerita`, `caption`, `hashtags`, `harga` (`min`, `max`, `alasan`), dan `english` (`description`, `caption`). Server memvalidasi hasil dengan Zod sebelum dikirim ke browser, sehingga setiap bagian di layar selalu terisi.
-- **Penanganan galat**: kalau Gemini gagal dipanggil (kuota habis, key tidak valid, atau jawaban tidak sesuai skema), pengguna melihat pesan galat yang jelas. Aplikasi tidak diam-diam menggantinya dengan hasil contoh.
+- **Output**: JSON terstruktur yang dibatasi skema (`responseJsonSchema`), misalnya untuk generate berisi `deskripsi_singkat`, `deskripsi_cerita`, `caption`, `hashtags`, `harga` (`min`, `max`, `alasan`), dan `english` (`description`, `caption`). Server memvalidasi hasil dengan Zod sebelum dikirim ke browser, sehingga setiap bagian di layar selalu terisi.
+- **Penanganan galat**: kalau semua model gagal (sibuk, kuota habis, key tidak valid, atau jawaban tidak sesuai skema), pengguna melihat pesan galat yang jelas. Aplikasi tidak diam-diam menggantinya dengan hasil contoh.
 - **Keamanan key**: API key hanya dibaca di server dari environment variable `GEMINI_API_KEY`. Browser tidak pernah memanggil Gemini secara langsung.
 
 Rincian lengkap ada di [docs/AI-DISCLOSURE.md](docs/AI-DISCLOSURE.md).
@@ -55,12 +64,13 @@ Rincian lengkap ada di [docs/AI-DISCLOSURE.md](docs/AI-DISCLOSURE.md).
 ```
 Browser (form React)
    │  POST /api/generate  { nama, kategori, keunggulan, modal, target }
+   │  (juga /api/foto untuk foto produk, /api/kalender untuk rencana 7 hari)
    ▼
-Next.js Route Handler  (app/api/generate/route.js)
+Next.js Route Handler  (app/api/*/route.js)
    │  validasi input
    ├── GEMINI_API_KEY kosong ──► hasil contoh statis (lib/generate.js) ──┐
    │                                                                     │
-   └── GEMINI_API_KEY ada ──► Gemini API (gemini-3.8-flash)              │
+   └── GEMINI_API_KEY ada ──► Gemini API (3.8-flash, cadangan 3.5/3.7)   │
                                  │  JSON sesuai skema                    │
                                  ▼                                       │
                            validasi Zod                                  │
@@ -71,9 +81,12 @@ Browser menampilkan hasil per bagian + tombol Salin, lalu menyimpan riwayat di l
 
 Struktur folder:
 
-- `app/page.js`: form dan tampilan hasil.
-- `app/api/generate/route.js`: endpoint dan validasi input.
-- `lib/generate.js`: prompt, skema keluaran, panggilan Gemini, dan data mode contoh.
+- `app/`: halaman landing dan aplikasi.
+- `app/components/fitur/`: komponen `FotoKeForm`, `PostinganIG`, dan `KalenderKonten`.
+- `app/api/generate`, `app/api/foto`, `app/api/kalender`: endpoint dan validasi input.
+- `lib/gemini.js`: panggilan Gemini dengan rantai model cadangan.
+- `lib/generate.js`, `lib/foto.js`, `lib/kalender.js`: prompt, skema keluaran, dan data mode contoh tiap fitur.
+- `lib/hari-raya-bali.js`: tanggal hari raya Bali, libur nasional, dan libur sekolah November 2026 sampai Desember 2027, dengan sumber tiap tanggal.
 
 ## Installation / Run Instructions
 
@@ -104,12 +117,13 @@ Tidak diperlukan. Aplikasi bisa dipakai tanpa login.
 
 ## Known Limitations
 
+- Saat ramai, `gemini-3.8-flash` sering menjawab 503 atau lambat. Server otomatis memakai model cadangan, tetapi satu permintaan bisa memakan waktu sampai sekitar 15–25 detik.
 - Memakai free tier Gemini API, sehingga ada batas jumlah permintaan per menit dan per hari. Kalau batas tercapai, aplikasi menampilkan pesan agar pengguna mencoba lagi nanti.
-- Pada free tier, Google dapat memakai input dan output untuk meningkatkan produknya. Pengguna sebaiknya tidak memasukkan data pribadi atau rahasia ke dalam form.
+- Pada free tier, Google dapat memakai input dan output untuk meningkatkan produknya. Pengguna sebaiknya tidak memasukkan data pribadi atau rahasia ke dalam form, dan tidak memotret wajah orang atau dokumen pribadi untuk fitur foto.
 - Saran harga adalah perkiraan dari AI berdasarkan harga modal dan kategori, bukan hasil riset pasar. Pengguna tetap perlu menyesuaikan dengan kondisi di lapangan.
 - Teks hasil AI bisa saja kurang tepat, jadi tetap perlu dibaca ulang sebelum diunggah.
 - Riwayat hanya tersimpan di browser yang dipakai dan hilang kalau data browser dihapus. Belum ada akun pengguna atau sinkronisasi antarperangkat.
-- Belum ada analisis foto produk; semua input masih berupa teks.
+- Tanggal hari raya Bali 2027 diambil dari Kalender Pendidikan Provinsi Bali 2026/2027 yang masih menandainya sebagai perkiraan sampai Surat Edaran Gubernur Bali 2027 terbit. Purnama dan Tilem belum dimasukkan.
 
 ## Third-party Resources / Credits
 
