@@ -1,4 +1,6 @@
 import localFont from "next/font/local";
+import SiteFooter from "./components/SiteFooter";
+import SiteHeader from "./components/SiteHeader";
 import "./globals.css";
 
 // Font disimpan di repo (app/fonts) supaya build tidak bergantung pada Google Fonts.
@@ -31,7 +33,7 @@ const tangan = localFont({
 });
 
 export const metadata = {
-  title: "UMKM Copilot Bali",
+  title: { default: "UMKM Copilot Bali", template: "%s · UMKM Copilot Bali" },
   description: "Bantu UMKM Bali menyiapkan deskripsi produk, caption, dan saran harga.",
 };
 
@@ -40,7 +42,11 @@ export const viewport = { themeColor: "#f7f3ec" };
 export default function RootLayout({ children }) {
   return (
     <html lang="id" className={`${sans.variable} ${serif.variable} ${mono.variable} ${tangan.variable}`}>
-      <body>{children}</body>
+      <body>
+        <SiteHeader />
+        <main id="isi">{children}</main>
+        <SiteFooter />
+      </body>
     </html>
   );
 }

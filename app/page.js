@@ -1,441 +1,260 @@
-"use client";
-
-import { useEffect, useRef, useState } from "react";
+import Link from "next/link";
+import FotoSlot from "./components/FotoSlot";
+import Icon from "./components/Icon";
 import Kolase from "./components/Kolase";
-import PenaSunting from "./components/PenaSunting";
-import { Stabilo, buatFakta, hitungFakta } from "./components/Stabilo";
-
-const KATEGORI = ["Kuliner", "Kerajinan", "Fashion", "Oleh-oleh", "Lainnya"];
-const HISTORY_KEY = "umkm-copilot-riwayat";
-const EMPTY = { nama: "", kategori: "Kuliner", keunggulan: "", modal: "", target: "lokal" };
-
-function rupiah(n) {
-  return "Rp" + Number(n).toLocaleString("id-ID");
-}
-
-const ICONS = {
-  copy: <><rect x="8" y="8" width="12" height="12" rx="2" /><path d="M16 8V6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h2" /></>,
-  check: <path d="M5 12.5l4.5 4.5L19 7.5" />,
-  alert: <><circle cx="12" cy="12" r="9" /><path d="M12 7.5v5M12 16.5v.01" /></>,
-  arrow: <><path d="M5 12h14" /><path d="M13 6l6 6-6 6" /></>,
-  chevron: <path d="M6 9l6 6 6-6" />,
-  kunci: <><rect x="5" y="11" width="14" height="9" rx="2" /><path d="M8 11V8a4 4 0 0 1 8 0v3" /></>,
-  coret: <><path d="M4 12h16" /><path d="M6 7h8M6 17h11" /></>,
-  peramban: <><rect x="3" y="4" width="18" height="16" rx="2" /><path d="M3 9h18M7 6.5h.01M10 6.5h.01" /></>,
-};
-
-function Icon({ name }) {
-  return (
-    <svg className="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"
-      strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-      {ICONS[name]}
-    </svg>
-  );
-}
-
-function CopyButton({ text }) {
-  const [copied, setCopied] = useState(false);
-  async function copy() {
-    await navigator.clipboard.writeText(text);
-    setCopied(true);
-    setTimeout(() => setCopied(false), 1500);
-  }
-  return (
-    <button type="button" className={copied ? "copy is-copied" : "copy"} onClick={copy}>
-      <Icon name={copied ? "check" : "copy"} />
-      {copied ? "Tersalin" : "Salin"}
-    </button>
-  );
-}
-
-function Section({ title, text, className = "", children }) {
-  return (
-    <section className={`kartu struk ${className}`}>
-      <div className="struk-head">
-        <h3>{title}</h3>
-        <CopyButton text={text} />
-      </div>
-      {children ?? <p className="body">{text}</p>}
-    </section>
-  );
-}
-
-function Cap({ no }) {
-  return <span className="cap">NOTA No. {String(no).padStart(2, "0")}</span>;
-}
-
-function Kepala({ no, id, judul, lead }) {
-  return (
-    <div className="kepala">
-      <Cap no={no} />
-      <h2 id={id}>{judul}</h2>
-      {lead && <p className="kepala-lead">{lead}</p>}
-    </div>
-  );
-}
-
-function loadHistory() {
-  try {
-    return JSON.parse(localStorage.getItem(HISTORY_KEY)) || [];
-  } catch {
-    return [];
-  }
-}
+import Reveal from "./components/Reveal";
 
 const JUDUL = [
   ["Coretan"], ["jualan"], ["Anda,"], ["disunting", "merah"], ["jadi"], ["nota"],
   ["siap", "hijau"], ["pajang.", "hijau"],
 ];
 
-const PERCAYA = [
-  { icon: "kunci", judul: "Google Gemini, instruksi dikunci di server",
-    teks: "Aturan penulisan disimpan di server dan tidak bisa diubah dari peramban. API key tidak pernah sampai ke HP Anda." },
-  { icon: "coret", judul: "Hanya fakta dari isian Anda",
-    teks: "AI dilarang mengarang sertifikat, penghargaan, atau lokasi. Kata yang berasal dari isian Anda diberi stabilo supaya mudah dicek." },
-  { icon: "peramban", judul: "Tidak disimpan di server kami",
-    teks: "Isian hanya dikirim ke Gemini untuk diproses. Riwayat lima nota terakhir tersimpan di peramban Anda sendiri." },
+function Cap({ children }) {
+  return <span className="cap">{children}</span>;
+}
+
+function Kepala({ no, judul, lead, id }) {
+  return (
+    <div className="kepala">
+      <Cap>NOTA No. {String(no).padStart(2, "0")}</Cap>
+      <h2 id={id}>{judul}</h2>
+      {lead && <p className="kepala-lead">{lead}</p>}
+    </div>
+  );
+}
+
+const ANGKA = [
+  ["448.734", "UMKM di Bali", "data 2025"],
+  ["310.526", "sudah punya NIB", "69% dari seluruh UMKM"],
+  ["±34%", "sudah masuk digital", "akhir 2024, sisanya 66% belum"],
+  ["6,33 jt", "wisman datang ke Bali", "sepanjang 2024"],
 ];
 
-const FAQ = [
-  ["Apakah gratis?", "Ya. UMKM Copilot bisa dipakai tanpa biaya."],
-  ["Perlu daftar akun?", "Tidak. Buka halaman, isi nota, langsung jadi."],
-  ["Hasilnya boleh diubah?", "Boleh, dan sebaiknya begitu. Salin hasilnya, sesuaikan dengan gaya toko Anda, lalu periksa lagi sebelum diunggah."],
-  ["Apakah data saya aman?", "Isian dikirim ke Google Gemini hanya untuk menyusun tulisan dan tidak disimpan di server kami. Riwayat ada di peramban Anda dan hilang kalau data peramban dihapus."],
-  ["Bisa bahasa selain Indonesia?", "Saat ini hasilnya dalam Bahasa Indonesia, ditambah satu versi Bahasa Inggris untuk wisatawan."],
+// 100 kotak, 34 terisi: porsi UMKM yang sudah terdigitalisasi.
+function Waffle() {
+  return (
+    <svg className="waffle" viewBox="0 0 200 200" role="img" aria-label="Dari setiap 100 UMKM di Bali, sekitar 34 sudah terdigitalisasi">
+      {Array.from({ length: 100 }, (_, i) => {
+        const x = (i % 10) * 20 + 2;
+        const y = Math.floor(i / 10) * 20 + 2;
+        return <rect key={i} x={x} y={y} width="16" height="16" rx="3" className={i < 34 ? "w-isi" : "w-kosong"} style={{ "--i": i }} />;
+      })}
+    </svg>
+  );
+}
+
+const SEBELUM = [
+  {
+    mentah: <>pie susu <del>enak murah</del>, <mark className="stabilo">susu sapi asli</mark>, <mark className="stabilo">tahan 7 hari</mark>, <del>pokoknya mantap</del></>,
+    jadi: <>Pie susu dari <mark className="stabilo">susu sapi asli</mark>, renyah dan <mark className="stabilo">tahan 7 hari</mark>. Pas dibawa pulang sebagai oleh-oleh.</>,
+    catatan: "Dua klaim tanpa bukti dicoret.",
+  },
+  {
+    mentah: <>kopi <mark className="stabilo">arabika Kintamani</mark> <del>paling enak se-Bali</del>, <mark className="stabilo">sangrai medium</mark>, <mark className="stabilo">bubuk 200 gram</mark></>,
+    jadi: <>Kopi <mark className="stabilo">arabika Kintamani</mark> dengan <mark className="stabilo">sangrai medium</mark>, dikemas <mark className="stabilo">bubuk 200 gram</mark>.</>,
+    catatan: "Klaim \"paling enak\" tidak bisa dibuktikan.",
+  },
+  {
+    mentah: <>kain endek <del>bagus banget</del>, <mark className="stabilo">tenun tangan</mark>, <mark className="stabilo">motif cepuk</mark>, <mark className="stabilo">2 meter</mark></>,
+    jadi: <>Kain endek <mark className="stabilo">tenun tangan</mark> bermotif <mark className="stabilo">cepuk</mark>, panjang <mark className="stabilo">2 meter</mark>.</>,
+    catatan: "Pujian umum diganti ukuran dan teknik.",
+  },
 ];
 
-export default function Home() {
-  const [form, setForm] = useState(EMPTY);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState("");
-  const [data, setData] = useState(null);
-  const [history, setHistory] = useState([]);
-  const [faktaForm, setFaktaForm] = useState(null);
-  const [menyusut, setMenyusut] = useState(false);
-  const resultsRef = useRef(null);
+const SIAPA = [
+  ["kuliner", "Kuliner", "Warung, kue, sambal, kopi.", "Menu baru langsung punya deskripsi dan caption."],
+  ["kerajinan", "Kerajinan", "Anyaman, ukiran, perak.", "Proses pembuatan diceritakan tanpa dilebih-lebihkan."],
+  ["fesyen", "Fesyen", "Endek, songket, kebaya.", "Bahan dan motif tertulis jelas untuk pembeli."],
+  ["oleh-oleh", "Oleh-oleh", "Pie susu, pai, camilan.", "Versi Inggris siap untuk wisatawan."],
+];
 
-  useEffect(() => setHistory(loadHistory()), []);
-
-  // Navbar menyusut jadi pil setelah halaman digulir.
-  useEffect(() => {
-    const cek = () => setMenyusut(window.scrollY > 24);
-    cek();
-    window.addEventListener("scroll", cek, { passive: true });
-    return () => window.removeEventListener("scroll", cek);
-  }, []);
-
-  // Simpan isian yang menghasilkan struk ini untuk stabilo, lalu di HP geser ke hasil.
-  useEffect(() => {
-    if (!data) return;
-    setFaktaForm(form);
-    if (window.matchMedia("(max-width: 959px)").matches) {
-      resultsRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
-    }
-  }, [data]);
-
-  function update(e) {
-    setForm({ ...form, [e.target.name]: e.target.value });
-  }
-
-  async function submit(e) {
-    e.preventDefault();
-    setLoading(true);
-    setError("");
-    try {
-      const res = await fetch("/api/generate", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(form),
-      });
-      const json = await res.json();
-      if (!res.ok) throw new Error(json.error || "Terjadi kesalahan.");
-      setData(json);
-      const others = history.filter((h) => h.form.nama !== form.nama);
-      const next = [{ form, ...json, at: Date.now() }, ...others].slice(0, 5);
-      setHistory(next);
-      try {
-        localStorage.setItem(HISTORY_KEY, JSON.stringify(next));
-      } catch {}
-    } catch (err) {
-      setError(err.message);
-    } finally {
-      setLoading(false);
-    }
-  }
-
-  function openHistory(item) {
-    setForm(item.form);
-    setData({ mode: item.mode, result: item.result });
-  }
-
-  const r = data?.result;
-  const captionFull = r ? `${r.caption}\n\n${r.hashtags.join(" ")}` : "";
-  const hargaText = r ? `${rupiah(r.harga.min)} – ${rupiah(r.harga.max)}\n${r.harga.alasan}` : "";
-  const englishText = r ? `${r.english.description}\n\n${r.english.caption}` : "";
-
-  const fakta = buatFakta(faktaForm);
-  const jumlahFakta = r
-    ? hitungFakta([r.deskripsi_singkat, r.deskripsi_cerita, r.caption, r.harga.alasan, englishText], fakta)
-    : 0;
-
+export default function Beranda() {
   return (
     <>
-      <a className="skip" href="#alat">Langsung ke formulir</a>
-
-      <header className={menyusut ? "nav is-pil" : "nav"}>
-        <div className="nav-bar">
-          <a className="logo" href="#" aria-label="UMKM Copilot Bali, ke atas">
-            <i className="logo-mark" aria-hidden="true" />
-            <span className="logo-text">UMKM Copilot</span>
-            <span className="logo-cap">BALI · AI</span>
-          </a>
-          <nav className="nav-links" aria-label="Navigasi utama">
-            <a className="nav-link" href="#cara-kerja">Cara kerja</a>
-            <a className="nav-link" href="#faq">FAQ</a>
-            <a className="btn btn-utama btn-sm" href="#alat">Coba sekarang</a>
-          </nav>
-        </div>
-      </header>
-
-      <main>
-        <section className="hero">
-          <div className="wrap hero-grid">
-            <div className="hero-teks">
-              <Cap no={1} />
-              <h1>
-                {JUDUL.map(([kata, warna], i) => (
-                  <span key={i} className={`kata ${warna || ""}`} style={{ "--i": i }}>{kata} </span>
-                ))}
-              </h1>
-              <p className="sub">
-                Tulis seadanya. Pena merah mencoret klaim kosong, menyorot fakta dari Anda, lalu mencetak
-                deskripsi, caption, harga, dan versi Inggris.
-              </p>
-              <div className="cta">
-                <a className="btn btn-utama btn-lg" href="#alat">Tulis nota sekarang <Icon name="arrow" /></a>
-                <a className="btn btn-garis btn-lg" href="#cara-kerja">Lihat cara kerja</a>
-              </div>
-              <ul className="legend" aria-label="Arti warna">
-                <li><i className="sw-merah" />coretan pena merah</li>
-                <li><i className="sw-stabilo" />fakta dari isian Anda</li>
-                <li><i className="sw-hijau" />siap dipakai</li>
-              </ul>
-            </div>
-            <Kolase />
-          </div>
-        </section>
-
-        <section className="bagian" id="cara-kerja" aria-labelledby="cara-judul">
-          <div className="wrap">
-            <Kepala no={2} id="cara-judul" judul="Dari coretan ke nota promosi" />
-            <ol className="grid-3">
-              <li className="kartu langkah">
-                <p className="langkah-no">Langkah 1</p>
-                <div className="langkah-vis"><p>pie susu enak murah, tahan 7 hari</p></div>
-                <h3>Tulis seadanya</h3>
-                <p>Lima isian singkat tentang produk Anda.</p>
-              </li>
-              <li className="kartu langkah">
-                <p className="langkah-no">Langkah 2</p>
-                <div className="langkah-vis"><p>pie susu <del>enak murah</del>, <mark className="stabilo">tahan 7 hari</mark></p></div>
-                <h3>Pena merah menyunting</h3>
-                <p>Klaim kosong dicoret, fakta Anda disorot.</p>
-              </li>
-              <li className="kartu langkah">
-                <p className="langkah-no">Langkah 3</p>
-                <div className="langkah-vis struk-mini">
-                  <span>DESKRIPSI</span><span>CAPTION</span><span>HARGA</span><span>ENGLISH</span>
-                </div>
-                <h3>Cetak, salin, posting</h3>
-                <p>Empat tulisan siap ditempel di Instagram, WhatsApp, atau marketplace.</p>
-              </li>
-            </ol>
-          </div>
-        </section>
-
-        <section className="bagian alat" id="alat" aria-labelledby="alat-judul">
-          <div className="wrap">
-            <Kepala no={3} id="alat-judul" judul="Tulis nota Anda"
-              lead="Isi data produk di nota. Hasilnya muncul di sebelah kanan, atau di bawah kalau Anda memakai HP." />
-
-            <div className="alat-grid">
-              <form className="kartu nota-form" onSubmit={submit}>
-                <p className="nota-judul"><span>NOTA PRODUK</span><span>5 ISIAN</span></p>
-                <label className="field">
-                  <span className="field-label">Nama produk</span>
-                  <input name="nama" value={form.nama} onChange={update} required maxLength={100}
-                    placeholder="Contoh: Pie Susu Bu Made" />
-                </label>
-                <div className="duo">
-                  <label className="field">
-                    <span className="field-label">Kategori</span>
-                    <select name="kategori" value={form.kategori} onChange={update}>
-                      {KATEGORI.map((k) => <option key={k}>{k}</option>)}
-                    </select>
-                  </label>
-                  <label className="field">
-                    <span className="field-label">Modal per unit <span className="optional">opsional</span></span>
-                    <span className="money">
-                      <span className="money-prefix" aria-hidden="true">Rp</span>
-                      <input name="modal" type="number" min="0" inputMode="numeric" value={form.modal}
-                        onChange={update} placeholder="15000" />
-                    </span>
-                  </label>
-                </div>
-                <label className="field">
-                  <span className="field-label">Bahan atau keunggulan</span>
-                  <textarea name="keunggulan" value={form.keunggulan} onChange={update} rows={3}
-                    maxLength={500} placeholder="Contoh: susu sapi asli, tanpa pengawet, tahan 7 hari" />
-                </label>
-                <fieldset className="field">
-                  <legend className="field-label">Pembelinya kebanyakan</legend>
-                  <div className="segmented">
-                    <label>
-                      <input type="radio" name="target" value="lokal" checked={form.target === "lokal"} onChange={update} />
-                      <span>Warga lokal</span>
-                    </label>
-                    <label>
-                      <input type="radio" name="target" value="turis" checked={form.target === "turis"} onChange={update} />
-                      <span>Wisatawan</span>
-                    </label>
-                  </div>
-                </fieldset>
-                <button type="submit" className="btn btn-utama btn-lg btn-block" disabled={loading}>
-                  {loading && <span className="spinner" aria-hidden="true" />}
-                  {loading ? "Sedang menyunting..." : "Sunting dan cetak"}
-                </button>
-                {error && (
-                  <div className="galat" role="alert">
-                    <Icon name="alert" />
-                    <div>
-                      <p className="galat-judul">Belum berhasil</p>
-                      <p>{error}</p>
-                    </div>
-                  </div>
-                )}
-
-                {history.length > 0 && (
-                  <div className="riwayat">
-                    <h3 className="riwayat-judul">NOTA SEBELUMNYA</h3>
-                    <ul>
-                      {history.map((h) => (
-                        <li key={h.at}>
-                          <button type="button" onClick={() => openHistory(h)}>
-                            <span className="riwayat-nama">{h.form.nama}</span>
-                            <span className="riwayat-kat">{h.form.kategori}</span>
-                          </button>
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                )}
-              </form>
-
-              <div className="results" ref={resultsRef} aria-live="polite" aria-busy={loading}>
-                {!r && !loading && (
-                  <div className="kartu kosong">
-                    <p className="nota-judul"><span>STRUK PROMOSI</span><span>BELUM DICETAK</span></p>
-                    <p className="kosong-judul">Struk akan tercetak di sini</p>
-                    <p className="kosong-teks">Isi nota, lalu tekan Sunting dan cetak. Anda akan mendapat:</p>
-                    <ul className="kosong-stub">
-                      <li><b>DESKRIPSI</b>versi singkat dan bercerita</li>
-                      <li><b>CAPTION</b>siap posting, dengan hashtag</li>
-                      <li><b>HARGA</b>rentang harga jual dan alasannya</li>
-                      <li><b>ENGLISH</b>untuk wisatawan</li>
-                    </ul>
-                  </div>
-                )}
-                {!r && loading && <PenaSunting form={form} />}
-                {r && (
-                  <div className={loading ? "tumpuk is-stale" : "tumpuk"}>
-                    <div className="hasil-head">
-                      <p className="hasil-fakta">
-                        <mark className="stabilo">{jumlahFakta} fakta</mark> dari isian Anda dipakai
-                      </p>
-                      {data.mode === "mock" && <span className="mode-cap">MODE CONTOH</span>}
-                    </div>
-                    {data.mode === "mock" && (
-                      <p className="notice">API key belum dipasang, jadi hasil di bawah adalah contoh statis.</p>
-                    )}
-                    <Section title="DESKRIPSI SINGKAT" text={r.deskripsi_singkat}>
-                      <p className="body"><Stabilo text={r.deskripsi_singkat} fakta={fakta} /></p>
-                    </Section>
-                    <Section title="DESKRIPSI BERCERITA" text={r.deskripsi_cerita}>
-                      <p className="body"><Stabilo text={r.deskripsi_cerita} fakta={fakta} /></p>
-                    </Section>
-                    <Section title="CAPTION + HASHTAG" text={captionFull}>
-                      <p className="body"><Stabilo text={r.caption} fakta={fakta} /></p>
-                      <ul className="chips">
-                        {r.hashtags.map((t, i) => <li key={i}>{t}</li>)}
-                      </ul>
-                    </Section>
-                    <Section title="SARAN HARGA JUAL" text={hargaText}>
-                      <p className="price">{rupiah(r.harga.min)} – {rupiah(r.harga.max)}</p>
-                      <p className="body"><Stabilo text={r.harga.alasan} fakta={fakta} /></p>
-                    </Section>
-                    <Section title="ENGLISH" text={englishText}>
-                      <p className="body" lang="en"><Stabilo text={r.english.description} fakta={fakta} /></p>
-                      <p className="body" lang="en"><Stabilo text={r.english.caption} fakta={fakta} /></p>
-                    </Section>
-                  </div>
-                )}
-              </div>
-            </div>
-          </div>
-        </section>
-
-        <section className="bagian" aria-labelledby="percaya-judul">
-          <div className="wrap">
-            <Kepala no={4} id="percaya-judul" judul="Kenapa bisa dipercaya" />
-            <ul className="grid-3">
-              {PERCAYA.map((p) => (
-                <li className="kartu percaya" key={p.judul}>
-                  <span className="percaya-ikon"><Icon name={p.icon} /></span>
-                  <h3>{p.judul}</h3>
-                  <p>{p.teks}</p>
-                </li>
+      <section className="hero">
+        <div className="wrap hero-grid">
+          <div className="hero-teks">
+            <Cap>NOTA No. 01</Cap>
+            <h1>
+              {JUDUL.map(([kata, warna], i) => (
+                <span key={i} className={`kata ${warna || ""}`} style={{ "--i": i }}>{kata} </span>
               ))}
+            </h1>
+            <p className="sub">
+              Tulis seadanya. Pena merah mencoret klaim kosong, menyorot fakta dari Anda, lalu mencetak
+              deskripsi, caption, harga, dan versi Inggris.
+            </p>
+            <div className="cta">
+              <Link className="btn btn-utama btn-lg" href="/studio">Buka Studio <Icon name="arrow" /></Link>
+              <Link className="btn btn-garis btn-lg" href="/contoh">Lihat contoh hasil</Link>
+            </div>
+            <ul className="legend" aria-label="Arti warna">
+              <li><i className="sw-merah" />coretan pena merah</li>
+              <li><i className="sw-stabilo" />fakta dari isian Anda</li>
+              <li><i className="sw-hijau" />siap dipakai</li>
             </ul>
           </div>
-        </section>
+          <Kolase />
+        </div>
+      </section>
 
-        <section className="bagian" id="faq" aria-labelledby="faq-judul">
-          <div className="wrap faq-grid">
-            <Kepala no={5} id="faq-judul" judul="Pertanyaan yang sering muncul"
-              lead="Belum terjawab? Coba saja dulu, tidak perlu daftar." />
-            <div className="kartu faq">
-              {FAQ.map(([q, a]) => (
-                <details key={q}>
-                  <summary>{q}<Icon name="chevron" /></summary>
-                  <p>{a}</p>
-                </details>
-              ))}
+      <section className="angka-strip" aria-label="UMKM Bali dalam angka">
+        <div className="wrap angka-grid">
+          {ANGKA.map(([n, label, banding]) => (
+            <div className="angka" key={label}>
+              <p className="angka-n">{n}</p>
+              <p className="angka-label">{label}</p>
+              <p className="angka-banding">{banding}</p>
             </div>
-          </div>
-        </section>
-      </main>
+          ))}
+        </div>
+      </section>
 
-      <footer className="foot">
-        <div className="wrap foot-grid">
-          <div className="foot-merek">
-            <a className="logo" href="#" aria-label="UMKM Copilot Bali, ke atas">
-              <i className="logo-mark" aria-hidden="true" />
-              <span className="logo-text">UMKM Copilot</span>
-            </a>
-            <p>Asisten menulis untuk UMKM Bali: deskripsi produk, caption, saran harga, dan versi Inggris dari satu nota.</p>
+      <section className="bagian" aria-labelledby="masalah-judul">
+        <div className="wrap duo-57">
+          <Reveal className="kolom-teks">
+            <Kepala no={2} id="masalah-judul" judul="Banyak yang berjualan, sedikit yang terbaca di internet." />
+            <p className="paragraf">
+              Bali punya hampir setengah juta UMKM dan jutaan wisatawan setiap tahun. Tetapi baru sekitar sepertiga
+              usaha yang sudah masuk ke ranah digital. Sisanya masih mengandalkan pembeli yang lewat.
+            </p>
+            <p className="paragraf">
+              Hambatannya sering bukan produk, melainkan tulisan: deskripsi yang jujur tapi menarik, caption yang
+              enak dibaca, dan versi Inggris untuk tamu dari luar negeri.
+            </p>
+            <p className="sumber">
+              Sumber: Dinas Koperasi dan UKM Provinsi Bali via RadarBisnis (jumlah UMKM 2025, NIB, digitalisasi akhir 2024);
+              BPS Provinsi Bali via Antara (kunjungan wisman 2024).
+            </p>
+          </Reveal>
+          <Reveal className="kartu grafik">
+            <p className="nota-judul"><span>DARI 100 UMKM BALI</span><span>AKHIR 2024</span></p>
+            <div className="grafik-isi">
+              <Waffle />
+              <div className="grafik-ket">
+                <p className="ket-n"><b>34</b> sudah digital</p>
+                <p className="ket-banding">66 lainnya belum hadir di marketplace atau media sosial.</p>
+                <div className="bar-nib" role="img" aria-label="310.526 dari 448.734 UMKM sudah punya NIB, sekitar 69 persen">
+                  <p className="bar-label"><span>Punya NIB</span><b>69%</b></p>
+                  <span className="bar-track"><span className="bar-isi" style={{ "--w": "69%" }} /></span>
+                  <p className="ket-banding">310.526 dari 448.734 usaha. Sudah resmi, tapi belum tentu terlihat di internet.</p>
+                </div>
+                <div className="legend legend-kecil">
+                  <span><i className="sw-hijau" />sudah digital</span>
+                  <span><i className="sw-garis" />belum</span>
+                </div>
+              </div>
+            </div>
+          </Reveal>
+        </div>
+      </section>
+
+      <section className="bagian" aria-labelledby="sebelum-judul">
+        <div className="wrap">
+          <Kepala no={3} id="sebelum-judul" judul="Sebelum dan sesudah disunting"
+            lead="Yang dicoret adalah klaim kosong. Yang distabilo adalah fakta dari pedagang, dipakai apa adanya." />
+          <ol className="banding-list">
+            {SEBELUM.map((s, i) => (
+              <Reveal as="li" className="kartu banding" key={i}>
+                <div className="banding-sisi">
+                  <p className="banding-label">SEBELUM · TULISAN PEDAGANG</p>
+                  <p className="banding-mentah">{s.mentah}</p>
+                  <p className="banding-catatan"><i className="k-no">{i + 1}</i>{s.catatan}</p>
+                </div>
+                <div className="banding-panah" aria-hidden="true"><Icon name="arrow" /></div>
+                <div className="banding-sisi">
+                  <p className="banding-label hijau">SESUDAH · SIAP DIPAKAI</p>
+                  <p className="banding-jadi">{s.jadi}</p>
+                </div>
+              </Reveal>
+            ))}
+          </ol>
+        </div>
+      </section>
+
+      <section className="bagian" aria-labelledby="siapa-judul">
+        <div className="wrap">
+          <Kepala no={4} id="siapa-judul" judul="Untuk usaha kecil yang menjual barang nyata" />
+          <ul className="grid-4">
+            {SIAPA.map(([foto, judul, contoh, teks]) => (
+              <Reveal as="li" className="kartu siapa" key={foto}>
+                <FotoSlot nama={foto} label={`Foto ${judul.toLowerCase()} menyusul`} />
+                <div className="siapa-isi">
+                  <h3>{judul}</h3>
+                  <p className="siapa-contoh">{contoh}</p>
+                  <p>{teks}</p>
+                </div>
+              </Reveal>
+            ))}
+          </ul>
+        </div>
+      </section>
+
+      <section className="bagian band-gelap" aria-labelledby="cara-judul">
+        <div className="wrap">
+          <div className="duo-57 rata-bawah">
+            <Kepala no={5} id="cara-judul" judul="Tiga langkah, tanpa daftar akun." />
+            <p className="kepala-lead">
+              Data produk dikirim ke server kami, diteruskan ke Google Gemini dengan instruksi yang dikunci,
+              lalu kembali sebagai empat struk. Tidak ada yang disimpan di server.
+            </p>
           </div>
-          <nav className="foot-links" aria-label="Tautan footer">
-            <a href="#cara-kerja">Cara kerja</a>
-            <a href="#alat">Coba</a>
-            <a href="#faq">FAQ</a>
-          </nav>
-          <div className="foot-info">
-            <p className="foot-disclosure">Teks dibuat dengan bantuan AI (Google Gemini). Periksa kembali sebelum diunggah.</p>
-            <p>Dibuat oleh Gianne Angely, Universitas Dhyana Pura.</p>
-            <p className="foot-meta">© 2026 · AI Web Innovation Challenge, Bali Digifest 2026</p>
+          <ol className="grid-3 langkah-gelap">
+            <Reveal as="li">
+              <p className="langkah-no">01</p>
+              <h3>Tulis nota</h3>
+              <p>Nama, kategori, keunggulan, modal, dan siapa pembelinya.</p>
+            </Reveal>
+            <Reveal as="li">
+              <p className="langkah-no">02</p>
+              <h3>Pena merah menyunting</h3>
+              <p>Klaim kosong dicoret, fakta Anda disorot dan dipakai apa adanya.</p>
+            </Reveal>
+            <Reveal as="li">
+              <p className="langkah-no">03</p>
+              <h3>Salin dan posting</h3>
+              <p>Deskripsi, caption, saran harga, dan versi Inggris tinggal disalin.</p>
+            </Reveal>
+          </ol>
+          <Link className="btn btn-terang btn-lg" href="/cara-kerja">Pelajari cara kerjanya <Icon name="arrow" /></Link>
+        </div>
+      </section>
+
+      <section className="bagian" aria-labelledby="kasus-judul">
+        <div className="wrap duo-57 kasus">
+          <Reveal className="kasus-foto">
+            <FotoSlot nama="pasar" label="Foto lapak menyusul" rasio="4 / 5" />
+          </Reveal>
+          <Reveal className="kolom-teks">
+            <Cap>ILUSTRASI CONTOH</Cap>
+            <h2 id="kasus-judul" className="judul-2">Satu nota, empat tulisan, satu menit.</h2>
+            <p className="paragraf">
+              Bu Made (tokoh ilustrasi) menjual pie susu di Gianyar. Ia menulis lima isian di Studio: nama produk,
+              kategori oleh-oleh, &ldquo;susu sapi asli, tanpa pengawet, tahan 7 hari&rdquo;, modal Rp15.000, dan pembeli
+              wisatawan. Hasil di bawah memakai mode contoh aplikasi.
+            </p>
+            <dl className="kasus-angka">
+              <div><dt>5 isian</dt><dd>menjadi <b>4 tulisan</b> siap salin</dd></div>
+              <div><dt>3 fakta</dt><dd>distabilo, <b>0 klaim</b> yang ditambahkan</dd></div>
+              <div><dt>Rp15.000</dt><dd>modal, saran jual <b>Rp27.000 – Rp35.000</b></dd></div>
+            </dl>
+            <p className="sumber">Tokoh dan isi bagian ini adalah ilustrasi, bukan testimoni pengguna.</p>
+          </Reveal>
+        </div>
+      </section>
+
+      <section className="cta-akhir" aria-labelledby="akhir-judul">
+        <div className="wrap cta-akhir-isi">
+          <div>
+            <h2 id="akhir-judul">Mulai dari satu nota.</h2>
+            <p>Gratis, tanpa daftar akun. Hasilnya bisa langsung disalin ke Instagram, WhatsApp, atau marketplace.</p>
+          </div>
+          <div className="cta-akhir-aksi">
+            <Link className="btn btn-terang btn-lg" href="/studio">Buka Studio <Icon name="arrow" /></Link>
+            <Link className="btn btn-garis-terang btn-lg" href="/contoh">Lihat contoh</Link>
           </div>
         </div>
-      </footer>
+      </section>
     </>
   );
 }
