@@ -1,0 +1,80 @@
+/* Tur coach-mark: lapisan gelap dengan lubang terang di bagian yang ditunjuk. */
+
+.pemicu {
+  display: inline-flex; align-items: center; gap: 0.45rem;
+  min-height: 40px; padding: 0 0.9rem;
+  border: 1.5px solid var(--garis); border-radius: 999px;
+  background: var(--kertas-hi); color: var(--tinta);
+  font: 600 0.82rem/1 var(--sans); cursor: pointer; white-space: nowrap;
+}
+.pemicu span {
+  display: grid; place-items: center; width: 20px; height: 20px; border-radius: 50%;
+  background: var(--kunyit); color: #173b2f; font: 700 0.75rem/1 var(--mono);
+}
+.pemicu:hover { border-color: var(--kunyit); }
+
+.tur { position: fixed; inset: 0; z-index: 1000; pointer-events: none; }
+.halang, .gelap { position: fixed; pointer-events: auto; }
+.gelap { inset: 0; background: rgb(12 26 21 / 0.62); }
+
+.lubang {
+  position: fixed;
+  border-radius: 12px;
+  box-shadow: 0 0 0 3px var(--kunyit), 0 0 0 200vmax rgb(12 26 21 / 0.62);
+  pointer-events: none;
+  transition: top 0.25s var(--ease), left 0.25s var(--ease), width 0.25s var(--ease), height 0.25s var(--ease);
+}
+.denyut::after {
+  content: ""; position: absolute; inset: -3px; border-radius: inherit;
+  border: 3px solid var(--kunyit);
+  animation: denyut 1.4s ease-out infinite;
+}
+@keyframes denyut {
+  from { opacity: 0.9; transform: scale(1); }
+  to { opacity: 0; transform: scale(1.08); }
+}
+
+.tip {
+  position: fixed;
+  pointer-events: auto;
+  padding: 16px 16px 14px;
+  border-radius: 12px;
+  background: var(--kertas-hi);
+  color: var(--tinta);
+  border: 1.5px solid var(--tinta);
+  box-shadow: 0 18px 40px -12px rgb(0 0 0 / 0.45);
+  transition: top 0.25s var(--ease), left 0.25s var(--ease);
+}
+.tip::before {
+  content: ""; position: absolute; left: calc(var(--panah-x) - 8px);
+  width: 16px; height: 16px; background: var(--kertas-hi);
+  border: 1.5px solid var(--tinta); transform: rotate(45deg);
+}
+.bawah::before { top: -9px; border-right: 0; border-bottom: 0; }
+.atas::before { bottom: -9px; border-left: 0; border-top: 0; }
+.tengah::before, .tempel::before { display: none; }
+
+.hitung { margin: 0 0 6px; font: 500 0.72rem/1.2 var(--mono); letter-spacing: 0.06em; text-transform: uppercase; color: var(--tinta-3); }
+.judul { margin: 0 0 6px; font: 800 1.08rem/1.25 var(--sans); }
+.teks { margin: 0; font-size: 0.95rem; line-height: 1.5; color: var(--tinta-2); }
+.penunjuk {
+  display: inline-flex; align-items: center; gap: 6px; margin: 10px 0 0;
+  padding: 4px 10px; border-radius: 999px;
+  background: var(--kunyit); color: #173b2f; font-weight: 700; font-size: 0.85rem;
+}
+
+.aksi { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-top: 14px; }
+.kanan { display: flex; gap: 8px; }
+.lewati, .kembali, .lanjut {
+  min-height: 44px; padding: 0 14px; border-radius: 8px;
+  font: 600 0.9rem/1 var(--sans); cursor: pointer;
+}
+.lewati { padding: 0 6px; border: 0; background: none; color: var(--tinta-2); text-decoration: underline; text-underline-offset: 4px; }
+.kembali { border: 1.5px solid var(--garis); background: transparent; color: var(--tinta); }
+.lanjut { border: 0; background: var(--tinta); color: var(--kertas); }
+.lanjut:focus-visible, .kembali:focus-visible, .lewati:focus-visible { outline: 3px solid var(--kunyit); outline-offset: 2px; }
+
+@media (prefers-reduced-motion: reduce) {
+  .lubang, .tip { transition: none; }
+  .denyut::after { animation: none; opacity: 0.9; }
+}

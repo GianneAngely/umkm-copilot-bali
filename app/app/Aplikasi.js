@@ -9,6 +9,7 @@ import { CONTOH } from "../data/contoh";
 import FotoKeForm from "../components/fitur/FotoKeForm";
 import KalenderKonten from "../components/fitur/KalenderKonten";
 import PostinganIG from "../components/fitur/PostinganIG";
+import Tur from "../components/Tur";
 
 const KATEGORI = ["Kuliner", "Kerajinan", "Fashion", "Oleh-oleh", "Lainnya"];
 const HISTORY_KEY = "umkm-copilot-riwayat";
@@ -170,7 +171,7 @@ export default function Aplikasi() {
         <Link className="merek" href="/" aria-label="Wicara, ke beranda">Wicara<i aria-hidden="true" /></Link>
         <nav className="sisi-menu">
           {MENU.map(([id, label]) => (
-            <button key={id} type="button" className="sisi-item" aria-current={tampil === id ? "page" : undefined}
+            <button key={id} type="button" className="sisi-item" aria-current={tampil === id ? "page" : undefined} data-tur={id === "riwayat" ? "riwayat" : undefined}
               onClick={() => (id === "nota" ? notaBaru() : setTampil(id))}>
               <Garis nama={id} />
               <span>{label}</span>
@@ -191,6 +192,7 @@ export default function Aplikasi() {
           </div>
           <div className="kerja-alat">
             <p className={`status status-${status[0]}`} role="status"><i aria-hidden="true" />{status[1]}</p>
+            <Tur />
           </div>
         </header>
 
@@ -239,18 +241,18 @@ export default function Aplikasi() {
         {tampil === "nota" && (
           <div className="kerja-grid">
             <div className="kolom-form">
-            <div className="isi-foto">
+            <div className="isi-foto" data-tur="foto">
               <FotoKeForm onIsi={isiDariFoto} onFoto={setFoto} />
             </div>
             <form className="kertas-form" onSubmit={submit}>
               <p className="kf-kepala"><span>NOTA PRODUK</span><span>5 ISIAN</span></p>
-              <label className="field">
+              <label className="field" data-tur="nama">
                 <span className="field-label">Nama produk</span>
                 <input ref={namaRef} name="nama" value={form.nama} onChange={update} required maxLength={100}
                   placeholder="Contoh: Pie Susu Bu Made" />
               </label>
               <div className="duo">
-                <label className="field">
+                <label className="field" data-tur="kategori">
                   <span className="field-label">Kategori</span>
                   <select name="kategori" value={form.kategori} onChange={update}>
                     {KATEGORI.map((k) => <option key={k}>{k}</option>)}
@@ -265,12 +267,12 @@ export default function Aplikasi() {
                   </span>
                 </label>
               </div>
-              <label className="field">
+              <label className="field" data-tur="keunggulan">
                 <span className="field-label">Bahan atau keunggulan</span>
                 <textarea name="keunggulan" value={form.keunggulan} onChange={update} rows={4}
                   maxLength={500} placeholder="Contoh: susu sapi asli, tanpa pengawet, tahan 7 hari" />
               </label>
-              <fieldset className="field">
+              <fieldset className="field" data-tur="target">
                 <legend className="field-label">Pembelinya kebanyakan</legend>
                 <div className="segmented">
                   <label>
@@ -283,7 +285,7 @@ export default function Aplikasi() {
                   </label>
                 </div>
               </fieldset>
-              <button type="submit" className="btn-hijau btn-blok" disabled={loading}>
+              <button type="submit" className="btn-hijau btn-blok" disabled={loading} data-tur="buat">
                 {loading && <span className="spinner" aria-hidden="true" />}
                 {loading ? "Sedang menyunting..." : "Sunting dan cetak ↗"}
               </button>
@@ -327,7 +329,7 @@ export default function Aplikasi() {
               )}
               {r && (
                 <div className={loading ? "tumpuk is-stale" : "tumpuk"}>
-                  <div className="hasil-atas">
+                  <div className="hasil-atas" data-tur="hasil">
                     <p className="hasil-fakta"><mark className="stabilo">{jumlahFakta} fakta</mark> dari isian Anda dipakai</p>
                     <CopyButton text={semuaText} label="Salin semua" className="copy-utama" />
                   </div>
@@ -357,8 +359,8 @@ export default function Aplikasi() {
 
                   <section className="alat-lanjut" aria-label="Alat lanjutan">
                     <div className="alat-tab" role="tablist" aria-label="Alat lanjutan">
-                      <button type="button" role="tab" id="tab-ig" aria-controls="panel-ig" aria-selected={alat === "ig"} onClick={() => setAlat("ig")}>Postingan IG</button>
-                      <button type="button" role="tab" id="tab-kal" aria-controls="panel-kal" aria-selected={alat === "kal"} onClick={() => setAlat("kal")}>Kalender 7 hari</button>
+                      <button type="button" role="tab" id="tab-ig" aria-controls="panel-ig" aria-selected={alat === "ig"} onClick={() => setAlat("ig")} data-tur="ig">Postingan IG</button>
+                      <button type="button" role="tab" id="tab-kal" aria-controls="panel-kal" aria-selected={alat === "kal"} onClick={() => setAlat("kal")} data-tur="kalender">Kalender 7 hari</button>
                     </div>
                     <div className="alat-panel" role="tabpanel" id="panel-ig" aria-labelledby="tab-ig" hidden={alat !== "ig"}>
                       <PostinganIG hasil={r} foto={foto} namaProduk={faktaForm?.nama || form.nama} />
@@ -378,7 +380,7 @@ export default function Aplikasi() {
 
       <nav className="tab-bawah" aria-label="Menu aplikasi">
         {MENU.map(([id, label]) => (
-          <button key={id} type="button" aria-current={tampil === id ? "page" : undefined}
+          <button key={id} type="button" aria-current={tampil === id ? "page" : undefined} data-tur={id === "riwayat" ? "riwayat" : undefined}
             onClick={() => (id === "nota" ? notaBaru() : setTampil(id))}>
             <Garis nama={id} />
             <span>{id === "contoh" ? "Contoh" : id === "nota" ? "Nota" : label}</span>
