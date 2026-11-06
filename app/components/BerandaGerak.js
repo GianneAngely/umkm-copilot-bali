@@ -30,11 +30,10 @@ export default function BerandaGerak() {
       // Hero: kicker, judul per kata, garis kunyit tergambar, lalu isi lain.
       gsap.timeline({ defaults: { ease: EASE }, delay: 0.05 })
         .to(".hero .kicker", { opacity: 1, y: 0, duration: 0.75 })
-        .to(".hero .hk", { opacity: 1, yPercent: 0, duration: 0.9, stagger: 0.075 }, "-=0.5")
-        .fromTo(".hero .kunci path", { strokeDashoffset: 320 }, { strokeDashoffset: 0, duration: 0.8, ease: "power2.inOut" }, "-=0.35")
+        .to(".hero .hk", { opacity: 1, y: 0, yPercent: 0, duration: 0.9, stagger: 0.075 }, "-=0.5")
+        .fromTo(".hero .kunci path", { strokeDashoffset: 1 }, { strokeDashoffset: 0, duration: 0.8, ease: "power2.inOut" }, "-=0.35")
         .to(".hero [data-intro]:not(.kicker)", { opacity: 1, y: 0, duration: 0.75, stagger: 0.075 }, "-=0.6")
-        .to(".hero .buku > div", { opacity: 1, duration: 0.4, stagger: 0.075 }, "-=0.4")
-        .fromTo(".hero .buku .titik", { scaleX: 0 }, { scaleX: 1, duration: 0.8, stagger: 0.12, ease: "power2.out" }, "<");
+        .from(".hero-foto", { clipPath: "inset(0 0 100% 0)", duration: 1.1, ease: "power3.inOut" }, 0.1);
 
       // Nota: cetak dari atas, baris muncul seperti printer, sinar pindai, coret, stabilo,
       // hasil, harga hitung naik, cap turun. Berulang pelan, berhenti di luar layar.
@@ -76,11 +75,19 @@ export default function BerandaGerak() {
         ctx.add(() => () => nota.removeEventListener("click", ulang));
       }
 
-      // Pemisah bagian: garis tergambar dari tengah, nomor tertulis.
+      // Stempel kepala bagian: dicap, sedikit memantul.
       gsap.utils.toArray("[data-pemisah]").forEach((el) => {
-        gsap.timeline({ scrollTrigger: { trigger: el, start: "top 88%", once: true } })
-          .fromTo(el.querySelectorAll("i"), { scaleX: 0 }, { scaleX: 1, duration: 0.9, ease: EASE })
-          .fromTo(el.querySelector("span"), { clipPath: "inset(0 100% 0 0)" }, { clipPath: "inset(0 0% 0 0)", duration: 0.6, ease: "steps(14)" }, "<0.15");
+        gsap.fromTo(el, { opacity: 0, scale: 1.5, rotation: -10 }, {
+          opacity: 1, scale: 1, rotation: -3, duration: 0.6, ease: "back.out(2)",
+          scrollTrigger: { trigger: el, start: "top 90%", once: true },
+        });
+      });
+
+      // Ornamen garis tergambar saat masuk layar.
+      gsap.utils.toArray("[data-ornamen]").forEach((svg) => {
+        const garis = svg.querySelectorAll("path");
+        garis.forEach((p) => { const n = p.getTotalLength ? p.getTotalLength() : 300; p.style.strokeDasharray = n; p.style.strokeDashoffset = n; });
+        gsap.to(garis, { strokeDashoffset: 0, duration: 1.6, stagger: 0.15, ease: "power2.inOut", scrollTrigger: { trigger: svg, start: "top 92%", once: true } });
       });
 
       // Muncul per elemen, bertahap.
@@ -89,13 +96,6 @@ export default function BerandaGerak() {
         onEnter: (els) => gsap.to(els, { opacity: 1, y: 0, duration: 0.75, stagger: 0.075, ease: EASE, overwrite: true }),
       });
 
-      // Daftar bertitik di luar hero: baris muncul, titik terisi kiri ke kanan.
-      gsap.utils.toArray("[data-buku]").forEach((list) => {
-        if (list.closest(".hero")) return;
-        gsap.timeline({ scrollTrigger: { trigger: list, start: "top 85%", once: true } })
-          .to(list.children, { opacity: 1, y: 0, duration: 0.6, stagger: 0.075, ease: EASE })
-          .fromTo(list.querySelectorAll(".titik"), { scaleX: 0 }, { scaleX: 1, duration: 0.7, stagger: 0.075, ease: "power2.out" }, "<0.1");
-      });
       gsap.utils.toArray(".hitung .titik").forEach((t) => {
         gsap.fromTo(t, { scaleX: 0 }, { scaleX: 1, duration: 0.8, ease: "power2.out", scrollTrigger: { trigger: t, start: "top 90%", once: true } });
       });

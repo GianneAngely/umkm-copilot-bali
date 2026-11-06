@@ -1,3 +1,5 @@
+import { Patra } from "./Ornamen";
+
 // Nota produk UMKM di hero. Markup sudah keadaan akhir (coretan, stabilo, hasil, cap), jadi
 // utuh tanpa JS atau saat gerak dikurangi. BerandaGerak memutarnya sebagai satu siklus cetak.
 export default function StrukHero() {
@@ -7,6 +9,7 @@ export default function StrukHero() {
         aria-label="Contoh nota produk Pie Susu Bu Made. Tulisan pedagang berisi klaim enak murah dan pokoknya mantap yang dicoret, serta fakta susu sapi asli dan tahan 7 hari yang distabilo. Hasil suntingan: deskripsi, caption, versi Inggris, dan saran harga Rp27.000 sampai Rp35.000.">
         <div aria-hidden="true">
           <i className="nota-sinar" data-n="sinar" />
+          <Patra className="nota-patra" />
           <div className="nota-kepala" data-n="baris">
             <span className="nota-toko">WARUNG<br />BU MADE</span>
             <div>
@@ -48,7 +51,7 @@ export default function StrukHero() {
           <span className="nota-cap" data-n="cap">SIAP POSTING</span>
         </div>
       </div>
-      <figcaption>CONTOH NOTA · KLIK UNTUK MEMUTAR ULANG</figcaption>
+      <figcaption>Contoh nota · klik untuk memutar ulang</figcaption>
     </figure>
   );
 }

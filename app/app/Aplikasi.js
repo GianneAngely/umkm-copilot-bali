@@ -7,6 +7,9 @@ import { Stabilo, buatFakta, hitungFakta } from "../components/Stabilo";
 import { CopyButton, Section, rupiah } from "../components/Struk";
 import TemaToggle from "../components/TemaToggle";
 import { CONTOH } from "../data/contoh";
+import FotoKeForm from "../components/fitur/FotoKeForm";
+import KalenderKonten from "../components/fitur/KalenderKonten";
+import PostinganIG from "../components/fitur/PostinganIG";
 
 const KATEGORI = ["Kuliner", "Kerajinan", "Fashion", "Oleh-oleh", "Lainnya"];
 const HISTORY_KEY = "umkm-copilot-riwayat";
@@ -53,6 +56,8 @@ export default function Aplikasi() {
   const [history, setHistory] = useState([]);
   const [faktaForm, setFaktaForm] = useState(null);
   const [tampil, setTampil] = useState("nota");
+  const [foto, setFoto] = useState("");
+  const [alat, setAlat] = useState("ig");
   const resultsRef = useRef(null);
   const namaRef = useRef(null);
 
@@ -121,6 +126,17 @@ export default function Aplikasi() {
     requestAnimationFrame(() => namaRef.current?.focus());
   }
 
+  // Isian dari foto hanya mengisi kolom yang dikenali, pengguna tetap menekan tombol sendiri.
+  function isiDariFoto(isi) {
+    if (!isi) return;
+    setForm((f) => ({
+      ...f,
+      nama: isi.nama ? String(isi.nama).slice(0, 100) : f.nama,
+      kategori: KATEGORI.includes(isi.kategori) ? isi.kategori : f.kategori,
+      keunggulan: isi.keunggulan ? String(isi.keunggulan).slice(0, 500) : f.keunggulan,
+    }));
+  }
+
   function notaBaru() {
     setTampil("nota");
     requestAnimationFrame(() => namaRef.current?.focus());
@@ -152,10 +168,7 @@ export default function Aplikasi() {
   return (
     <div className="aplikasi">
       <aside className="sisi" aria-label="Menu aplikasi">
-        <Link className="merek" href="/" aria-label="UMKM Copilot, ke beranda">
-          <i className="merek-tanda" aria-hidden="true">U</i>
-          <span>UMKM COPILOT</span>
-        </Link>
+        <Link className="merek" href="/" aria-label="Wicara, ke beranda">Wicara<i aria-hidden="true" /></Link>
         <nav className="sisi-menu">
           {MENU.map(([id, label]) => (
             <button key={id} type="button" className="sisi-item" aria-current={tampil === id ? "page" : undefined}
@@ -175,7 +188,7 @@ export default function Aplikasi() {
       <div className="kerja">
         <header className="kerja-atas">
           <div>
-            <p className="kerja-label">UMKM COPILOT · APP</p>
+            <p className="kerja-label">WICARA · MEJA TULIS</p>
             <h1>{judul}</h1>
           </div>
           <div className="kerja-alat">
@@ -228,6 +241,10 @@ export default function Aplikasi() {
 
         {tampil === "nota" && (
           <div className="kerja-grid">
+            <div className="kolom-form">
+            <div className="isi-foto">
+              <FotoKeForm onIsi={isiDariFoto} onFoto={setFoto} />
+            </div>
             <form className="kertas-form" onSubmit={submit}>
               <p className="kf-kepala"><span>NOTA PRODUK</span><span>5 ISIAN</span></p>
               <label className="field">
@@ -284,6 +301,7 @@ export default function Aplikasi() {
               )}
               <p className="kf-catat">Isi data produk saja. Jangan tulis nama orang, nomor telepon, atau alamat.</p>
             </form>
+            </div>
 
             <div className="hasil" ref={resultsRef} aria-live="polite" aria-busy={loading}>
               {!r && !loading && (
@@ -339,6 +357,21 @@ export default function Aplikasi() {
                     <p className="body" lang="en"><Stabilo text={r.english.description} fakta={fakta} /></p>
                     <p className="body" lang="en"><Stabilo text={r.english.caption} fakta={fakta} /></p>
                   </Section>
+
+                  <section className="alat-lanjut" aria-label="Alat lanjutan">
+                    <div className="alat-tab" role="tablist" aria-label="Alat lanjutan">
+                      <button type="button" role="tab" id="tab-ig" aria-controls="panel-ig" aria-selected={alat === "ig"} onClick={() => setAlat("ig")}>Postingan IG</button>
+                      <button type="button" role="tab" id="tab-kal" aria-controls="panel-kal" aria-selected={alat === "kal"} onClick={() => setAlat("kal")}>Kalender 7 hari</button>
+                    </div>
+                    <div className="alat-panel" role="tabpanel" id="panel-ig" aria-labelledby="tab-ig" hidden={alat !== "ig"}>
+                      <PostinganIG hasil={r} foto={foto} namaProduk={faktaForm?.nama || form.nama} />
+                    </div>
+                    <div className="alat-panel" role="tabpanel" id="panel-kal" aria-labelledby="tab-kal" hidden={alat !== "kal"}>
+                      <KalenderKonten
+                        produk={{ nama: faktaForm?.nama || form.nama, kategori: faktaForm?.kategori || form.kategori, target: faktaForm?.target || form.target }}
+                        ringkasan={r.deskripsi_singkat} />
+                    </div>
+                  </section>
                 </div>
               )}
             </div>

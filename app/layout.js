@@ -2,23 +2,21 @@ import localFont from "next/font/local";
 import "./globals.css";
 
 // Font disimpan di repo (app/fonts) supaya build tidak bergantung pada Google Fonts.
+// Familjen Grotesk untuk judul, Plus Jakarta Sans untuk isi, IBM Plex Mono untuk label dan angka nota.
+const display = localFont({ src: "./fonts/FamiljenGrotesk-latin.woff2", weight: "400 700", variable: "--font-display", display: "swap" });
+const sans = localFont({ src: "./fonts/PlusJakartaSans-latin.woff2", weight: "200 800", variable: "--font-sans", display: "swap" });
 const mono = localFont({
-  src: "./fonts/SplineSansMono-latin.woff2",
-  weight: "300 700",
+  src: [
+    { path: "./fonts/IBMPlexMono-Regular-latin.woff2", weight: "400" },
+    { path: "./fonts/IBMPlexMono-SemiBold-latin.woff2", weight: "600" },
+  ],
   variable: "--font-mono",
-  display: "swap",
-});
-// Bricolage Grotesque untuk judul dan isi, Spline Sans Mono untuk label (seperti PERINTIS).
-const display = localFont({
-  src: "./fonts/BricolageGrotesque-latin.woff2",
-  weight: "200 800",
-  variable: "--font-display",
   display: "swap",
 });
 
 export const metadata = {
-  title: { default: "UMKM Copilot Bali", template: "%s · UMKM Copilot Bali" },
-  description: "Bantu UMKM Bali menyiapkan deskripsi produk, caption, dan saran harga.",
+  title: { default: "Wicara, asisten tulis jualan untuk UMKM Bali", template: "%s · Wicara" },
+  description: "Wicara membantu UMKM Bali menyusun deskripsi produk, caption, saran harga, dan versi Inggris dari satu nota.",
 };
 
 export const viewport = {
@@ -34,7 +32,7 @@ const SKRIP_TEMA = `(function(){var t;try{t=localStorage.getItem("tema")}catch(e
 
 export default function RootLayout({ children }) {
   return (
-    <html lang="id" className={`${mono.variable} ${display.variable}`} suppressHydrationWarning>
+    <html lang="id" className={`${display.variable} ${sans.variable} ${mono.variable}`} suppressHydrationWarning>
       <head>
         <script dangerouslySetInnerHTML={{ __html: SKRIP_TEMA }} />
       </head>

@@ -3,22 +3,23 @@ import Link from "next/link";
 import BerandaGerak from "../components/BerandaGerak";
 import FiturAkordion from "../components/FiturAkordion";
 import GaleriNota from "../components/GaleriNota";
+import { Sulur } from "../components/Ornamen";
 import StrukHero from "../components/StrukHero";
 
+// Kepala bagian berupa stempel toko kecil yang sedikit miring.
 function Pemisah({ no, nama }) {
   return (
-    <p className="pemisah" data-pemisah>
-      <i aria-hidden="true" />
-      <span><b>{String(no).padStart(2, "0")}</b> / {nama}</span>
-      <i aria-hidden="true" />
+    <p className="stempel" data-pemisah>
+      <span>No. {String(no).padStart(2, "0")}</span>
+      <b>{nama}</b>
     </p>
   );
 }
 
-const BUKU = [
-  ["Isi", "nama · kategori · keunggulan"],
-  ["Hasil", "deskripsi · caption · harga · EN"],
-  ["Bahasa", "Indonesia ⇄ Inggris"],
+const TABEL = [
+  [<>pie susu <span className="coret-statis">enak murah</span></>, <>Pie susu dari <mark>susu sapi asli</mark></>],
+  [<>tahan seminggu <span className="coret-statis">pokoknya mantap</span></>, <>Renyah dan <mark>tahan 7 hari</mark></>],
+  [<>buat turis</>, <>Versi Inggris untuk wisatawan</>],
 ];
 
 // [teks akhir, label, pembanding, nilai hitung, desimal, awalan, akhiran]
@@ -37,11 +38,10 @@ const SIAPA = [
 ];
 
 const ALUR = [
-  ["Tulis nota", "nama · kategori · keunggulan · modal"],
-  ["AI menyunting", "klaim kosong dicoret, fakta distabilo"],
-  ["Empat tulisan jadi", "deskripsi · caption · harga · English"],
-  ["Periksa sebentar", "baca ulang, sesuaikan gaya toko"],
-  ["Salin dan posting", "Instagram · WhatsApp · marketplace"],
+  ["Tulis nota", "Nama, kategori, keunggulan, dan modal. Atau foto produknya.", "pasar", "50% 55%"],
+  ["Pena merah menyunting", "Klaim kosong dicoret, fakta Anda distabilo dan dipakai apa adanya.", "kerajinan", "55% 50%"],
+  ["Empat tulisan jadi", "Deskripsi, caption dan hashtag, saran harga, dan versi Inggris.", "kuliner", "50% 45%"],
+  ["Salin dan posting", "Ke Instagram, WhatsApp, atau marketplace. Bisa juga jadi gambar IG.", "oleh-oleh", "50% 45%"],
 ];
 
 const PERCAYA = [
@@ -51,7 +51,7 @@ const PERCAYA = [
 ];
 
 const FAQ = [
-  ["Apakah gratis?", "Ya. UMKM Copilot bisa dipakai tanpa biaya dan tanpa daftar akun."],
+  ["Apakah gratis?", "Ya. Wicara bisa dipakai tanpa biaya dan tanpa daftar akun."],
   ["Hasilnya boleh diubah?", "Boleh, dan sebaiknya begitu. Salin hasilnya, sesuaikan dengan gaya toko Anda, lalu periksa lagi sebelum diunggah."],
   ["Apakah data saya aman?", "Isian dikirim ke Google Gemini hanya untuk menyusun tulisan dan tidak disimpan di server kami. Karena memakai layanan gratis Gemini, isi data produk saja, jangan nama orang, nomor telepon, atau alamat."],
   ["Apa batasannya?", "Saran harga adalah perkiraan dari modal dan kategori, bukan riset pasar. Hasil AI tetap perlu dibaca ulang, dan foto produk belum bisa dibaca."],
@@ -63,11 +63,11 @@ export default function Beranda() {
       <section className="hero" aria-labelledby="hero-judul">
         <div className="wrap hero-grid">
           <div className="hero-kiri">
-            <p className="kicker" data-intro><i aria-hidden="true" /><b>UMKM Copilot</b><span className="kicker-ekor">· Asisten menulis UMKM Bali</span></p>
+            <p className="kicker" data-intro><b>Wicara</b><span className="kicker-ekor">Asisten tulis jualan untuk UMKM Bali</span></p>
             <h1 id="hero-judul" className="hero-judul">
               {"Tulisan jualan yang".split(" ").map((k, i) => <span className="hk" key={i}>{k} </span>)}
               <span className="hk"><span className="kunci">rapi dan jujur
-                <svg viewBox="0 0 300 14" preserveAspectRatio="none" aria-hidden="true"><path d="M3 9 C 80 3, 200 3, 297 8" /></svg>
+                <svg viewBox="0 0 300 14" preserveAspectRatio="none" aria-hidden="true"><path pathLength="1" d="M3 9 C 80 3, 200 3, 297 8" /></svg>
               </span>.</span>
             </h1>
             <p className="hero-sub" data-intro>
@@ -77,16 +77,24 @@ export default function Beranda() {
             <form className="hero-form" action="/app" method="get" data-intro>
               <label className="sr" htmlFor="hero-nama">Nama produk</label>
               <input id="hero-nama" name="nama" maxLength={100} placeholder="Misalnya: Pie Susu Bu Made" autoComplete="off" />
-              <button type="submit" className="btn-kunyit" data-magnet>Tulis sekarang ↗</button>
+              <button type="submit" className="btn-hijau" data-magnet>Tulis sekarang <span className="panah">→</span></button>
             </form>
             <a className="tautan-garis" href="#cara-kerja" data-intro>Atau lihat cara kerja →</a>
-            <dl className="buku" data-buku>
-              {BUKU.map(([k, v]) => (
-                <div key={k}><dt>{k}</dt><span className="titik" aria-hidden="true" /><dd>{v}</dd></div>
-              ))}
-            </dl>
+            <table className="tabel-nota" data-intro>
+              <thead><tr><th scope="col">Tulisan Anda</th><th scope="col">Hasil Wicara</th></tr></thead>
+              <tbody>
+                {TABEL.map(([a, b], i) => <tr key={i}><td>{a}</td><td>{b}</td></tr>)}
+              </tbody>
+            </table>
           </div>
-          <StrukHero />
+          <div className="hero-panggung">
+            <span className="hero-foto">
+              <Image src="/foto/hero-umkm.jpg" alt="Pedagang sate tersenyum di pasar kuliner Bali" fill priority
+                sizes="(min-width: 960px) 520px, 92vw" style={{ objectFit: "cover", objectPosition: "42% 38%" }} />
+              <small>Pasar kuliner, Bali · Foto: G Y / Pexels</small>
+            </span>
+            <StrukHero />
+          </div>
         </div>
       </section>
       <div className="sobek" aria-hidden="true" />
@@ -95,7 +103,7 @@ export default function Beranda() {
       <section className="sec rata-kanan" id="masalah" aria-labelledby="masalah-judul">
         <div className="wrap">
           <Pemisah no={1} nama="Masalah" />
-          <h2 id="masalah-judul" data-muncul>Banyak yang berjualan, sedikit yang terbaca di internet.</h2>
+          <h2 id="masalah-judul" data-muncul>Banyak yang berjualan, sedikit yang <span className="sorot-judul">terbaca</span> di internet.</h2>
           <p className="intro" data-muncul>Bali punya hampir setengah juta UMKM dan jutaan wisatawan tiap tahun. Hambatannya sering bukan produk, melainkan tulisan.</p>
           <div className="masalah-grid">
             <dl className="hitung" data-muncul>
@@ -133,24 +141,27 @@ export default function Beranda() {
           <Pemisah no={2} nama="Cara kerja" />
           <h2 id="cara-judul" data-muncul>Menyusun tulisan semudah mengisi nota.</h2>
           <p className="intro" data-muncul>Lima isian singkat. Sisanya disunting dan ditulis, Anda tinggal membaca lalu menyalin.</p>
-          <ol className="alur" data-buku>
-            {ALUR.map(([judul, ket], i) => (
-              <li key={judul}>
-                <span className="alur-no">{String(i + 1).padStart(2, "0")}</span>
-                <b>{judul}</b>
-                <span className="titik" aria-hidden="true" />
-                <span className="alur-ket">{ket}</span>
+          <Sulur className="band-sulur" />
+          <ol className="langkah">
+            {ALUR.map(([judul, ket, foto, fokus], i) => (
+              <li key={judul} data-muncul>
+                <span className="langkah-foto">
+                  <Image src={`/foto/${foto}.jpg`} alt="" fill sizes="(min-width: 960px) 260px, 45vw" style={{ objectFit: "cover", objectPosition: fokus }} />
+                  <b>{String(i + 1).padStart(2, "0")}</b>
+                </span>
+                <h3>{judul}</h3>
+                <p>{ket}</p>
               </li>
             ))}
           </ol>
-          <p className="loop" data-muncul>» Data produk ke server, ke Gemini, kembali sebagai empat tulisan</p>
+          <p className="loop" data-muncul>Data produk ke server, diteruskan ke Gemini, kembali sebagai empat tulisan</p>
         </div>
       </section>
 
       <section className="sec" id="fitur" aria-labelledby="fitur-judul">
         <div className="wrap">
           <Pemisah no={3} nama="Fitur" />
-          <h2 id="fitur-judul" data-muncul>Empat tulisan jualan dari satu nota.</h2>
+          <h2 id="fitur-judul" data-muncul>Empat tulisan jualan dari <span className="sorot-judul">satu nota</span>.</h2>
           <p className="intro" data-muncul>Yang distabilo kuning selalu berasal dari isian Anda. Yang tidak bisa dibuktikan, dicoret.</p>
           <FiturAkordion />
         </div>
@@ -194,7 +205,7 @@ export default function Beranda() {
           <h2 id="akhir-judul" data-muncul>Mulai dari satu nota, gratis.</h2>
           <p className="intro" data-muncul>Tanpa daftar akun. Hasilnya langsung bisa disalin ke Instagram, WhatsApp, atau marketplace.</p>
           <div className="cta-aksi" data-muncul>
-            <Link className="btn-kunyit" href="/app" data-magnet>Buka app ↗</Link>
+            <Link className="btn-kunyit" href="/app" data-magnet>Buka app <span className="panah">→</span></Link>
             <a className="tautan-garis terang" href="#contoh">Lihat contoh →</a>
           </div>
         </div>
