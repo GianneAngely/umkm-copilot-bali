@@ -1,4 +1,5 @@
 import localFont from "next/font/local";
+import GerakGlobal from "./components/GerakGlobal";
 import SiteFooter from "./components/SiteFooter";
 import SiteHeader from "./components/SiteHeader";
 import "./globals.css";
@@ -45,7 +46,7 @@ export const viewport = {
 };
 
 // Dipasang sebelum halaman digambar supaya tidak ada kedipan tema yang salah.
-const SKRIP_TEMA = `(function(){var t;try{t=localStorage.getItem("tema")}catch(e){}if(t!=="dark"&&t!=="light"){t=window.matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light"}document.documentElement.dataset.theme=t})();`;
+const SKRIP_TEMA = `(function(){var t;try{t=localStorage.getItem("tema")}catch(e){}if(t!=="dark"&&t!=="light"){t=window.matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light"}document.documentElement.dataset.theme=t;try{if(sessionStorage.getItem("pl"))document.documentElement.classList.add("pl-skip");sessionStorage.setItem("pl","1")}catch(e){}})();`;
 
 export default function RootLayout({ children }) {
   return (
@@ -54,6 +55,7 @@ export default function RootLayout({ children }) {
         <script dangerouslySetInnerHTML={{ __html: SKRIP_TEMA }} />
       </head>
       <body>
+        <GerakGlobal />
         <SiteHeader />
         <main id="isi">{children}</main>
         <SiteFooter />

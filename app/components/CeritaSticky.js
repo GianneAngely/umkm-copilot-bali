@@ -1,11 +1,14 @@
 "use client";
 
 import Image from "next/image";
+import { gsap } from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useEffect, useRef, useState } from "react";
 import { Jendela } from "./Jendela";
 
-// Kiri: daftar bernomor yang aktif mengikuti gulir. Kanan: jendela produk yang menempel
-// dan isinya berganti sesuai item aktif. Di HP, panel tampil di bawah tiap item.
+gsap.registerPlugin(ScrollTrigger);
+
+// Kiri: daftar bernomor, kanan: jendela produk yang isinya berganti sesuai item aktif.
 // Tiap panel adalah layar hasil yang utuh, dengan coretan merah dan stabilo dari isian.
 
 function Kepala({ judul, salin = "Salin" }) {
@@ -120,41 +123,70 @@ const ITEM = [
   },
 ];
 
-export default function CeritaSticky() {
+export default function CeritaSticky({ judul, lead }) {
   const [aktif, setAktif] = useState(0);
-  const refs = useRef([]);
+  const akar = useRef(null);
+  const st = useRef(null);
 
+  // Desktop: bagian dipaku dan gulir menentukan state aktif. Di HP atau saat gerak dikurangi,
+  // daftar tampil biasa dan panel muncul di bawah tiap item.
   useEffect(() => {
-    const io = new IntersectionObserver(
-      (entri) => entri.forEach((e) => e.isIntersecting && setAktif(Number(e.target.dataset.i))),
-      { rootMargin: "-45% 0px -45% 0px" },
-    );
-    refs.current.forEach((el) => el && io.observe(el));
-    return () => io.disconnect();
+    const mm = gsap.matchMedia();
+    mm.add("(prefers-reduced-motion: no-preference) and (min-width: 960px) and (min-height: 760px)", () => {
+      st.current = ScrollTrigger.create({
+        trigger: akar.current,
+        start: "top top",
+        end: () => "+=" + window.innerHeight * 2.2,
+        pin: true,
+        anticipatePin: 1,
+        onUpdate: (s) => setAktif(Math.min(ITEM.length - 1, Math.floor(s.progress * ITEM.length))),
+      });
+      return () => { st.current = null; };
+    });
+    return () => mm.revert();
   }, []);
 
+  function pilih(i) {
+    const s = st.current;
+    if (s && window.lenis) {
+      window.lenis.scrollTo(s.start + ((i + 0.5) / ITEM.length) * (s.end - s.start));
+    } else if (s) {
+      window.scrollTo(0, s.start + ((i + 0.5) / ITEM.length) * (s.end - s.start));
+    } else {
+      setAktif(i);
+    }
+  }
+
   return (
-    <div className="cerita">
-      <ol className="cerita-daftar">
-        {ITEM.map((it, i) => (
-          <li key={it.judul} ref={(el) => (refs.current[i] = el)} data-i={i} className={i === aktif ? "aktif" : ""}>
-            <p className="cerita-no">{String(i + 1).padStart(2, "0")}</p>
-            <div>
-              <h3>{it.judul}</h3>
-              <p className="cerita-teks">{it.teks}</p>
-              <div className="cerita-panel-hp" aria-hidden="true"><div className="panel">{it.panel}</div></div>
-            </div>
-          </li>
-        ))}
-      </ol>
-      <div className="cerita-kanan">
-        <Jendela alamat="umkmcopilot.id/studio" demo className="jendela-cerita">
-          <div className="panel-tumpuk">
-            {ITEM.map((it, i) => (
-              <div key={it.judul} className={`panel${i === aktif ? " aktif" : ""}`} data-panel={i}>{it.panel}</div>
-            ))}
+    <div className="cerita-pin" ref={akar}>
+      <div className="wrap cerita">
+        <div className="cerita-kiri">
+          <div className="b-kepala">
+            <h2 id="cerita-judul">{judul}</h2>
+            <p>{lead}</p>
           </div>
-        </Jendela>
+          <ol className="cerita-daftar">
+            {ITEM.map((it, i) => (
+              <li key={it.judul} className={i === aktif ? "aktif" : ""}>
+                <button type="button" className="cerita-tombol" onClick={() => pilih(i)} aria-pressed={i === aktif}>
+                  <span className="cerita-no">{String(i + 1).padStart(2, "0")}</span>
+                  <span className="cerita-nama">{it.judul}</span>
+                </button>
+                <p className="cerita-teks">{it.teks}</p>
+                <div className="cerita-panel-hp" aria-hidden="true"><div className="panel">{it.panel}</div></div>
+              </li>
+            ))}
+          </ol>
+        </div>
+        <div className="cerita-kanan">
+          <Jendela alamat="umkmcopilot.id/studio" demo className="jendela-cerita">
+            <div className="panel-tumpuk">
+              {ITEM.map((it, i) => (
+                <div key={it.judul} className={`panel${i === aktif ? " aktif" : ""}`} data-panel={i}>{it.panel}</div>
+              ))}
+            </div>
+          </Jendela>
+        </div>
       </div>
     </div>
   );
