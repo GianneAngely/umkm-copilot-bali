@@ -25,6 +25,13 @@ const mono = localFont({
   variable: "--font-mono",
   display: "swap",
 });
+// Judul tebal di beranda.
+const display = localFont({
+  src: "./fonts/BricolageGrotesque-latin.woff2",
+  weight: "200 800",
+  variable: "--font-display",
+  display: "swap",
+});
 // Hanya untuk ilustrasi nota tulisan tangan di hero.
 const tangan = localFont({
   src: "./fonts/Caveat-latin.woff2",
@@ -50,7 +57,7 @@ const SKRIP_TEMA = `(function(){var t;try{t=localStorage.getItem("tema")}catch(e
 
 export default function RootLayout({ children }) {
   return (
-    <html lang="id" className={`${sans.variable} ${serif.variable} ${mono.variable} ${tangan.variable}`} suppressHydrationWarning>
+    <html lang="id" className={`${sans.variable} ${serif.variable} ${mono.variable} ${display.variable} ${tangan.variable}`} suppressHydrationWarning>
       <head>
         <script dangerouslySetInnerHTML={{ __html: SKRIP_TEMA }} />
       </head>

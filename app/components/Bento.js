@@ -2,7 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 import Icon from "./Icon";
 
-const DAFTAR = ["Deskripsi jujur", "Caption + hashtag", "Saran harga", "English"];
+const DAFTAR = ["Isi lima hal tentang produk", "Pena merah menyunting", "Salin dan posting"];
 
 const BARIS = [
   ["kuliner", "Untuk pedagang//", "Warung, perajin, dan toko oleh-oleh. Cukup lima isian singkat."],

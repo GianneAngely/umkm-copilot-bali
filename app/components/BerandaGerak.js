@@ -28,25 +28,28 @@ export default function BerandaGerak() {
         if (!gerak) return;
         const jedaAwal = document.documentElement.classList.contains("pl-skip") ? 0.1 : 0.85;
 
-        // Hero: huruf JUALAN naik satu per satu, kartu foto masuk berputar, lalu pil dan isian.
+        // Hero: judul tebal per kata, garis stabilo tergambar, lalu isian; di kanan kartu foto masuk.
         gsap.timeline({ defaults: { ease: "power3.out" }, delay: jedaAwal })
-          .from(".v-huruf", { yPercent: 60, opacity: 0, duration: 0.9, stagger: 0.06 })
-          .from(".v-kartu-belakang", { rotation: 0, xPercent: 0, opacity: 0, duration: 0.8 }, "-=0.6")
-          .from(".v-kartu-depan", { rotation: -6, scale: 0.8, opacity: 0, duration: 0.9, ease: "back.out(1.4)" }, "-=0.65")
-          .from(".v-pil", { y: 16, opacity: 0, duration: 0.6, stagger: 0.12 }, "-=0.5")
-          .from(".v-bawah > *", { y: 20, opacity: 0, duration: 0.6, stagger: 0.1 }, "-=0.4");
+          .from(".g-eyelet", { y: 14, opacity: 0, duration: 0.5 })
+          .from(".g-kata", { yPercent: 50, opacity: 0, duration: 0.8, stagger: 0.08 }, "-=0.2")
+          .from(".g-garis-bawah path", { strokeDasharray: 240, strokeDashoffset: 240, duration: 0.7, ease: "power2.inOut" }, "-=0.2")
+          .from(".g-sub, .g-isian, .g-contoh", { y: 18, opacity: 0, duration: 0.6, stagger: 0.1 }, "-=0.5")
+          .from(".g-latar .v-huruf", { yPercent: 40, opacity: 0, duration: 0.9, stagger: 0.05 }, 0.3)
+          .from(".v-kartu-belakang", { rotation: 0, xPercent: 0, opacity: 0, duration: 0.8 }, 0.6)
+          .from(".v-kartu-depan", { rotation: -6, scale: 0.8, opacity: 0, duration: 0.9, ease: "back.out(1.4)" }, 0.7)
+          .from(".v-pil", { y: 16, opacity: 0, duration: 0.6, stagger: 0.12 }, 1.1);
 
-        // Pil melayang pelan; kata raksasa sedikit bergeser saat digulir.
+        // Pil melayang pelan; latar JUALAN dan kartu bergeser saat digulir.
         gsap.utils.toArray("[data-apung]").forEach((el, k) => {
-          gsap.to(el, { y: k % 2 ? 8 : -8, duration: 3 + k * 0.5, repeat: -1, yoyo: true, ease: "sine.inOut", delay: 1.5 });
+          gsap.to(el, { y: k % 2 ? 8 : -8, duration: 3 + k * 0.5, repeat: -1, yoyo: true, ease: "sine.inOut", delay: 2 });
         });
-        gsap.to(".v-kata", {
-          xPercent: -4, ease: "none",
-          scrollTrigger: { trigger: ".v-hero", start: "top top", end: "bottom top", scrub: true },
+        gsap.to(".g-latar", {
+          xPercent: -6, ease: "none",
+          scrollTrigger: { trigger: ".g-hero", start: "top top", end: "bottom top", scrub: true },
         });
         gsap.to("[data-v-tumpuk]", {
-          yPercent: -18, rotation: 4, ease: "none",
-          scrollTrigger: { trigger: ".v-hero", start: "top top", end: "bottom top", scrub: true },
+          yPercent: -14, rotation: 4, ease: "none",
+          scrollTrigger: { trigger: ".g-hero", start: "top top", end: "bottom top", scrub: true },
         });
 
         // Kartu foto berganti tiap ~4 detik, berhenti saat hero di luar layar.
@@ -63,7 +66,7 @@ export default function BerandaGerak() {
           if (label) label.textContent = KARTU[i][2];
           gsap.fromTo(depan, { rotation: 4 }, { rotation: 9, duration: 0.9, ease: "power3.out" });
         }, 4200);
-        ScrollTrigger.create({ trigger: ".v-hero", start: "top top", end: "bottom top", onToggle: (s) => (jalan = s.isActive) });
+        ScrollTrigger.create({ trigger: ".g-hero", start: "top top", end: "bottom top", onToggle: (s) => (jalan = s.isActive) });
 
         // Tombol magnetik.
         const magnet = [];

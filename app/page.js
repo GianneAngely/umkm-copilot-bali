@@ -4,6 +4,7 @@ import CeritaSticky from "./components/CeritaSticky";
 import DemoHidup from "./components/DemoHidup";
 import FotoSlot from "./components/FotoSlot";
 import Bento from "./components/Bento";
+import Fitur from "./components/Fitur";
 import HeroJualan from "./components/HeroJualan";
 import Icon from "./components/Icon";
 import { Jendela } from "./components/Jendela";
@@ -76,6 +77,7 @@ export default function Beranda() {
 
       <HeroJualan />
       <Bento />
+      <Fitur />
 
       <section className="b-pamer" aria-label="Tampilan Studio">
         <p className="b-merek" aria-hidden="true">UMKM Copilot</p>
