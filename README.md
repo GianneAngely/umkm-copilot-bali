@@ -39,7 +39,7 @@ Fitur berikut sudah berfungsi:
 | --- | --- |
 | Frontend | Next.js 15 (App Router), React 19, CSS biasa |
 | Backend | Next.js Route Handler (`POST /api/generate`, `/api/foto`, `/api/kalender`) di runtime Node.js |
-| AI | Gemini API lewat SDK resmi `@google/genai`: model utama `gemini-3.8-flash`, cadangan `gemini-3.5-flash`, `gemini-3.7-flash`, `gemini-3.6-flash`, dan `gemini-3.5-flash-lite` |
+| AI | Gemini API lewat SDK resmi `@google/genai`, rantai model `gemini-3.5-flash`, `gemini-3.6-flash`, `gemini-3.5-flash-lite`, `gemini-3.8-flash` |
 | Database / storage | Tidak memakai database. Riwayat disimpan di `localStorage` browser |
 | Hosting | Vercel |
 
@@ -47,7 +47,7 @@ Fitur berikut sudah berfungsi:
 
 AI adalah inti produk: tanpa model bahasa, aplikasi tidak bisa menyusun teks pemasaran yang menyesuaikan produk, kategori, dan target pasar.
 
-- **Model**: Google Gemini lewat Gemini API dengan API key free tier. Model utama `gemini-3.8-flash`. Kalau model itu sibuk (503/429) atau tidak menjawab dalam 9 detik, server pindah ke `gemini-3.5-flash`, `gemini-3.7-flash`, `gemini-3.6-flash`, lalu `gemini-3.5-flash-lite`. Model yang sibuk dicoba ulang sekali; model yang kuotanya habis (429) langsung dilewati karena kuota free tier dihitung per model. Total waktu tunggu dibatasi 25 detik. Respons API menyertakan field `model` berisi model yang benar-benar menjawab.
+- **Model**: Google Gemini lewat Gemini API dengan API key free tier. Server mencoba berurutan `gemini-3.5-flash`, `gemini-3.6-flash`, `gemini-3.5-flash-lite`, lalu `gemini-3.8-flash`, pindah ke model berikutnya kalau sibuk (503/429) atau tidak menjawab dalam 9 detik. Satu klik memakai satu panggilan kecuali gagal, isian yang persis sama diambil dari cache sessionStorage, dan kalau semua model penuh pengguna mendapat pesan jujur plus tombol untuk melihat hasil berlabel Contoh. Model yang sibuk dicoba ulang sekali; model yang kuotanya habis (429) langsung dilewati karena kuota free tier dihitung per model. Total waktu tunggu dibatasi 25 detik. Respons API menyertakan field `model` berisi model yang benar-benar menjawab.
 - **Tiga fungsi AI**:
   - `/api/generate`: teks pemasaran dari data produk.
   - `/api/foto`: membaca foto produk (JPEG/PNG, maksimal 4 MB, diperkecil di browser sampai 1280 px) dan mengisi form.
