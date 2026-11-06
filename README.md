@@ -116,9 +116,9 @@ Tidak diperlukan. Aplikasi bisa dipakai tanpa login.
 - [Next.js](https://nextjs.org) dan [React](https://react.dev) (MIT)
 - [@google/genai](https://www.npmjs.com/package/@google/genai), SDK resmi Gemini (Apache-2.0)
 - [Zod](https://zod.dev) untuk skema dan validasi (MIT)
-- Font [Plus Jakarta Sans](https://fonts.google.com/specimen/Plus+Jakarta+Sans) dan [Young Serif](https://fonts.google.com/specimen/Young+Serif) dari Google Fonts (SIL Open Font License), dimuat lewat `next/font`
+- Font [Plus Jakarta Sans](https://fonts.google.com/specimen/Plus+Jakarta+Sans), [Newsreader](https://fonts.google.com/specimen/Newsreader), [IBM Plex Mono](https://fonts.google.com/specimen/IBM+Plex+Mono), dan [Caveat](https://fonts.google.com/specimen/Caveat) dari Google Fonts (SIL Open Font License 1.1). Berkas WOFF2 subset Latin disimpan di `app/fonts/` dan dimuat lewat `next/font/local`, jadi build tidak bergantung pada server Google. Rincian lisensi di `app/fonts/LICENSE.md`
 - Gemini API oleh Google
-- Motif ikat endek di header dan ikon digambar langsung sebagai SVG inline, tanpa pustaka ikon atau aset pihak ketiga
+- Ilustrasi hero (taplak kotak, nota, struk, label harga, HP, pena) dan ikon digambar langsung dengan CSS dan SVG inline, tanpa pustaka ikon, foto, atau gambar hasil generator
 
 ## Team Members
 

@@ -17,7 +17,7 @@ export default function PenaSunting({ form }) {
         <span className="spinner" aria-hidden="true" />
         Pena merah sedang menyunting nota Anda...
       </p>
-      <div className="kertas sunting-nota" aria-hidden="true">
+      <div className="kartu sunting-nota" aria-hidden="true">
         {baris.map((b, i) => (
           <p className="sunting-baris" key={i} style={{ "--i": i }}>
             <span>{b}</span>
@@ -31,7 +31,7 @@ export default function PenaSunting({ form }) {
           <path d="M4 14 L10 11.3 L10 16.7 Z" fill="#1f1a15" />
         </svg>
       </div>
-      <div className="kertas sunting-struk" aria-hidden="true">
+      <div className="kartu sunting-struk" aria-hidden="true">
         <span className="bar bar-judul" />
         <span className="bar" />
         <span className="bar" />
