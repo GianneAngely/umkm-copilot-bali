@@ -20,21 +20,19 @@ export const metadata = {
 };
 
 export const viewport = {
-  themeColor: [
-    { media: "(prefers-color-scheme: light)", color: "#f4efe3" },
-    { media: "(prefers-color-scheme: dark)", color: "#0c1a15" },
-  ],
+  themeColor: "#f4efe3",
+  colorScheme: "light",
 };
 
-// Dipasang sebelum halaman digambar: tema tanpa kedipan, dan kelas "js" untuk animasi landing.
+// Dipasang sebelum halaman digambar: kelas "js" untuk animasi landing.
 // Kalau skrip gerak gagal jalan dalam 2,5 detik, kelas itu dicabut supaya isi tetap tampil.
-const SKRIP_TEMA = `(function(){var t;try{t=localStorage.getItem("tema")}catch(e){}if(t!=="dark"&&t!=="light"){t=window.matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light"}var h=document.documentElement;h.dataset.theme=t;h.classList.add("js");setTimeout(function(){if(!window.__gerak)h.classList.remove("js")},2500)})();`;
+const SKRIP_JS = `(function(){var h=document.documentElement;h.classList.add("js");setTimeout(function(){if(!window.__gerak)h.classList.remove("js")},2500)})();`;
 
 export default function RootLayout({ children }) {
   return (
     <html lang="id" className={`${display.variable} ${sans.variable} ${mono.variable}`} suppressHydrationWarning>
       <head>
-        <script dangerouslySetInnerHTML={{ __html: SKRIP_TEMA }} />
+        <script dangerouslySetInnerHTML={{ __html: SKRIP_JS }} />
       </head>
       <body>{children}</body>
     </html>

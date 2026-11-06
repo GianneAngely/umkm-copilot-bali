@@ -7,6 +7,7 @@
   Tekstur garis kertas memakai repeating-linear-gradient sebagai pola, bukan gradasi warna.
 */
 :root {
+  color-scheme: light;
   --kertas: #f4efe3;
   --kertas-hi: #fffcf3;
   --kertas-2: #ebe4d3;
@@ -39,31 +40,6 @@
   --ease: cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-:root[data-theme="dark"] .ak-ikon { background: var(--kertas-2); color: var(--kunyit); }
-:root[data-theme="dark"] .ak-item.buka .ak-ikon { background: transparent; }
-:root[data-theme="dark"] {
-  /* Malam di warung: hijau tua sangat gelap, teks krem, kunyit tetap aksen. */
-  color-scheme: dark;
-  --kertas: #0c1a15;
-  --kertas-hi: #13261f;
-  --kertas-2: #1a3129;
-  --tinta: #f1ecdf;
-  --tinta-2: #c4cbbf;
-  --tinta-3: #97a398;
-  --kunyit: #e8ae33;
-  --kunyit-tua: #b07a0b;
-  --kunyit-teks: #e8ae33;
-  --bata: #e0806a;
-  --garis: rgb(241 236 223 / 0.24);
-  --garis-soft: rgb(241 236 223 / 0.12);
-  --tekstur: rgb(241 236 223 / 0.02);
-  --tekstur-nota: rgb(241 236 223 / 0.025);
-  --band: #07120e;
-  --band-teks: #f1ecdf;
-  --band-teks-2: #b9c4ba;
-  --angkat: 0 26px 50px -26px rgb(0 0 0 / 0.75);
-  --angkat-kecil: 0 12px 26px -18px rgb(0 0 0 / 0.7);
-}
 
 * { box-sizing: border-box; }
 html { scroll-behavior: smooth; scroll-padding-top: 80px; overflow-x: clip; -webkit-text-size-adjust: 100%; scrollbar-color: var(--garis) transparent; }
@@ -122,9 +98,6 @@ mark, .stabilo { background: var(--stabilo); color: var(--stabilo-teks); padding
 .tautan-garis:hover { color: var(--kunyit-teks); }
 .tautan-garis.terang { color: var(--band-teks); }
 
-.tema-toggle { display: grid; place-items: center; flex: none; width: 38px; height: 38px; border: 1.5px solid var(--garis); border-radius: 8px; background: transparent; color: var(--tinta-2); cursor: pointer; transition: border-color 0.15s, color 0.15s; }
-.tema-toggle:hover { border-color: var(--kunyit); color: var(--kunyit-teks); }
-.tema-toggle svg { width: 17px; height: 17px; }
 
 .merek { display: inline-flex; align-items: baseline; gap: 2px; min-height: 44px; padding-top: 10px; font: 700 1.6rem/1 var(--display); letter-spacing: 0; }
 .merek i { width: 7px; height: 7px; border-radius: 1px; background: var(--kunyit); transform: rotate(45deg); }
@@ -461,7 +434,6 @@ html.lenis { scroll-behavior: auto; }
 .sisi-item[aria-current="page"] .icon { color: var(--kunyit); }
 .sisi-item small { margin-left: auto; padding: 2px 7px; border-radius: 99px; background: var(--kunyit); color: #173b2f; font: 600 0.68rem/1.3 var(--mono); }
 .sisi-bawah { display: flex; flex-direction: column; gap: 6px; margin-top: auto; padding-top: 1rem; border-top: 1.5px dashed var(--garis); }
-.sisi-tema { display: flex; align-items: center; justify-content: space-between; padding: 0 0.75rem; font: 400 0.72rem/1 var(--mono); letter-spacing: 0.1em; text-transform: uppercase; color: var(--tinta-3); }
 
 .kerja { min-width: 0; padding: 1.25rem var(--tepi) 6.5rem; }
 @media (min-width: 1100px) { .kerja { padding: 1.6rem 2.4rem 3rem; } }
@@ -469,7 +441,6 @@ html.lenis { scroll-behavior: auto; }
 .kerja-label { font: 400 0.68rem/1 var(--mono); letter-spacing: 0.16em; color: var(--tinta-3); }
 .kerja-atas h1 { margin-top: 0.5rem; font-size: clamp(1.6rem, 1.3rem + 1.2vw, 2.2rem); }
 .kerja-alat { display: flex; align-items: center; gap: 0.6rem; }
-@media (min-width: 1100px) { .kerja-alat .tema-toggle { display: none; } }
 .status { display: inline-flex; align-items: center; gap: 0.6em; min-height: 34px; padding: 0 0.85em; border: 1.5px solid var(--garis); border-radius: 8px; font: 600 0.72rem/1 var(--mono); letter-spacing: 0.06em; text-transform: uppercase; color: var(--tinta-2); }
 .status i { width: 7px; height: 7px; border-radius: 50%; background: var(--tinta-3); }
 .status-sibuk i { background: var(--bata); animation: kedip 1s ease-in-out infinite alternate; }

@@ -3,7 +3,6 @@
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import Icon from "./Icon";
-import TemaToggle from "./TemaToggle";
 
 const MENU = [
   ["#masalah", "Masalah"],
@@ -40,7 +39,6 @@ export default function SiteHeader() {
           {MENU.map(([href, label]) => <a key={href} href={href}>{label}</a>)}
         </nav>
         <div className="nav-kanan">
-          <TemaToggle />
           <Link className="nav-cta" href="/app">Buka app <span className="panah">→</span></Link>
           <button type="button" className="nav-toggle" aria-expanded={buka} aria-controls="menu-hp"
             aria-label={buka ? "Tutup menu" : "Buka menu"} onClick={() => setBuka(!buka)}>

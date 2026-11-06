@@ -5,7 +5,6 @@ import { useEffect, useRef, useState } from "react";
 import Icon from "../components/Icon";
 import { Stabilo, buatFakta, hitungFakta } from "../components/Stabilo";
 import { CopyButton, Section, rupiah } from "../components/Struk";
-import TemaToggle from "../components/TemaToggle";
 import { CONTOH } from "../data/contoh";
 import FotoKeForm from "../components/fitur/FotoKeForm";
 import KalenderKonten from "../components/fitur/KalenderKonten";
@@ -180,7 +179,6 @@ export default function Aplikasi() {
           ))}
         </nav>
         <div className="sisi-bawah">
-          <div className="sisi-tema"><span>Tema</span><TemaToggle /></div>
           <Link className="sisi-item" href="/"><Garis nama="rumah" /><span>Ke beranda</span></Link>
         </div>
       </aside>
@@ -193,7 +191,6 @@ export default function Aplikasi() {
           </div>
           <div className="kerja-alat">
             <p className={`status status-${status[0]}`} role="status"><i aria-hidden="true" />{status[1]}</p>
-            <TemaToggle />
           </div>
         </header>
 
