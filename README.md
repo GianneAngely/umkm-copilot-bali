@@ -39,7 +39,7 @@ Fitur berikut sudah berfungsi:
 | --- | --- |
 | Frontend | Next.js 15 (App Router), React 19, CSS biasa |
 | Backend | Next.js Route Handler (`POST /api/generate`, `/api/foto`, `/api/kalender`) di runtime Node.js |
-| AI | Gemini API lewat SDK resmi `@google/genai`, rantai model `gemini-3.5-flash`, `gemini-3.6-flash`, `gemini-3.5-flash-lite`, `gemini-3.8-flash` |
+| AI | Utama: Claude API (Anthropic) lewat SDK resmi `@anthropic-ai/sdk`, model `claude-haiku-5-5`. Cadangan: Gemini API lewat `@google/genai`, rantai `gemini-3.5-flash`, `gemini-3.6-flash`, `gemini-3.5-flash-lite`, `gemini-3.8-flash` |
 | Database / storage | Tidak memakai database. Riwayat disimpan di `localStorage` browser |
 | Hosting | Vercel |
 
@@ -47,7 +47,8 @@ Fitur berikut sudah berfungsi:
 
 AI adalah inti produk: tanpa model bahasa, aplikasi tidak bisa menyusun teks pemasaran yang menyesuaikan produk, kategori, dan target pasar.
 
-- **Model**: Google Gemini lewat Gemini API dengan API key free tier. Server mencoba berurutan `gemini-3.5-flash`, `gemini-3.6-flash`, `gemini-3.5-flash-lite`, lalu `gemini-3.8-flash`, pindah ke model berikutnya kalau sibuk (503/429) atau tidak menjawab dalam 9 detik. Satu klik memakai satu panggilan kecuali gagal, isian yang persis sama diambil dari cache sessionStorage, dan kalau semua model penuh pengguna mendapat pesan jujur plus tombol untuk melihat hasil berlabel Contoh. Model yang sibuk dicoba ulang sekali; model yang kuotanya habis (429) langsung dilewati karena kuota free tier dihitung per model. Total waktu tunggu dibatasi 25 detik. Respons API menyertakan field `model` berisi model yang benar-benar menjawab.
+- **Model utama**: Claude Haiku 5.5 (`claude-haiku-5-5`) dari Anthropic, dipanggil lewat Claude API dengan *structured output* (`output_config.format` dari skema Zod yang sama) dan effort `low` supaya cepat. Model yang sama dipakai untuk teks pemasaran, membaca foto produk, dan kalender. Kalau Claude galat, menolak, atau `ANTHROPIC_API_KEY` kosong, server otomatis pindah ke cadangan Gemini.
+- **Cadangan**: Google Gemini lewat Gemini API dengan API key free tier. Server mencoba berurutan `gemini-3.5-flash`, `gemini-3.6-flash`, `gemini-3.5-flash-lite`, lalu `gemini-3.8-flash`, pindah ke model berikutnya kalau sibuk (503/429) atau tidak menjawab dalam 9 detik. Satu klik memakai satu panggilan kecuali gagal, isian yang persis sama diambil dari cache sessionStorage, dan kalau semua model penuh pengguna mendapat pesan jujur plus tombol untuk melihat hasil berlabel Contoh. Model yang sibuk dicoba ulang sekali; model yang kuotanya habis (429) langsung dilewati karena kuota free tier dihitung per model. Total waktu tunggu dibatasi 25 detik. Respons API menyertakan field `model` berisi model yang benar-benar menjawab.
 - **Tiga fungsi AI**:
   - `/api/generate`: teks pemasaran dari data produk.
   - `/api/foto`: membaca foto produk (JPEG/PNG, maksimal 4 MB, diperkecil di browser sampai 1280 px) dan mengisi form.
@@ -55,7 +56,7 @@ AI adalah inti produk: tanpa model bahasa, aplikasi tidak bisa menyusun teks pem
 - **Input**: data produk dari form, disusun menjadi prompt pendek di server. Instruksi sistem meminta bahasa yang wajar, melarang klaim berlebihan, dan melarang AI mengarang fakta yang tidak ada di data (misalnya sertifikat atau penghargaan).
 - **Output**: JSON terstruktur yang dibatasi skema (`responseJsonSchema`), misalnya untuk generate berisi `deskripsi_singkat`, `deskripsi_cerita`, `caption`, `hashtags`, `harga` (`min`, `max`, `alasan`), dan `english` (`description`, `caption`). Server memvalidasi hasil dengan Zod sebelum dikirim ke browser, sehingga setiap bagian di layar selalu terisi.
 - **Penanganan galat**: kalau semua model gagal (sibuk, kuota habis, key tidak valid, atau jawaban tidak sesuai skema), pengguna melihat pesan galat yang jelas. Aplikasi tidak diam-diam menggantinya dengan hasil contoh.
-- **Keamanan key**: API key hanya dibaca di server dari environment variable `GEMINI_API_KEY`. Browser tidak pernah memanggil Gemini secara langsung.
+- **Keamanan key**: API key hanya dibaca di server dari environment variable `ANTHROPIC_API_KEY` dan `GEMINI_API_KEY`. Browser tidak pernah memanggil Claude atau Gemini secara langsung.
 
 Rincian lengkap ada di [docs/AI-DISCLOSURE.md](docs/AI-DISCLOSURE.md).
 
@@ -68,9 +69,9 @@ Browser (form React)
    ▼
 Next.js Route Handler  (app/api/*/route.js)
    │  validasi input
-   ├── GEMINI_API_KEY kosong ──► hasil contoh statis (lib/generate.js) ──┐
+   ├── kedua key kosong ──► hasil contoh statis (lib/generate.js) ───────┐
    │                                                                     │
-   └── GEMINI_API_KEY ada ──► Gemini API (3.8-flash, cadangan 3.5/3.7)   │
+   └── ada key ──► Claude Haiku 5.5 ──(galat)──► rantai Gemini           │
                                  │  JSON sesuai skema                    │
                                  ▼                                       │
                            validasi Zod                                  │
@@ -84,6 +85,8 @@ Struktur folder:
 - `app/`: halaman landing dan aplikasi.
 - `app/components/fitur/`: komponen `FotoKeForm`, `PostinganIG`, dan `KalenderKonten`.
 - `app/api/generate`, `app/api/foto`, `app/api/kalender`: endpoint dan validasi input.
+- `lib/ai.js`: satu pintu panggilan AI, Claude dulu lalu cadangan Gemini.
+- `lib/claude.js`: panggilan Claude dengan structured output.
 - `lib/gemini.js`: panggilan Gemini dengan rantai model cadangan.
 - `lib/generate.js`, `lib/foto.js`, `lib/kalender.js`: prompt, skema keluaran, dan data mode contoh tiap fitur.
 - `lib/hari-raya-bali.js`: tanggal hari raya Bali, libur nasional, dan libur sekolah November 2026 sampai Desember 2027, dengan sumber tiap tanggal.
@@ -97,7 +100,7 @@ npm install
 cp .env.example .env.local
 ```
 
-Isi `GEMINI_API_KEY` di `.env.local` dengan API key dari [Google AI Studio](https://aistudio.google.com/apikey). Kalau dibiarkan kosong, aplikasi berjalan di mode contoh.
+Isi `ANTHROPIC_API_KEY` di `.env.local` dengan API key dari [Claude Console](https://platform.claude.com), dan `GEMINI_API_KEY` dengan API key dari [Google AI Studio](https://aistudio.google.com/apikey) sebagai cadangan. Kalau keduanya kosong, aplikasi berjalan di mode contoh.
 
 ```bash
 npm run dev
@@ -105,7 +108,7 @@ npm run dev
 
 Buka http://localhost:3000.
 
-Versi produksi: `npm run build` lalu `npm start`. Untuk Vercel, cukup tambahkan `GEMINI_API_KEY` di pengaturan Environment Variables proyek.
+Versi produksi: `npm run build` lalu `npm start`. Untuk Vercel, tambahkan `ANTHROPIC_API_KEY` dan `GEMINI_API_KEY` di pengaturan Environment Variables proyek.
 
 ## Deployment URL
 
@@ -117,9 +120,8 @@ Tidak diperlukan. Aplikasi bisa dipakai tanpa login.
 
 ## Known Limitations
 
-- Saat ramai, `gemini-3.8-flash` sering menjawab 503 atau lambat. Server otomatis memakai model cadangan, tetapi satu permintaan bisa memakan waktu sampai sekitar 15–25 detik.
-- Memakai free tier Gemini API, sehingga ada batas jumlah permintaan per menit dan per hari. Kalau batas tercapai, aplikasi menampilkan pesan agar pengguna mencoba lagi nanti.
-- Pada free tier, Google dapat memakai input dan output untuk meningkatkan produknya. Pengguna sebaiknya tidak memasukkan data pribadi atau rahasia ke dalam form, dan tidak memotret wajah orang atau dokumen pribadi untuk fitur foto.
+- Claude API berbayar per token dari kredit akun. Kalau kredit habis atau Claude galat, permintaan pindah ke Gemini free tier, yang punya batas permintaan per menit dan per hari dan kadang sibuk (503), sehingga jawaban cadangan bisa memakan waktu sampai sekitar 25 detik. Kalau semua model penuh, aplikasi menampilkan pesan agar pengguna mencoba lagi nanti.
+- Saat permintaan jatuh ke cadangan Gemini free tier, Google dapat memakai input dan output untuk meningkatkan produknya. Pengguna sebaiknya tidak memasukkan data pribadi atau rahasia ke dalam form, dan tidak memotret wajah orang atau dokumen pribadi untuk fitur foto.
 - Saran harga adalah perkiraan dari AI berdasarkan harga modal dan kategori, bukan hasil riset pasar. Pengguna tetap perlu menyesuaikan dengan kondisi di lapangan.
 - Teks hasil AI bisa saja kurang tepat, jadi tetap perlu dibaca ulang sebelum diunggah.
 - Riwayat hanya tersimpan di browser yang dipakai dan hilang kalau data browser dihapus. Belum ada akun pengguna atau sinkronisasi antarperangkat.
@@ -128,11 +130,12 @@ Tidak diperlukan. Aplikasi bisa dipakai tanpa login.
 ## Third-party Resources / Credits
 
 - [Next.js](https://nextjs.org) dan [React](https://react.dev) (MIT)
+- [@anthropic-ai/sdk](https://www.npmjs.com/package/@anthropic-ai/sdk), SDK resmi Claude API (MIT)
 - [@google/genai](https://www.npmjs.com/package/@google/genai), SDK resmi Gemini (Apache-2.0)
 - [Zod](https://zod.dev) untuk skema dan validasi (MIT)
 - [GSAP](https://gsap.com) (lisensi standar GSAP, gratis) dan [Lenis](https://lenis.darkroom.engineering) (MIT) untuk animasi dan gulir halus
 - Font [Familjen Grotesk](https://fonts.google.com/specimen/Familjen+Grotesk), [Plus Jakarta Sans](https://fonts.google.com/specimen/Plus+Jakarta+Sans), dan [IBM Plex Mono](https://fonts.google.com/specimen/IBM+Plex+Mono) dari Google Fonts (SIL Open Font License 1.1). Berkas WOFF2 subset Latin disimpan di `app/fonts/` dan dimuat lewat `next/font/local`, jadi build tidak bergantung pada server Google. Rincian lisensi di `app/fonts/LICENSE.md`
-- Gemini API oleh Google
+- Claude API oleh Anthropic (penyedia AI utama) dan Gemini API oleh Google (cadangan)
 - Struk contoh di beranda dan ikon digambar langsung dengan CSS dan SVG inline, tanpa pustaka ikon atau gambar hasil generator
 - Foto dari [Pexels](https://www.pexels.com) (lisensi Pexels), disimpan di `public/foto/`:
   - `hero-umkm.jpg`, pedagang sate di pasar kuliner Bali, oleh [G Y](https://www.pexels.com/photo/31246481/)
