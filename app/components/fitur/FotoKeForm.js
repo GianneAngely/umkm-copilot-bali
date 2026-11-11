@@ -6,7 +6,7 @@ import s from "./fitur.module.css";
 const LEBAR_MAKS = 1280;
 
 // Perkecil foto di browser sebelum dikirim: sisi terpanjang paling besar 1280 px, JPEG.
-async function kompres(file) {
+export async function kompres(file) {
   let bitmap;
   try {
     bitmap = await createImageBitmap(file, { imageOrientation: "from-image" });

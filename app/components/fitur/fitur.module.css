@@ -210,3 +210,41 @@
 .gelembungKeluar { align-self: flex-end; background: #d9fdd3; border-top-right-radius: 0; }
 .chatIsi { background: var(--stabilo); color: var(--stabilo-teks); padding: 0 2px; border-radius: 2px; }
 .chatKartu > button { align-self: flex-start; }
+
+/* ---------- Foto studio ---------- */
+.studio { color: var(--tinta); }
+.studioIsi { display: grid; grid-template-columns: 1fr; gap: 16px; margin-top: 16px; align-items: start; }
+@media (min-width: 820px) { .studioIsi { grid-template-columns: 1.4fr 1fr; } }
+.studioBanding {
+  position: relative; margin: 0 auto; width: 100%;
+  overflow: hidden; border-radius: 10px; border: 1px solid var(--garis-soft);
+  background: var(--kertas-2);
+}
+.studioGambar { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; display: block; }
+.studioRedup { position: absolute; inset: 0; background: rgb(12 26 21 / 0.55); pointer-events: none; }
+.studioHasil { position: absolute; display: block; object-fit: fill; outline: 2px dashed rgb(255 252 243 / 0.85); outline-offset: -1px; }
+.studioGaris { position: absolute; top: 0; bottom: 0; width: 3px; margin-left: -1.5px; background: var(--kertas-hi); box-shadow: 0 0 0 1px rgb(0 0 0 / 0.25); pointer-events: none; }
+.studioTag {
+  position: absolute; top: 10px; padding: 3px 8px; border-radius: 99px;
+  background: rgb(23 59 47 / 0.78); color: #fffcf3;
+  font: 600 0.68rem/1.3 var(--mono); letter-spacing: 0.06em; text-transform: uppercase; pointer-events: none;
+}
+.studioTagKiri { left: 10px; }
+.studioTagKanan { right: 10px; }
+.studioSlider { position: absolute; inset: 0; width: 100%; height: 100%; margin: 0; opacity: 0; cursor: ew-resize; touch-action: pan-y; }
+.studioSlider:focus-visible { opacity: 0.001; }
+.studioBanding:has(.studioSlider:focus-visible) { outline: 3px solid var(--kunyit); outline-offset: 2px; }
+.studioLabel { grid-column: 1 / -1; margin: -6px 0 0; font: 500 0.78rem/1.4 var(--mono); color: var(--tinta-2); }
+@media (min-width: 820px) { .studioLabel { grid-column: 1; grid-row: 2; } }
+.studioKartu {
+  display: flex; flex-direction: column; gap: 8px;
+  padding: 16px; border-radius: 10px; background: var(--kertas-hi); border: 1px solid var(--garis-soft);
+}
+@media (min-width: 820px) { .studioKartu { grid-column: 2; grid-row: 1 / span 2; } }
+.studioKartu .catatanContoh { margin-top: 0; }
+.studioKartu > button { align-self: flex-start; margin-top: 6px; }
+.studioNilai { margin: 0; font: 800 1rem/1 var(--display); }
+.studioNilai span { font-size: 2.6rem; }
+.studioNilai small { font: 500 0.78rem/1 var(--mono); color: var(--tinta-2); margin-left: 6px; }
+.studioDaftar { margin: 0 0 4px; padding-left: 1.2em; display: flex; flex-direction: column; gap: 4px; font-size: 0.93rem; line-height: 1.45; }
+.studioAtur { margin: 0 0 4px; font-size: 0.9rem; color: var(--tinta-2); }
