@@ -1,7 +1,8 @@
-import { AiError } from "@/lib/gemini";
+import { AiError, adaPenyediaAI } from "@/lib/ai";
 import { buatKalender, kalenderContoh } from "@/lib/kalender";
 
-export const maxDuration = 30;
+// Claude (maks ~20 dtk) lalu cadangan Gemini (maks 25 dtk).
+export const maxDuration = 60;
 
 const KATEGORI = ["Kuliner", "Kerajinan", "Fashion", "Oleh-oleh", "Lainnya"];
 
@@ -37,7 +38,7 @@ export async function POST(request) {
   }
 
   const input = { produk, ringkasan, mulai };
-  if (!process.env.GEMINI_API_KEY) {
+  if (!adaPenyediaAI()) {
     return Response.json({ mode: "mock", result: kalenderContoh(input) });
   }
 

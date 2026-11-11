@@ -1,7 +1,8 @@
-import { AiError } from "@/lib/gemini";
+import { AiError, adaPenyediaAI } from "@/lib/ai";
 import { UKURAN_MAKS, bacaFoto, fotoContoh, jenisGambar } from "@/lib/foto";
 
-export const maxDuration = 30;
+// Claude (maks ~20 dtk) lalu cadangan Gemini (maks 25 dtk).
+export const maxDuration = 60;
 
 // Menerima foto produk sebagai multipart (field "foto") atau JSON { gambar: "data:image/...;base64,..." }.
 export async function POST(request) {
@@ -32,7 +33,7 @@ export async function POST(request) {
     return Response.json({ error: "Format foto harus JPEG atau PNG." }, { status: 415 });
   }
 
-  if (!process.env.GEMINI_API_KEY) {
+  if (!adaPenyediaAI()) {
     return Response.json({ mode: "mock", result: fotoContoh() });
   }
 

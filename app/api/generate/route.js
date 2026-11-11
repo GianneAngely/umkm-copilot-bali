@@ -1,6 +1,8 @@
-import { AiError, generateMock, generateWithGemini } from "@/lib/generate";
+import { AiError, adaPenyediaAI } from "@/lib/ai";
+import { generateMock, generateWithAI } from "@/lib/generate";
 
-export const maxDuration = 30;
+// Claude (maks ~20 dtk) lalu cadangan Gemini (maks 25 dtk).
+export const maxDuration = 60;
 
 const KATEGORI = ["Kuliner", "Kerajinan", "Fashion", "Oleh-oleh", "Lainnya"];
 
@@ -23,12 +25,12 @@ export async function POST(request) {
     return Response.json({ error: "Nama produk wajib diisi." }, { status: 400 });
   }
 
-  if (!process.env.GEMINI_API_KEY) {
+  if (!adaPenyediaAI()) {
     return Response.json({ mode: "mock", result: generateMock(input) });
   }
 
   try {
-    const { data, model } = await generateWithGemini(input);
+    const { data, model } = await generateWithAI(input);
     return Response.json({ mode: "ai", model, result: data });
   } catch (err) {
     if (err instanceof AiError) {
