@@ -10,6 +10,7 @@ import { CONTOH } from "../data/contoh";
 import FotoKeForm from "../components/fitur/FotoKeForm";
 import KalenderKonten from "../components/fitur/KalenderKonten";
 import PostinganIG from "../components/fitur/PostinganIG";
+import BalasChat from "../components/fitur/BalasChat";
 import Tur from "../components/Tur";
 import { mintaJson } from "../../lib/klien";
 
@@ -69,7 +70,6 @@ export default function Aplikasi() {
   const [faktaForm, setFaktaForm] = useState(null);
   const [tampil, setTampil] = useState("nota");
   const [foto, setFoto] = useState("");
-  const [fotoContoh, setFotoContoh] = useState({});
   const [proses, setProses] = useState({ mulai: 0, selesai: 0 });
   const [putar, setPutar] = useState(0);
   const resultsRef = useRef(null);
@@ -77,18 +77,9 @@ export default function Aplikasi() {
 
   useEffect(() => setHistory(loadHistory()), []);
 
-  // Foto produk contoh (public/foto/contoh-<id>.jpg) dipakai kalau berkasnya ada; kalau tidak, foto suasana kategori.
-  useEffect(() => {
-    for (const c of CONTOH) {
-      const img = new Image();
-      img.onload = () => setFotoContoh((m) => ({ ...m, [c.id]: img.src }));
-      img.src = `/foto/contoh-${c.id}.jpg`;
-    }
-  }, []);
-
+  // Belum ada foto produk asli: gambar memakai foto suasana Pexels per kategori.
   function fotoProduk(f) {
-    const c = f && CONTOH.find((x) => x.form.nama === f.nama);
-    return (c && fotoContoh[c.id]) || FOTO_KATEGORI[f?.kategori] || FOTO_KATEGORI.Lainnya;
+    return FOTO_KATEGORI[f?.kategori] || FOTO_KATEGORI.Lainnya;
   }
 
   // Nama produk dari formulir di beranda (?nama=) hanya mengisi kolom, tidak langsung mengirim.
@@ -262,7 +253,7 @@ export default function Aplikasi() {
             <ul className="kartu-contoh">
               {CONTOH.map((c) => (
                 <li key={c.id}>
-                  <span className="kc-foto"><img src={fotoContoh[c.id] || FOTO_KATEGORI[c.form.kategori]} alt="" loading="lazy" /></span>
+                  <span className="kc-foto"><img src={FOTO_KATEGORI[c.form.kategori]} alt="" loading="lazy" /><small>foto suasana</small></span>
                   <p className="kc-kat">{c.form.kategori.toUpperCase()}</p>
                   <h2>{c.form.nama}</h2>
                   <p className="kc-isi">{c.form.keunggulan}</p>
@@ -360,7 +351,7 @@ export default function Aplikasi() {
                       <li key={c.id}>
                         <button type="button" onClick={() => muatContoh(c)}>
                           <span className="cf-gambar">
-                            <img src={fotoContoh[c.id] || FOTO_KATEGORI[c.form.kategori]} alt="" />
+                            <img src={FOTO_KATEGORI[c.form.kategori]} alt="" /><small className="cf-suasana">foto suasana</small>
                             <span className="kn-kat">{c.form.kategori.toUpperCase()}</span>
                           </span>
                           <span className="cf-isi">
@@ -440,13 +431,18 @@ export default function Aplikasi() {
 
                   <h2 className="sub-hasil"><span>Siap diunggah</span><small>Dibuat dari tulisan di atas</small></h2>
                   <section className="kartu-fitur" aria-label="Postingan Instagram" data-tur="ig">
-                    {!foto && <p className="ig-catat">Pratinjau memakai foto contoh. Unggah foto produk Anda di kartu Isi dari foto, gambarnya langsung berganti.</p>}
+                    {!foto && <p className="ig-catat">Pratinjau memakai foto suasana kategori. Unggah foto produk Anda di kartu Isi dari foto, gambarnya langsung berganti.</p>}
                     <PostinganIG hasil={r} foto={foto || fotoProduk(faktaForm || form)} namaProduk={faktaForm?.nama || form.nama} />
                   </section>
                   <section className="kartu-fitur" aria-label="Kalender konten 7 hari" data-tur="kalender">
                     <KalenderKonten
                       produk={{ nama: faktaForm?.nama || form.nama, kategori: faktaForm?.kategori || form.kategori, target: faktaForm?.target || form.target }}
                       ringkasan={r.deskripsi_singkat} />
+                  </section>
+                  <section className="kartu-fitur" aria-label="Balasan chat pembeli" data-tur="balas">
+                    <BalasChat
+                      produk={{ nama: faktaForm?.nama || form.nama, kategori: faktaForm?.kategori || form.kategori, keunggulan: faktaForm?.keunggulan ?? form.keunggulan, target: faktaForm?.target || form.target }}
+                      hasil={r} />
                   </section>
                 </div>
               )}

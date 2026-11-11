@@ -18,8 +18,10 @@ const LANGKAH = [
   { id: "buat", judul: "Buat tulisannya", teks: "Tekan tombol ini. Langkah kerja AI tampil satu per satu sampai hasilnya jadi.", klik: true },
   { id: "hasil", judul: "Hasilnya sudah jadi", teks: "Di sini terlihat model AI yang dipakai dan lama prosesnya. Tekan Salin semua, lalu tempel di Instagram, WhatsApp, atau marketplace.", tunggu: true },
   { id: "suntingan", judul: "Lembar suntingan", teks: "Tekan Draf Anda untuk melihat klaim kosong yang dicoret pena merah dan fakta Anda yang distabilo. Angkanya dihitung langsung dari isian dan hasil.", tunggu: true },
+  { id: "studio", judul: "Foto Studio", teks: "Foto seadanya dari HP diubah AI jadi foto katalog. Geser slider untuk membandingkan sebelum dan sesudah. Hasilnya langsung dipakai di gambar postingan.", tunggu: true },
   { id: "ig", judul: "Gambar postingan Instagram", teks: "Gambar feed dan story sudah jadi. Pilih template, lalu unduh PNG-nya.", tunggu: true },
   { id: "kalender", judul: "Kalender 7 hari", teks: "Tekan Susun kalender. AI menyusun rencana posting seminggu, termasuk hari raya Bali.", tunggu: true },
+  { id: "balas", judul: "Balasan chat pembeli", teks: "Lima template balasan WhatsApp untuk pertanyaan yang paling sering: harga, stok, ongkir, dan lainnya. Tekan Salin balasan lalu tempel di chat.", tunggu: true },
   { id: "riwayat", judul: "Riwayat", teks: "Tulisan yang pernah dibuat tersimpan di sini. Tekan untuk membukanya lagi." },
 ];
 

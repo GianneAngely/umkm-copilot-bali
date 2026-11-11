@@ -755,6 +755,8 @@ mark.ls-sapu { padding: 0 2px; background: var(--stabilo); box-decoration-break:
 .kc-foto { display: block; width: calc(100% + 2.6rem); margin: -1.3rem -1.3rem 0.5rem; aspect-ratio: 16 / 9; overflow: hidden; border-radius: 5px 5px 0 0; background: var(--kertas-2); }
 .kc-foto img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.5s var(--ease); }
 .kartu-contoh li:hover .kc-foto img { transform: scale(1.05); }
+.kc-foto { position: relative; }
+.kc-foto small, .cf-suasana { position: absolute; right: 8px; bottom: 8px; padding: 2px 7px; border-radius: 4px; background: rgb(23 59 47 / 0.75); color: var(--kertas); font: 400 0.62rem/1.4 var(--mono); }
 .ig-catat { margin-bottom: 0.9rem; padding: 0.55rem 0.8rem; border-left: 3px solid var(--kunyit); border-radius: 0 6px 6px 0; background: var(--kertas-2); font-size: 0.85rem; color: var(--tinta-2); }
 
 /* Mikro-interaksi salin */
