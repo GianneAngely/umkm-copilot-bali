@@ -11,6 +11,7 @@ import FotoKeForm from "../components/fitur/FotoKeForm";
 import KalenderKonten from "../components/fitur/KalenderKonten";
 import PostinganIG from "../components/fitur/PostinganIG";
 import BalasChat from "../components/fitur/BalasChat";
+import FotoStudio from "../components/fitur/FotoStudio";
 import Tur from "../components/Tur";
 import { mintaJson } from "../../lib/klien";
 
@@ -70,6 +71,7 @@ export default function Aplikasi() {
   const [faktaForm, setFaktaForm] = useState(null);
   const [tampil, setTampil] = useState("nota");
   const [foto, setFoto] = useState("");
+  const [fotoStudio, setFotoStudio] = useState("");
   const [proses, setProses] = useState({ mulai: 0, selesai: 0 });
   const [putar, setPutar] = useState(0);
   const resultsRef = useRef(null);
@@ -269,7 +271,7 @@ export default function Aplikasi() {
           <div className="kerja-grid">
             <div className="kolom-form">
             <div className="isi-foto" data-tur="foto">
-              <FotoKeForm onIsi={isiDariFoto} onFoto={setFoto} />
+              <FotoKeForm onIsi={isiDariFoto} onFoto={(u) => { setFoto(u); setFotoStudio(""); }} />
             </div>
             <form className="kertas-form" onSubmit={submit}>
               <p className="kf-kepala"><span>DRAF COPY</span><span>atau ketik sendiri</span></p>
@@ -430,9 +432,12 @@ export default function Aplikasi() {
                   </Section>
 
                   <h2 className="sub-hasil"><span>Siap diunggah</span><small>Dibuat dari tulisan di atas</small></h2>
+                  <section className="kartu-fitur" aria-label="Foto Studio" data-tur="studio">
+                    <FotoStudio foto={foto} onHasil={setFotoStudio} />
+                  </section>
                   <section className="kartu-fitur" aria-label="Postingan Instagram" data-tur="ig">
-                    {!foto && <p className="ig-catat">Pratinjau memakai foto suasana kategori. Unggah foto produk Anda di kartu Isi dari foto, gambarnya langsung berganti.</p>}
-                    <PostinganIG hasil={r} foto={foto || fotoProduk(faktaForm || form)} namaProduk={faktaForm?.nama || form.nama} />
+                    {!foto && !fotoStudio && <p className="ig-catat">Pratinjau memakai foto suasana kategori. Unggah foto produk Anda di kartu Isi dari foto, gambarnya langsung berganti.</p>}
+                    <PostinganIG hasil={r} foto={fotoStudio || foto || fotoProduk(faktaForm || form)} namaProduk={faktaForm?.nama || form.nama} />
                   </section>
                   <section className="kartu-fitur" aria-label="Kalender konten 7 hari" data-tur="kalender">
                     <KalenderKonten
