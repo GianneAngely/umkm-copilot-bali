@@ -2,24 +2,13 @@
 
 import { useEffect, useRef, useState } from "react";
 import { BatangSuntingan, MeterTeks } from "./Grafik";
+import { POLA_KLAIM, cariKlaim } from "../../lib/klaim";
 
 // Semua di berkas ini murni tampilan: membandingkan isian dengan hasil di sisi klien.
 // API, skema hasil, dan rantai model tidak disentuh.
 
-// Klaim kosong yang tidak bisa dibuktikan. Kata ini dicoret di draf kalau tidak ikut ke hasil,
-// dan dihitung sebagai "klaim ditambahkan" kalau muncul di hasil padahal tidak ada di isian.
-const KLAIM = [
-  "nomor satu", "no. 1", "no 1", "100%", "pokoknya", "dijamin", "terbaik", "terenak", "terlezat", "termurah",
-  "terlaris", "ternikmat", "terpercaya", "paling", "enak", "lezat", "murah", "mantap", "mantul", "juara",
-  "sempurna", "istimewa", "premium", "viral", "legendaris", "best", "cheapest", "finest", "number one",
-];
-
-const esc = (s) => s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
-const POLA_KLAIM = new RegExp(`(?<![\\p{L}\\d])(${KLAIM.map(esc).join("|")})(?![\\p{L}\\d])`, "giu");
-
-function cariKlaim(teks) {
-  return [...String(teks || "").matchAll(POLA_KLAIM)].map((m) => m[0].toLowerCase());
-}
+// Klaim kosong (daftar di lib/klaim.js, sama dengan yang dicek server) dicoret di draf kalau tidak
+// ikut ke hasil, dan dihitung sebagai "klaim ditambahkan" kalau muncul di hasil padahal tidak ada di isian.
 
 export function detik(ms) {
   return (ms / 1000).toLocaleString("id-ID", { minimumFractionDigits: 1, maximumFractionDigits: 1 }) + " detik";
