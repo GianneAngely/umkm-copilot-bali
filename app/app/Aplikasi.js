@@ -69,12 +69,27 @@ export default function Aplikasi() {
   const [faktaForm, setFaktaForm] = useState(null);
   const [tampil, setTampil] = useState("nota");
   const [foto, setFoto] = useState("");
+  const [fotoContoh, setFotoContoh] = useState({});
   const [proses, setProses] = useState({ mulai: 0, selesai: 0 });
   const [putar, setPutar] = useState(0);
   const resultsRef = useRef(null);
   const namaRef = useRef(null);
 
   useEffect(() => setHistory(loadHistory()), []);
+
+  // Foto produk contoh (public/foto/contoh-<id>.jpg) dipakai kalau berkasnya ada; kalau tidak, foto suasana kategori.
+  useEffect(() => {
+    for (const c of CONTOH) {
+      const img = new Image();
+      img.onload = () => setFotoContoh((m) => ({ ...m, [c.id]: img.src }));
+      img.src = `/foto/contoh-${c.id}.jpg`;
+    }
+  }, []);
+
+  function fotoProduk(f) {
+    const c = f && CONTOH.find((x) => x.form.nama === f.nama);
+    return (c && fotoContoh[c.id]) || FOTO_KATEGORI[f?.kategori] || FOTO_KATEGORI.Lainnya;
+  }
 
   // Nama produk dari formulir di beranda (?nama=) hanya mengisi kolom, tidak langsung mengirim.
   useEffect(() => {
@@ -222,6 +237,7 @@ export default function Aplikasi() {
                 {history.map((h) => (
                   <li key={h.at}>
                     <button type="button" onClick={() => bukaRiwayat(h)}>
+                      <img className="dn-foto" src={fotoProduk(h.form)} alt="" loading="lazy" />
                       <span className="dn-nama">{h.form.nama}</span>
                       <span className="titik" aria-hidden="true" />
                       <span className="dn-meta">{h.form.kategori} · {waktu(h.at)}</span>
@@ -246,6 +262,7 @@ export default function Aplikasi() {
             <ul className="kartu-contoh">
               {CONTOH.map((c) => (
                 <li key={c.id}>
+                  <span className="kc-foto"><img src={fotoContoh[c.id] || FOTO_KATEGORI[c.form.kategori]} alt="" loading="lazy" /></span>
                   <p className="kc-kat">{c.form.kategori.toUpperCase()}</p>
                   <h2>{c.form.nama}</h2>
                   <p className="kc-isi">{c.form.keunggulan}</p>
@@ -343,7 +360,7 @@ export default function Aplikasi() {
                       <li key={c.id}>
                         <button type="button" onClick={() => muatContoh(c)}>
                           <span className="cf-gambar">
-                            <img src={FOTO_KATEGORI[c.form.kategori]} alt="" loading="lazy" />
+                            <img src={fotoContoh[c.id] || FOTO_KATEGORI[c.form.kategori]} alt="" />
                             <span className="kn-kat">{c.form.kategori.toUpperCase()}</span>
                           </span>
                           <span className="cf-isi">
@@ -423,7 +440,8 @@ export default function Aplikasi() {
 
                   <h2 className="sub-hasil"><span>Siap diunggah</span><small>Dibuat dari tulisan di atas</small></h2>
                   <section className="kartu-fitur" aria-label="Postingan Instagram" data-tur="ig">
-                    <PostinganIG hasil={r} foto={foto} namaProduk={faktaForm?.nama || form.nama} />
+                    {!foto && <p className="ig-catat">Pratinjau memakai foto contoh. Unggah foto produk Anda di kartu Isi dari foto, gambarnya langsung berganti.</p>}
+                    <PostinganIG hasil={r} foto={foto || fotoProduk(faktaForm || form)} namaProduk={faktaForm?.nama || form.nama} />
                   </section>
                   <section className="kartu-fitur" aria-label="Kalender konten 7 hari" data-tur="kalender">
                     <KalenderKonten

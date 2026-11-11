@@ -175,3 +175,38 @@
 .terunduh { background: var(--tinta) !important; border-color: var(--tinta) !important; color: var(--kertas) !important; animation: pop 0.35s var(--ease); }
 @keyframes pop { 40% { transform: scale(1.05); } }
 @media (prefers-reduced-motion: reduce) { .mingguMemuat li, .terunduh { animation: none; } .foto { transition: none; } }
+.pratinjau { width: 120px; height: 120px; box-shadow: var(--angkat-kecil); border: 3px solid var(--kertas-hi); transform: rotate(-2deg); }
+@media (max-width: 400px) { .pratinjau { width: 84px; height: 84px; } }
+
+/* ---------- Balas chat pembeli ---------- */
+.chat { color: var(--tinta); }
+.chat .catatanContoh { margin-top: 14px; }
+.chatDaftar {
+  list-style: none; margin: 16px 0 0; padding: 0;
+  display: grid; grid-template-columns: 1fr; gap: 12px;
+}
+@media (min-width: 720px) { .chatDaftar { grid-template-columns: repeat(2, 1fr); } }
+@media (min-width: 1100px) { .chatDaftar { grid-template-columns: repeat(3, 1fr); } }
+.chatKartu {
+  display: flex; flex-direction: column; gap: 10px;
+  padding: 14px; border-radius: 10px;
+  background: var(--kertas-hi); border: 1px solid var(--garis-soft);
+}
+.chatJenis { margin: 0; font: 600 0.75rem/1.2 var(--mono); letter-spacing: 0.06em; text-transform: uppercase; color: var(--tinta-2); }
+/* Pratinjau ala WhatsApp: warna latar dan gelembung meniru aplikasinya supaya mudah dibayangkan. */
+.chatLayar {
+  flex: 1;
+  display: flex; flex-direction: column; gap: 6px;
+  padding: 12px 10px; border-radius: 8px;
+  background: #efeae2;
+}
+.gelembungMasuk, .gelembungKeluar {
+  max-width: 88%; margin: 0;
+  padding: 7px 10px; border-radius: 8px;
+  color: #111b21; font-size: 0.9rem; line-height: 1.45; white-space: pre-line;
+  box-shadow: 0 1px 0.5px rgb(11 20 26 / 0.13);
+}
+.gelembungMasuk { align-self: flex-start; background: #ffffff; border-top-left-radius: 0; }
+.gelembungKeluar { align-self: flex-end; background: #d9fdd3; border-top-right-radius: 0; }
+.chatIsi { background: var(--stabilo); color: var(--stabilo-teks); padding: 0 2px; border-radius: 2px; }
+.chatKartu > button { align-self: flex-start; }

@@ -749,6 +749,14 @@ mark.ls-sapu { padding: 0 2px; background: var(--stabilo); box-decoration-break:
 .kartu-fitur { min-width: 0; padding: 1.2rem 1.3rem 1.3rem; border: 1.5px solid var(--garis-soft); border-radius: 10px; background: var(--kertas-hi); box-shadow: var(--angkat); animation: muncul-struk 0.5s var(--ease) both; }
 @media (max-width: 480px) { .kartu-fitur { padding: 1rem 0.95rem; } }
 
+/* Foto di riwayat, contoh, dan catatan IG */
+.dn-foto { flex: none; align-self: center; width: 56px; height: 56px; border-radius: 8px; object-fit: cover; box-shadow: var(--angkat-kecil); }
+@media (max-width: 620px) { .daftar-nota button { position: relative; padding-left: 72px; } .dn-foto { position: absolute; left: 0.4rem; top: 1rem; width: 52px; height: 52px; } }
+.kc-foto { display: block; width: calc(100% + 2.6rem); margin: -1.3rem -1.3rem 0.5rem; aspect-ratio: 16 / 9; overflow: hidden; border-radius: 5px 5px 0 0; background: var(--kertas-2); }
+.kc-foto img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.5s var(--ease); }
+.kartu-contoh li:hover .kc-foto img { transform: scale(1.05); }
+.ig-catat { margin-bottom: 0.9rem; padding: 0.55rem 0.8rem; border-left: 3px solid var(--kunyit); border-radius: 0 6px 6px 0; background: var(--kertas-2); font-size: 0.85rem; color: var(--tinta-2); }
+
 /* Mikro-interaksi salin */
 .copy.is-copied .icon { animation: centang 0.35s var(--ease); }
 .copy.is-copied { animation: pop-salin 0.35s var(--ease); }
