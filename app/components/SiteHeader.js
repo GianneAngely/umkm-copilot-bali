@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import Icon from "./Icon";
+import MegaFitur from "./MegaFitur";
 
 const MENU = [
   ["#masalah", "Masalah"],
@@ -36,7 +37,7 @@ export default function SiteHeader() {
       <div className="wrap nav-bar">
         <Link className="merek" href="/" aria-label="Wicara, ke atas">Wicara<i aria-hidden="true" /></Link>
         <nav className="nav-links" aria-label="Navigasi utama">
-          {MENU.map(([href, label]) => <a key={href} href={href}>{label}</a>)}
+          {MENU.map(([href, label]) => (href === "#fitur" ? <MegaFitur key={href} label="Fitur" /> : <a key={href} href={href}>{label}</a>))}
         </nav>
         <div className="nav-kanan">
           <Link className="nav-cta" href="/app">Buka app <span className="panah">→</span></Link>
@@ -48,6 +49,7 @@ export default function SiteHeader() {
       </div>
       <nav id="menu-hp" className="menu-hp" aria-label="Navigasi utama" hidden={!buka}>
         {MENU.map(([href, label]) => <a key={href} href={href} onClick={() => setBuka(false)}>{label}</a>)}
+        <MegaFitur label="Semua fitur" className="mf-di-menu" />
         <Link className="btn-hijau" href="/app">Buka app <span className="panah">→</span></Link>
       </nav>
     </header>

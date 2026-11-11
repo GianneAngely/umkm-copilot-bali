@@ -12,7 +12,10 @@ import KalenderKonten from "../components/fitur/KalenderKonten";
 import PostinganIG from "../components/fitur/PostinganIG";
 import BalasChat from "../components/fitur/BalasChat";
 import FotoStudio from "../components/fitur/FotoStudio";
+import ProfilInstagram from "../components/fitur/ProfilInstagram";
 import Tur from "../components/Tur";
+import MegaFitur from "../components/MegaFitur";
+import { SEMUA_FITUR } from "../data/fitur";
 import { mintaJson } from "../../lib/klien";
 
 const KATEGORI = ["Kuliner", "Kerajinan", "Fashion", "Oleh-oleh", "Lainnya"];
@@ -77,6 +80,7 @@ export default function Aplikasi() {
   const [fotoStudio, setFotoStudio] = useState("");
   const [proses, setProses] = useState({ mulai: 0, selesai: 0 });
   const [putar, setPutar] = useState(0);
+  const [petunjuk, setPetunjuk] = useState("");
   const resultsRef = useRef(null);
   const namaRef = useRef(null);
 
@@ -111,6 +115,7 @@ export default function Aplikasi() {
     setLoading(true);
     setError("");
     setContohGalat(null);
+    setPetunjuk("");
     const mulai = performance.now();
     setProses({ mulai, selesai: 0 });
     // Bawa stepper ke layar kalau kolom hasil sedang di luar pandangan.
@@ -170,6 +175,44 @@ export default function Aplikasi() {
     }));
   }
 
+  // Dari mega menu atau tautan /app#id: buka bagian fiturnya. Bagian yang baru ada setelah hasil jadi
+  // diarahkan ke formulir dengan contoh produk dan petunjuk singkat.
+  function pilihFitur(id) {
+    if (id === "riwayat" || id === "contoh") return setTampil(id);
+    if (id === "tutorial") return document.querySelector("[data-pemicu-tur]")?.click();
+    const f = SEMUA_FITUR.find((x) => x.id === id);
+    if (!f) return;
+    setTampil("nota");
+    setTimeout(() => {
+      const el = document.querySelector(`[data-tur="${f.sasaran}"]`);
+      if (el) {
+        setPetunjuk("");
+        el.scrollIntoView({ behavior: "smooth", block: "start" });
+        if (f.sasaran === "nama") namaRef.current?.focus({ preventScroll: true });
+        return;
+      }
+      if (f.butuhHasil) {
+        if (!form.nama) setForm({ ...CONTOH[0].form });
+        setPetunjuk(`${f.nama} muncul setelah tulisan jadi. ${form.nama ? "" : "Contoh produk sudah dimuat. "}Tekan Sunting dan tulis untuk melihatnya.`);
+        document.querySelector('[data-tur="buat"]')?.scrollIntoView({ behavior: "smooth", block: "center" });
+      }
+    }, 60);
+  }
+
+  useEffect(() => {
+    const dariHash = () => {
+      const id = decodeURIComponent(window.location.hash.slice(1));
+      if (id) pilihFitur(id);
+    };
+    const t = setTimeout(dariHash, 300);
+    window.addEventListener("hashchange", dariHash);
+    return () => {
+      clearTimeout(t);
+      window.removeEventListener("hashchange", dariHash);
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   function notaBaru() {
     setTampil("nota");
     requestAnimationFrame(() => namaRef.current?.focus());
@@ -222,6 +265,7 @@ export default function Aplikasi() {
           </div>
           <div className="kerja-alat">
             <p className={`status status-${status[0]}`} role="status"><i aria-hidden="true" />{status[1]}</p>
+            <MegaFitur label="Semua fitur" className="mf-app" onPilih={pilihFitur} />
             <Tur />
           </div>
         </header>
@@ -318,6 +362,7 @@ export default function Aplikasi() {
                   </label>
                 </div>
               </fieldset>
+              {petunjuk && <p className="petunjuk" role="status">{petunjuk}</p>}
               <button type="submit" className="btn-hijau btn-blok btn-sunting" disabled={loading} data-tur="buat">
                 {loading ? <><span className="spinner" aria-hidden="true" />AI sedang menyunting...</> : <>Sunting dan tulis <span aria-hidden="true">↗</span></>}
               </button>
@@ -441,6 +486,11 @@ export default function Aplikasi() {
                   <section className="kartu-fitur" aria-label="Postingan Instagram" data-tur="ig">
                     {!foto && !fotoStudio && <p className="ig-catat">Pratinjau memakai foto suasana kategori. Unggah foto produk Anda di kartu Isi dari foto, gambarnya akan langsung berganti.</p>}
                     <PostinganIG hasil={r} foto={fotoStudio || foto || fotoProduk(faktaForm || form)} namaProduk={faktaForm?.nama || form.nama} />
+                  </section>
+                  <section className="kartu-fitur" aria-label="Profil Instagram" data-tur="profil">
+                    <ProfilInstagram
+                      produk={{ nama: faktaForm?.nama || form.nama, kategori: faktaForm?.kategori || form.kategori, keunggulan: faktaForm?.keunggulan ?? form.keunggulan, target: faktaForm?.target || form.target }}
+                      foto={fotoStudio || foto || fotoProduk(faktaForm || form)} />
                   </section>
                   <section className="kartu-fitur" aria-label="Kalender konten 7 hari" data-tur="kalender">
                     <KalenderKonten
