@@ -18,6 +18,12 @@ Disusun mengikuti Lampiran C Panduan Peserta AI Web Innovation Challenge, Bali D
 | Pre-existing Components | Tidak ada. Seluruh aplikasi dibuat selama periode kompetisi |
 | Third-party Assets / Credits | Font Bricolage Grotesque dan Spline Sans Mono dari Google Fonts (SIL Open Font License 1.1), disimpan di `app/fonts/`. Foto di `public/foto/` dari Pexels (lisensi Pexels), nama fotografer dicantumkan di README. Ikon, struk, dan template postingan digambar sendiri dengan CSS, SVG inline, dan Canvas |
 
+## Menjaga fakta dan klaim
+
+- Instruksi sistem melarang AI menambah fakta di luar isian pengguna (asal-usul, sejarah, cara membuat, rasa atau kemasan yang tidak disebut, kelangkaan stok, promo, garansi, testimoni, angka) dan melarang kata klaim kosong dari daftar di `lib/klaim.js`, termasuk di tagar dan teks bahasa Inggris.
+- Server memeriksa hasil generate, profil, balasan, dan kalender terhadap daftar itu. Kalau ada kata klaim, server meminta ulang sekali dengan pesan koreksi. Kalau masih ada, hasil dikembalikan apa adanya.
+- Lembar suntingan di aplikasi memakai daftar yang sama dan menampilkan jumlah "klaim ditambahkan" kepada pengguna. Pemeriksaan berbasis daftar kata ini tidak menangkap semua kalimat karangan, jadi pengguna tetap diminta membaca ulang sebelum mengunggah.
+
 ## Privasi dan penggunaan data
 
 - Data produk yang diisi pengguna (nama produk, kategori, bahan atau keunggulan, harga modal, dan target pasar) dan foto produk yang diunggah dikirim dari server aplikasi ke Claude API (Anthropic) untuk diproses, atau ke Gemini API kalau Claude sedang galat. Aplikasi tidak menyimpan data atau foto ini di server.
