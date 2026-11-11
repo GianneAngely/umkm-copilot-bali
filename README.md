@@ -31,6 +31,7 @@ Fitur berikut sudah berfungsi:
 - **Isi dari foto**: pengguna memotret atau memilih foto produk, lalu AI membaca foto dan mengisi nama, kategori, dan keunggulan di form. AI hanya menulis yang terlihat di foto dan mencatat bagian yang meragukan.
 - **Postingan Instagram siap unduh**: hasil generate digambar ke kanvas ukuran feed (1080×1080) dan story (1080×1920) dengan tiga template bergaya nota, lalu diunduh sebagai PNG. Semua proses ini terjadi di browser.
 - **Kalender konten 7 hari**: AI menyusun rencana posting seminggu yang memperhitungkan hari raya Bali (Galungan, Kuningan, Nyepi, Saraswati, Pagerwesi, Siwaratri), libur nasional, dan libur sekolah. Data tanggalnya disimpan di `lib/hari-raya-bali.js` beserta sumbernya.
+- **Foto studio**: AI (Claude, dengan mata vision) menilai foto produk dari HP: memberi skor 1–10, menyebut sampai tiga masalah, dan menentukan cara merapikannya (kotak potong supaya produk di tengah, kemiringan, cahaya, kontras, warna, dan kehangatan). Pengaturan itu lalu diterapkan ke foto asli di peramban dengan kanvas. Tidak ada gambar baru yang dibuat AI; label di layar berbunyi "Foto asli Anda, dirapikan otomatis sesuai saran AI". Ada slider sebelum/sesudah, tips memotret ulang, dan tombol unduh JPG. Contoh: [docs/studio-contoh.png](docs/studio-contoh.png).
 - **Balas chat pembeli**: AI menyiapkan lima template balasan WhatsApp untuk pertanyaan yang paling sering masuk (harga, stok, cara pesan, ongkir, dan pertanyaan turis dalam Bahasa Inggris), lengkap dengan pratinjau gelembung chat dan tombol Salin. Info yang tidak diisi penjual, seperti ongkir, rekening, atau status stok, ditulis sebagai `[isi sendiri: ...]` dan diberi stabilo.
 - **Mode contoh**: kalau server belum diberi API key, aplikasi tetap bisa dicoba dan menampilkan hasil contoh yang diberi label jelas.
 
@@ -50,10 +51,11 @@ AI adalah inti produk: tanpa model bahasa, aplikasi tidak bisa menyusun teks pem
 
 - **Model utama**: Claude Haiku 5.5 (`claude-haiku-5-5`) dari Anthropic, dipanggil lewat Claude API dengan *structured output* (`output_config.format` dari skema Zod yang sama) dan effort `low` supaya cepat. Model yang sama dipakai untuk teks pemasaran, membaca foto produk, dan kalender. Kalau Claude galat, menolak, atau `ANTHROPIC_API_KEY` kosong, server otomatis pindah ke cadangan Gemini.
 - **Cadangan**: Google Gemini lewat Gemini API dengan API key free tier. Server mencoba berurutan `gemini-3.5-flash`, `gemini-3.6-flash`, `gemini-3.5-flash-lite`, lalu `gemini-3.8-flash`, pindah ke model berikutnya kalau sibuk (503/429) atau tidak menjawab dalam 9 detik. Satu klik memakai satu panggilan kecuali gagal, isian yang persis sama diambil dari cache sessionStorage, dan kalau semua model penuh pengguna mendapat pesan jujur plus tombol untuk melihat hasil berlabel Contoh. Model yang sibuk dicoba ulang sekali; model yang kuotanya habis (429) langsung dilewati karena kuota free tier dihitung per model. Total waktu tunggu dibatasi 25 detik. Respons API menyertakan field `model` berisi model yang benar-benar menjawab.
-- **Empat fungsi AI**:
+- **Lima fungsi AI**:
   - `/api/generate`: teks pemasaran dari data produk.
   - `/api/foto`: membaca foto produk (JPEG/PNG, maksimal 4 MB, diperkecil di browser sampai 1280 px) dan mengisi form.
   - `/api/kalender`: rencana posting 7 hari. Server menyisipkan hari raya dan libur yang jatuh di rentang tanggal itu ke prompt, jadi AI tidak menebak tanggal hari raya sendiri.
+  - `/api/studio`: menilai foto produk dan mengembalikan pengaturan perbaikan dalam JSON (`nilai`, `masalah`, `perbaikan` berisi `crop`, `kecerahan`, `kontras`, `saturasi`, `kehangatan`, `rotasi`, serta `tips_foto_ulang`). Server menjepit setiap angka (misalnya penyesuaian warna hanya -0,3 sampai 0,3 dan rotasi -10 sampai 10 derajat), lalu peramban menerapkannya ke foto asli.
   - `/api/balasan`: lima template balasan WhatsApp dari data produk dan harga. Instruksinya melarang mengarang ongkir, alamat, rekening, stok, varian, atau kemasan; bagian itu diganti placeholder.
 - **Input**: data produk dari form, disusun menjadi prompt pendek di server. Instruksi sistem meminta bahasa yang wajar, melarang klaim berlebihan, dan melarang AI mengarang fakta yang tidak ada di data (misalnya sertifikat atau penghargaan).
 - **Output**: JSON terstruktur yang dibatasi skema (`responseJsonSchema`), misalnya untuk generate berisi `deskripsi_singkat`, `deskripsi_cerita`, `caption`, `hashtags`, `harga` (`min`, `max`, `alasan`), dan `english` (`description`, `caption`). Server memvalidasi hasil dengan Zod sebelum dikirim ke browser, sehingga setiap bagian di layar selalu terisi.
@@ -86,11 +88,11 @@ Struktur folder:
 
 - `app/`: halaman landing dan aplikasi.
 - `app/components/fitur/`: komponen `FotoKeForm`, `PostinganIG`, dan `KalenderKonten`.
-- `app/api/generate`, `app/api/foto`, `app/api/kalender`, `app/api/balasan`: endpoint dan validasi input.
+- `app/api/generate`, `app/api/foto`, `app/api/kalender`, `app/api/studio`, `app/api/balasan`: endpoint dan validasi input.
 - `lib/ai.js`: satu pintu panggilan AI, Claude dulu lalu cadangan Gemini.
 - `lib/claude.js`: panggilan Claude dengan structured output.
 - `lib/gemini.js`: panggilan Gemini dengan rantai model cadangan.
-- `lib/generate.js`, `lib/foto.js`, `lib/kalender.js`, `lib/balasan.js`: prompt, skema keluaran, dan data mode contoh tiap fitur.
+- `lib/generate.js`, `lib/foto.js`, `lib/kalender.js`, `lib/studio.js`, `lib/balasan.js`: prompt, skema keluaran, dan data mode contoh tiap fitur.
 - `lib/hari-raya-bali.js`: tanggal hari raya Bali, libur nasional, dan libur sekolah November 2026 sampai Desember 2027, dengan sumber tiap tanggal.
 
 ## Installation / Run Instructions
