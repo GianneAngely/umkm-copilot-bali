@@ -16,9 +16,9 @@ const LANGKAH = [
     angka: [["0", "API key di peramban"], ["1", "skema JSON tetap"]],
   },
   {
-    judul: "Gemini menulis, ada cadangan",
-    teks: "Model utama gemini-3.8-flash. Kalau sibuk, permintaan pindah ke model cadangan secara berurutan.",
-    angka: [["3", "model berantai"], ["≤25 dtk", "batas tunggu"]],
+    judul: "Claude menulis, Gemini cadangan",
+    teks: "Model utama Claude Haiku 5.5 dari Anthropic. Kalau Claude bermasalah, permintaan pindah ke rantai model Google Gemini.",
+    angka: [["5", "model berantai"], ["1", "skema yang sama"]],
   },
   {
     judul: "Pena merah dan stabilo",
@@ -35,7 +35,7 @@ const LANGKAH = [
 const NODE = [
   { x: 150, y: 20, w: 220, h: 56, label: "Draf copy", sub: "isian · foto" },
   { x: 150, y: 128, w: 220, h: 56, label: "Server Wicara", sub: "validasi · instruksi terkunci" },
-  { x: 150, y: 236, w: 220, h: 56, label: "Gemini", sub: "3.8-flash ⇢ cadangan" },
+  { x: 150, y: 236, w: 220, h: 56, label: "Claude", sub: "Haiku 5.5 ⇢ cadangan Gemini" },
   { x: 150, y: 344, w: 220, h: 56, label: "Pena & stabilo", sub: "cek fakta · Zod" },
 ];
 const HASIL = [
@@ -60,7 +60,7 @@ export default function AlurWicara() {
   return (
     <div className="aw">
       <div className="aw-diagram">
-        <svg viewBox="0 0 520 540" role="img" aria-label="Alur Wicara: draf copy, server Wicara, Gemini, pena merah dan stabilo, lalu empat struk, postingan IG, dan kalender tujuh hari">
+        <svg viewBox="0 0 520 540" role="img" aria-label="Alur Wicara: draf copy, server Wicara, Claude dengan cadangan Gemini, pena merah dan stabilo, lalu empat struk, postingan IG, dan kalender tujuh hari">
           {NODE.slice(0, 3).map((n, i) => (
             <g key={"g" + i}>
               <line x1="260" y1={n.y + n.h} x2="260" y2={NODE[i + 1].y} className="aw-garis" />

@@ -46,15 +46,15 @@ const ALUR = [
 ];
 
 const PERCAYA = [
-  ["Instruksi dikunci di server", "Model gemini-3.8-flash, jawaban wajib berbentuk JSON tetap dan dicek ulang di server. API key tidak pernah sampai ke peramban."],
+  ["Instruksi dikunci di server", "Model Claude Haiku 5.5 dengan cadangan Gemini, jawaban wajib berbentuk JSON tetap dan dicek ulang di server. API key tidak pernah sampai ke peramban."],
   ["Nol klaim karangan", "AI dilarang menambah sertifikat, penghargaan, atau lokasi toko. Kata dari isian Anda diberi stabilo supaya mudah dicek."],
-  ["Data tidak disimpan", "Tidak ada database. Isian diteruskan ke Gemini untuk diproses, dan riwayat lima tulisan tersimpan di peramban Anda sendiri."],
+  ["Data tidak disimpan", "Tidak ada database. Isian diteruskan ke Claude (cadangan: Gemini) untuk diproses, dan riwayat lima tulisan tersimpan di peramban Anda sendiri."],
 ];
 
 const FAQ = [
   ["Apakah gratis?", "Ya. Wicara bisa dipakai tanpa biaya dan tanpa daftar akun."],
   ["Hasilnya boleh diubah?", "Boleh, dan sebaiknya begitu. Salin hasilnya, sesuaikan dengan gaya toko Anda, lalu periksa lagi sebelum diunggah."],
-  ["Apakah data saya aman?", "Isian dikirim ke Google Gemini hanya untuk menyusun tulisan dan tidak disimpan di server kami. Karena memakai layanan gratis Gemini, isi data produk saja, jangan nama orang, nomor telepon, atau alamat."],
+  ["Apakah data saya aman?", "Isian dikirim ke Claude dari Anthropic, atau ke Google Gemini kalau Claude sedang bermasalah, hanya untuk menyusun tulisan dan tidak disimpan di server kami. Tetap isi data produk saja, jangan nama orang, nomor telepon, atau alamat."],
   ["Apa batasannya?", "Saran harga adalah perkiraan dari modal dan kategori, bukan riset pasar. Hasil AI tetap perlu dibaca ulang, dan foto produk belum bisa dibaca."],
 ];
 
@@ -149,7 +149,7 @@ export default function Beranda() {
               </li>
             ))}
           </ol>
-          <p className="loop" data-muncul>Data produk ke server, diteruskan ke Gemini, kembali sebagai empat tulisan</p>
+          <p className="loop" data-muncul>Data produk ke server, diteruskan ke Claude, kembali sebagai empat tulisan</p>
         </div>
       </section>
 
@@ -179,7 +179,7 @@ export default function Beranda() {
         <div className="wrap">
           <Pemisah no={4} nama="Di balik layar" />
           <h2 id="tek-judul" data-muncul>Dari draf sampai <span className="sorot-judul">siap posting</span>.</h2>
-          <p className="intro" data-muncul>Gulir untuk mengikuti satu draf melewati server, Gemini, dan pemeriksaan fakta.</p>
+          <p className="intro" data-muncul>Gulir untuk mengikuti satu draf melewati server, Claude, dan pemeriksaan fakta.</p>
           <AlurWicara />
         </div>
       </section>

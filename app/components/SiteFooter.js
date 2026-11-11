@@ -26,7 +26,7 @@ export default function SiteFooter() {
           <Link href="/app">Buka app</Link>
         </nav>
         <div className="kaki-info">
-          <p className="kaki-ai">Teks dibuat dengan bantuan AI (Google Gemini). Periksa kembali sebelum diunggah.</p>
+          <p className="kaki-ai">Teks dibuat dengan bantuan AI (Claude oleh Anthropic, cadangan Google Gemini). Periksa kembali sebelum diunggah.</p>
           <p>Dibuat oleh Gianne Angely, Teknik Informatika, Universitas Dhyana Pura.</p>
           <p>AI Web Innovation Challenge · Bali Digifest 2026</p>
           <p className="kaki-kredit">

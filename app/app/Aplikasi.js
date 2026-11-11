@@ -158,7 +158,7 @@ export default function Aplikasi() {
     : data?.mode === "mock"
       ? ["contoh", "Mode contoh"]
       : data?.mode === "ai"
-        ? ["aktif", "AI aktif · Gemini"]
+        ? ["aktif", data.model ? `AI aktif · ${data.model}` : "AI aktif"]
         : ["siap", "Siap menerima tulisan"];
 
   const judul = { nota: "Tulisan baru", riwayat: "Riwayat tulisan", contoh: "Contoh produk" }[tampil];
