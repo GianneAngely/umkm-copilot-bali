@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { BatangSuntingan, MeterTeks } from "./Grafik";
 
 // Semua di berkas ini murni tampilan: membandingkan isian dengan hasil di sisi klien.
 // API, skema hasil, dan rantai model tidak disentuh.
@@ -181,6 +182,15 @@ export function LembarSuntingan({ form, r, fakta, Stabilo, putar }) {
           </p>
         </div>
       )}
+
+      <div className="ls-grafik">
+        <BatangSuntingan fakta={a.fakta} klaim={a.klaimDicoret} />
+        <div className="ls-meter">
+          <MeterTeks label="Panjang caption" nilai={`${r.caption}\n\n${(r.hashtags || []).join(" ")}`.length} batas={2200} satuan="karakter" />
+          <MeterTeks label="Jumlah tagar" nilai={(r.hashtags || []).length} batas={30} satuan="tagar" />
+          <p className="ls-meter-catat">Batas dari Instagram: caption 2.200 karakter, tagar 30 per postingan.</p>
+        </div>
+      </div>
 
       <div className="ls-kaki">
         <Penghitung a={a} />

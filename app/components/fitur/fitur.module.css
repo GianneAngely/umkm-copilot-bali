@@ -248,3 +248,5 @@
 .studioNilai small { font: 500 0.78rem/1 var(--mono); color: var(--tinta-2); margin-left: 6px; }
 .studioDaftar { margin: 0 0 4px; padding-left: 1.2em; display: flex; flex-direction: column; gap: 4px; font-size: 0.93rem; line-height: 1.45; }
 .studioAtur { margin: 0 0 4px; font-size: 0.9rem; color: var(--tinta-2); }
+.studioSkor { display: flex; align-items: flex-end; gap: 12px; margin-bottom: 10px; }
+.studioSkor p { margin: 0 0 4px; font-size: 0.82rem; line-height: 1.4; color: var(--tinta-2); }

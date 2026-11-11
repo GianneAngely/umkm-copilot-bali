@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import s from "./fitur.module.css";
+import { MeterSkor } from "../Grafik";
 import { kompres } from "./FotoKeForm";
 
 const SISI_MAKS = 1600;
@@ -229,9 +230,10 @@ export default function FotoStudio({ foto, onHasil }) {
                 <strong>Mode contoh.</strong> Foto belum dinilai AI; yang diterapkan adalah pengaturan contoh.
               </p>
             )}
-            <p className={s.studioNilai}>
-              <span>{saran.nilai}</span>/10 <small>kelayakan foto katalog</small>
-            </p>
+            <div className={s.studioSkor}>
+              <MeterSkor nilai={saran.nilai} />
+              <p>Nilai foto asli Anda sebagai foto katalog, menurut penilaian AI.</p>
+            </div>
             {saran.masalah.length > 0 && (
               <>
                 <p className={s.label}>Perlu dibenahi</p>

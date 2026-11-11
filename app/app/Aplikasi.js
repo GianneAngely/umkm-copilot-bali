@@ -4,7 +4,8 @@ import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import Icon from "../components/Icon";
 import { Stabilo, buatFakta } from "../components/Stabilo";
-import { LembarSuntingan, StepperAI } from "../components/Suntingan";
+import { LembarSuntingan, StepperAI, analisis } from "../components/Suntingan";
+import { DasborRiwayat, GrafikHarga } from "../components/Grafik";
 import { CopyButton, Section, rupiah } from "../components/Struk";
 import { CONTOH } from "../data/contoh";
 import FotoKeForm from "../components/fitur/FotoKeForm";
@@ -40,6 +41,22 @@ function loadHistory() {
   } catch {
     return [];
   }
+}
+
+// Ringkasan riwayat: dihitung dari data yang tersimpan, tanpa angka tambahan.
+function ringkasRiwayat(history) {
+  let fakta = 0;
+  let klaim = 0;
+  const per = Object.fromEntries(KATEGORI.map((k) => [k, 0]));
+  for (const h of history) {
+    if (h.form?.kategori in per) per[h.form.kategori]++;
+    const a = h.result ? analisis(h.form, h.result) : null;
+    if (a) {
+      fakta += a.fakta;
+      klaim += a.klaimDicoret;
+    }
+  }
+  return { jumlah: history.length, perKategori: Object.entries(per), fakta, klaim };
 }
 
 function waktu(at) {
@@ -272,6 +289,7 @@ export default function Aplikasi() {
 
         {tampil === "riwayat" && (
           <section className="panel-daftar" aria-label="Riwayat tulisan">
+            {history.length > 0 && <DasborRiwayat {...ringkasRiwayat(history)} />}
             {history.length > 0 ? (
               <ul className="daftar-nota">
                 {history.map((h) => (
@@ -472,6 +490,7 @@ export default function Aplikasi() {
                   </Section>
                   <Section title="SARAN HARGA JUAL" text={hargaText} className="struk-harga">
                     <p className="price">{rupiah(r.harga.min)} – {rupiah(r.harga.max)}</p>
+                    <GrafikHarga modal={(faktaForm || form).modal} min={r.harga.min} max={r.harga.max} />
                     <p className="body"><Stabilo text={r.harga.alasan} fakta={fakta} /></p>
                   </Section>
                   <Section title="VERSI BAHASA INGGRIS" text={englishText}>
