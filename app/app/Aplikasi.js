@@ -100,6 +100,7 @@ export default function Aplikasi() {
   const [petunjuk, setPetunjuk] = useState("");
   const resultsRef = useRef(null);
   const namaRef = useRef(null);
+  const modalRef = useRef(null);
 
   useEffect(() => setHistory(loadHistory()), []);
 
@@ -230,6 +231,14 @@ export default function Aplikasi() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  function isiModal() {
+    setTampil("nota");
+    requestAnimationFrame(() => {
+      modalRef.current?.scrollIntoView({ behavior: "smooth", block: "center" });
+      modalRef.current?.focus({ preventScroll: true });
+    });
+  }
+
   function notaBaru() {
     setTampil("nota");
     requestAnimationFrame(() => namaRef.current?.focus());
@@ -237,10 +246,12 @@ export default function Aplikasi() {
 
   const r = data?.result;
   const captionFull = r ? `${r.caption}\n\n${r.hashtags.join(" ")}` : "";
-  const hargaText = r ? `${rupiah(r.harga.min)} – ${rupiah(r.harga.max)}\n${r.harga.alasan}` : "";
+  // Kontrak server: harga 0–0 berarti saran harga belum dihitung karena modal kosong.
+  const hargaAda = Boolean(r && (Number(r.harga?.min) > 0 || Number(r.harga?.max) > 0));
+  const hargaText = hargaAda ? `${rupiah(r.harga.min)} – ${rupiah(r.harga.max)}\n${r.harga.alasan}` : "";
   const englishText = r ? `${r.english.description}\n\n${r.english.caption}` : "";
   const semuaText = r
-    ? [`DESKRIPSI SINGKAT\n${r.deskripsi_singkat}`, `DESKRIPSI BERCERITA\n${r.deskripsi_cerita}`, `CAPTION\n${captionFull}`, `SARAN HARGA\n${hargaText}`, `ENGLISH\n${englishText}`].join("\n\n")
+    ? [`DESKRIPSI SINGKAT\n${r.deskripsi_singkat}`, `DESKRIPSI BERCERITA\n${r.deskripsi_cerita}`, `CAPTION\n${captionFull}`, hargaAda && `SARAN HARGA\n${hargaText}`, `ENGLISH\n${englishText}`].filter(Boolean).join("\n\n")
     : "";
 
   const fakta = buatFakta(faktaForm);
@@ -356,9 +367,10 @@ export default function Aplikasi() {
                   <span className="field-label">Modal per unit</span>
                   <span className="money">
                     <span className="money-prefix" aria-hidden="true">Rp</span>
-                    <input name="modal" type="number" min="0" inputMode="numeric" value={form.modal}
-                      onChange={update} placeholder="opsional" />
+                    <input ref={modalRef} name="modal" type="number" min="0" inputMode="numeric" value={form.modal}
+                      onChange={update} placeholder="contoh: 15000" aria-describedby="bantu-modal" />
                   </span>
+                  <span className="field-bantu" id="bantu-modal">Isi supaya saran harga bisa dihitung.</span>
                 </label>
               </div>
               <label className="field" data-tur="keunggulan">
@@ -473,6 +485,9 @@ export default function Aplikasi() {
                   {data.mode === "mock" && (
                     <p className="notice">MODE CONTOH · AI tidak dipanggil, jadi hasil di bawah adalah contoh statis.</p>
                   )}
+                  {faktaForm && !String(faktaForm.keunggulan || "").trim() && (
+                    <p className="catatan-isian">Bahan atau keunggulan belum diisi, jadi tulisannya singkat. Tambahkan supaya hasilnya lebih lengkap. Bagian bertanda <mark className="isi-sendiri">[isi sendiri: …]</mark> perlu Anda lengkapi.</p>
+                  )}
                   <LembarSuntingan form={faktaForm || form} r={r} fakta={fakta} Stabilo={Stabilo} putar={putar} />
 
                   <h2 className="sub-hasil"><span>4 tulisan siap salin</span><small>Stabilo kuning = fakta dari isian Anda</small></h2>
@@ -488,11 +503,19 @@ export default function Aplikasi() {
                       {r.hashtags.map((t, i) => <li key={i}>{t}</li>)}
                     </ul>
                   </Section>
-                  <Section title="SARAN HARGA JUAL" text={hargaText} className="struk-harga">
-                    <p className="price">{rupiah(r.harga.min)} – {rupiah(r.harga.max)}</p>
-                    <GrafikHarga modal={(faktaForm || form).modal} min={r.harga.min} max={r.harga.max} />
-                    <p className="body"><Stabilo text={r.harga.alasan} fakta={fakta} /></p>
-                  </Section>
+                  {hargaAda ? (
+                    <Section title="SARAN HARGA JUAL" text={hargaText} className="struk-harga">
+                      <p className="price">{rupiah(r.harga.min)} – {rupiah(r.harga.max)}</p>
+                      <GrafikHarga modal={(faktaForm || form).modal} min={r.harga.min} max={r.harga.max} />
+                      <p className="body"><Stabilo text={r.harga.alasan} fakta={fakta} /></p>
+                    </Section>
+                  ) : (
+                    <Section title="SARAN HARGA JUAL" className="struk-harga harga-kosong" tanpaSalin>
+                      <p className="hk-judul">Saran harga belum dihitung</p>
+                      <p className="body">Isi modal per unit di formulir, lalu tekan Sunting dan tulis lagi. Wicara tidak menebak harga tanpa modal.</p>
+                      <button type="button" className="btn-garis btn-kecil" onClick={isiModal}>Isi modal</button>
+                    </Section>
+                  )}
                   <Section title="VERSI BAHASA INGGRIS" text={englishText}>
                     <p className="body" lang="en"><Stabilo text={r.english.description} fakta={fakta} /></p>
                     <p className="body" lang="en"><Stabilo text={r.english.caption} fakta={fakta} /></p>

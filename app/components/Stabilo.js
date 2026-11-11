@@ -21,13 +21,17 @@ export function buatFakta(form) {
   return [...new Set(bersih)].sort((a, b) => b.length - a.length);
 }
 
-export function Stabilo({ text, fakta }) {
-  if (!fakta?.length || !text) return text;
+function tandaiFakta(text, fakta, awal) {
+  if (!fakta?.length || !text) return [text];
   const pola = new RegExp(`(${fakta.map(escape).join("|")})`, "gi");
-  const potong = text.split(pola);
-  return potong.map((p, i) =>
-    i % 2 === 1 ? <mark className="stabilo" key={i}>{p}</mark> : p,
-  );
+  return text.split(pola).map((p, i) => (i % 2 === 1 ? <mark className="stabilo" key={`${awal}-${i}`}>{p}</mark> : p));
+}
+
+export function Stabilo({ text, fakta }) {
+  if (!text) return text;
+  return String(text)
+    .split(/(\[isi sendiri:[^\]]*\])/i)
+    .flatMap((b, i) => (i % 2 === 1 ? [<mark className="isi-sendiri" key={`p-${i}`}>{b}</mark>] : tandaiFakta(b, fakta, i)));
 }
 
 export function hitungFakta(teks, fakta) {

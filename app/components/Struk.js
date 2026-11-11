@@ -22,12 +22,12 @@ export function CopyButton({ text, label = "Salin", className = "" }) {
   );
 }
 
-export function Section({ title, text, className = "", children }) {
+export function Section({ title, text, className = "", tanpaSalin = false, children }) {
   return (
     <section className={`struk ${className}`}>
       <div className="struk-head">
         <h3>{title}</h3>
-        <CopyButton text={text} />
+        {!tanpaSalin && <CopyButton text={text} />}
       </div>
       {children ?? <p className="body">{text}</p>}
     </section>

@@ -891,3 +891,10 @@ mark.ls-sapu { padding: 0 2px; background: var(--stabilo); box-decoration-break:
 }
 @keyframes gr-tumbuh { from { transform: scaleX(0); } }
 @keyframes gr-skor { from { stroke-dasharray: 0 10; } }
+
+/* ---------- Harga belum dihitung, penanda isi sendiri ---------- */
+mark.isi-sendiri { padding: 0 4px; border: 1.5px dashed var(--bata); border-radius: 4px; background: color-mix(in srgb, var(--bata) 8%, var(--kertas-hi)); color: var(--bata); font: 600 0.88em/1.5 var(--mono); box-decoration-break: clone; -webkit-box-decoration-break: clone; }
+.harga-kosong { border-top-style: dashed; }
+.hk-judul { margin-bottom: 0.4rem; font: 700 1.25rem/1.25 var(--display); }
+.harga-kosong .btn-garis { margin-top: 0.9rem; }
+.catatan-isian { padding: 0.65rem 0.85rem; border-left: 3px solid var(--bata); border-radius: 0 8px 8px 0; background: var(--kertas-hi); box-shadow: var(--angkat-kecil); font-size: 0.9rem; color: var(--tinta-2); }
