@@ -60,7 +60,7 @@ export default function AlurWicara() {
   return (
     <div className="aw">
       <div className="aw-diagram">
-        <svg viewBox="0 0 520 540" role="img" aria-label="Alur Wicara: draf copy, server Wicara, Claude dengan cadangan Gemini, pena merah dan stabilo, lalu empat struk, postingan IG, dan kalender tujuh hari">
+        <svg viewBox="0 0 520 540" role="img" aria-label="Alur Wicara: draf copy, server Wicara, Claude dengan cadangan Gemini, pena merah dan stabilo, lalu empat struk, postingan Instagram, dan kalender tujuh hari">
           {NODE.slice(0, 3).map((n, i) => (
             <g key={"g" + i}>
               <line x1="260" y1={n.y + n.h} x2="260" y2={NODE[i + 1].y} className="aw-garis" />
