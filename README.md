@@ -24,7 +24,7 @@ Fitur berikut sudah berfungsi:
 - **Generate sekali klik** dengan hasil per bagian:
   - deskripsi produk dalam dua versi, singkat untuk marketplace dan bercerita untuk media sosial;
   - caption promosi untuk Instagram/WhatsApp dan 8–12 hashtag yang relevan dengan Bali;
-  - saran rentang harga jual dalam Rupiah beserta alasannya, dihitung dari harga modal bila diisi;
+  - saran rentang harga jual dalam Rupiah beserta alasannya, dihitung dari harga modal. Kalau modal tidak diisi, Wicara tidak menebak harga: API mengembalikan `min` dan `max` bernilai 0 (artinya saran harga belum dihitung) dengan alasan "Modal per unit belum diisi, jadi saran harga belum dihitung.", dan baris harga tidak digambar di Postingan Instagram. Kalau modal diisi tetapi angka dari AI tidak masuk akal (nol, terbalik, atau di bawah modal), server memakai rumus margin per target pasar;
   - versi Bahasa Inggris (deskripsi dan caption) untuk wisatawan asing.
 - **Tombol Salin** di setiap bagian hasil.
 - **Riwayat** lima produk terakhir, tersimpan di browser pengguna.
@@ -129,7 +129,7 @@ Tidak diperlukan. Aplikasi bisa dipakai tanpa login.
 
 - Claude API berbayar per token dari kredit akun. Kalau kredit habis atau Claude galat, permintaan pindah ke Gemini free tier, yang punya batas permintaan per menit dan per hari dan kadang sibuk (503), sehingga jawaban cadangan bisa memakan waktu sampai sekitar 25 detik. Kalau semua model penuh, aplikasi menampilkan pesan agar pengguna mencoba lagi nanti.
 - Saat permintaan jatuh ke cadangan Gemini free tier, Google dapat memakai input dan output untuk meningkatkan produknya. Pengguna sebaiknya tidak memasukkan data pribadi atau rahasia ke dalam form, dan tidak memotret wajah orang atau dokumen pribadi untuk fitur foto.
-- Saran harga adalah perkiraan dari AI berdasarkan harga modal dan kategori, bukan hasil riset pasar. Pengguna tetap perlu menyesuaikan dengan kondisi di lapangan.
+- Saran harga adalah perkiraan dari AI berdasarkan harga modal, kategori, dan target pasar, bukan hasil riset pasar, dan hanya dihitung kalau modal diisi. Pengguna tetap perlu menyesuaikan dengan kondisi di lapangan.
 - Teks hasil AI bisa saja kurang tepat, jadi tetap perlu dibaca ulang sebelum diunggah.
 - Riwayat hanya tersimpan di browser yang dipakai dan hilang kalau data browser dihapus. Belum ada akun pengguna atau sinkronisasi antarperangkat.
 - Tanggal hari raya Bali 2027 diambil dari Kalender Pendidikan Provinsi Bali 2026/2027 yang masih menandainya sebagai perkiraan sampai Surat Edaran Gubernur Bali 2027 terbit. Purnama dan Tilem belum dimasukkan.
