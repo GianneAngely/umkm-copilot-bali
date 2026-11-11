@@ -20,19 +20,6 @@ function cariKlaim(teks) {
   return [...String(teks || "").matchAll(POLA_KLAIM)].map((m) => m[0].toLowerCase());
 }
 
-// Nama model dari response ("claude-haiku-5-5", "gemini-3.5-flash") jadi label yang enak dibaca.
-export function namaModel(id) {
-  if (!id) return "";
-  const bagian = String(id).split("-");
-  const hasil = [];
-  for (const b of bagian) {
-    const angka = /^\d+(\.\d+)?$/.test(b);
-    if (angka && hasil.length && /^\d/.test(hasil[hasil.length - 1])) hasil[hasil.length - 1] += "." + b;
-    else hasil.push(angka ? b : b.charAt(0).toUpperCase() + b.slice(1));
-  }
-  return hasil.join(" ");
-}
-
 export function detik(ms) {
   return (ms / 1000).toLocaleString("id-ID", { minimumFractionDigits: 1, maximumFractionDigits: 1 }) + " dtk";
 }

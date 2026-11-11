@@ -115,7 +115,6 @@ export default function KalenderKonten({ produk, ringkasan, tanggalMulai }) {
               Hari raya tetap diambil dari data kalender asli.
             </p>
           )}
-          {data.model && <p className={s.model}>AI aktif · {data.model}</p>}
           <ol className={s.kalDaftar}>
             {data.result.hari.map((h) => {
               const acara = data.result.acara.filter((a) =>

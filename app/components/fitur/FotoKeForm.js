@@ -144,7 +144,6 @@ export default function FotoKeForm({ onIsi, onFoto }) {
             {info.mode === "mock" && <strong>Mode contoh. </strong>}
             {info.mode === "ai" && <strong>Form sudah diisi dari foto. Periksa lagi sebelum lanjut. </strong>}
             {info.catatan}
-            {info.model && <span className={s.model}>AI aktif · {info.model}</span>}
           </div>
         )}
       </div>

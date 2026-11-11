@@ -4,7 +4,7 @@ import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import Icon from "../components/Icon";
 import { Stabilo, buatFakta } from "../components/Stabilo";
-import { LembarSuntingan, StepperAI, detik, namaModel } from "../components/Suntingan";
+import { LembarSuntingan, StepperAI } from "../components/Suntingan";
 import { CopyButton, Section, rupiah } from "../components/Struk";
 import { CONTOH } from "../data/contoh";
 import FotoKeForm from "../components/fitur/FotoKeForm";
@@ -25,7 +25,6 @@ const DAPAT = [
   ["05", "Gambar IG", "feed dan story"],
   ["06", "Kalender 7 hari", "dengan hari raya Bali"],
 ];
-const namaModelTunggu = "CLAUDE · CADANGAN GEMINI";
 
 function loadHistory() {
   try {
@@ -133,7 +132,7 @@ export default function Aplikasi() {
     setForm(item.form);
     setProses({ mulai: 0, selesai: 0 });
     setPutar(0);
-    setData({ mode: item.mode, model: item.model, result: item.result });
+    setData({ mode: item.mode, result: item.result });
   }
 
   // Tampilan saja: pindah menu, membuka riwayat, atau memuat contoh ke formulir.
@@ -180,7 +179,7 @@ export default function Aplikasi() {
     : data?.mode === "mock"
       ? ["contoh", "Mode contoh"]
       : data?.mode === "ai"
-        ? ["aktif", data.model ? `AI aktif · ${namaModel(data.model)}` : "AI aktif"]
+        ? ["aktif", "AI aktif"]
         : ["siap", "Siap menerima tulisan"];
 
   const judul = { nota: "Tulisan baru", riwayat: "Riwayat tulisan", contoh: "Contoh produk" }[tampil];
@@ -362,7 +361,7 @@ export default function Aplikasi() {
               {loading && (
                 <div className="memuat" role="status">
                   <div className="kertas-hasil kartu-proses">
-                    <p className="kf-kepala"><span>WICARA SEDANG BEKERJA</span><span>{namaModelTunggu}</span></p>
+                    <p className="kf-kepala"><span>WICARA SEDANG BEKERJA</span><span>AI MENYUNTING</span></p>
                     <StepperAI mulai={proses.mulai} selesai={null} />
                     <div className="pena-sunting" aria-hidden="true">
                       {[form.nama, ...String(form.keunggulan || "").split(/[,;\n]/)].map((b) => b.trim()).filter(Boolean).slice(0, 4).map((b, i) => (
@@ -384,9 +383,12 @@ export default function Aplikasi() {
                     <div className="rk-kiri">
                       <p className="rk-meta">
                         <span className={data.mode === "ai" ? "lencana-model" : "lencana-model contoh"}>
-                          <i aria-hidden="true" />{data.mode === "ai" ? namaModel(data.model) || "AI" : "Mode contoh"}
+                          <i aria-hidden="true" />
+                          {proses.selesai
+                            ? `Selesai dalam ${((proses.selesai - proses.mulai) / 1000).toLocaleString("id-ID", { maximumFractionDigits: 1, minimumFractionDigits: 1 })} detik`
+                            : data.mode === "ai" ? "Hasil tersimpan" : "Mode contoh"}
                         </span>
-                        {proses.selesai && <span className="rk-waktu">{detik(proses.selesai - proses.mulai)}</span>}
+                        {proses.selesai && data.mode !== "ai" && <span className="rk-waktu">mode contoh</span>}
                       </p>
                       <StepperAI mulai={1} selesai={2} ringkas />
                     </div>
