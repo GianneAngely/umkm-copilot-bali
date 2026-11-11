@@ -4,8 +4,8 @@ import { useEffect, useRef, useState } from "react";
 import s from "./fitur.module.css";
 
 const UKURAN = {
-  feed: { w: 1080, h: 1080, label: "Feed 1080×1080" },
-  story: { w: 1080, h: 1920, label: "Story 1080×1920" },
+  feed: { w: 1080, h: 1080, label: "feed Instagram" },
+  story: { w: 1080, h: 1920, label: "Story Instagram" },
 };
 
 const TEMPLATE = [
@@ -389,7 +389,7 @@ export default function PostinganIG({ hasil, foto, namaProduk, harga }) {
       <div className={s.igKepala}>
         <div>
           <p className={s.label}>Postingan Instagram</p>
-          <p className={s.bantu}>Gambar feed dan story langsung jadi dari caption dan harga di atas.</p>
+          <p className={s.bantu}>Gambar untuk feed dan Story Instagram langsung jadi dari caption dan harga di atas. Berkasnya berformat PNG.</p>
         </div>
         <div className={s.pilihan} role="radiogroup" aria-label="Template">
           {TEMPLATE.map((t) => (
@@ -419,7 +419,7 @@ export default function PostinganIG({ hasil, foto, namaProduk, harga }) {
             />
             <figcaption>
               <button type="button" className={`${s.tombolGaris} ${diunduh === ukuran ? s.terunduh : ""}`} disabled={!siap} onClick={() => unduh(ukuran)}>
-                {diunduh === ukuran ? "✓ Terunduh" : `Unduh PNG ${u.label}`}
+                {diunduh === ukuran ? "✓ Terunduh" : `Unduh untuk ${u.label}`}
               </button>
             </figcaption>
           </figure>

@@ -42,7 +42,7 @@ const ALUR = [
   ["Tulis apa adanya", "Nama, kategori, keunggulan, dan modal. Atau foto produknya.", "pasar", "50% 55%"],
   ["Pena merah menyunting", "Klaim kosong dicoret, fakta Anda distabilo dan dipakai apa adanya.", "kerajinan", "55% 50%"],
   ["Empat tulisan jadi", "Deskripsi, caption dan hashtag, saran harga, dan versi Inggris.", "kuliner", "50% 45%"],
-  ["Salin dan posting", "Ke Instagram, WhatsApp, atau marketplace. Bisa juga jadi gambar IG.", "oleh-oleh", "50% 45%"],
+  ["Salin dan posting", "Ke Instagram, WhatsApp, atau marketplace. Bisa juga dijadikan gambar postingan Instagram.", "oleh-oleh", "50% 45%"],
 ];
 
 const PERCAYA = [

@@ -33,14 +33,14 @@ const LANGKAH = [
 ];
 
 const NODE = [
-  { x: 150, y: 20, w: 220, h: 56, label: "Draf copy", sub: "isian · foto" },
+  { x: 150, y: 20, w: 220, h: 56, label: "Draf tulisan", sub: "isian · foto" },
   { x: 150, y: 128, w: 220, h: 56, label: "Server Wicara", sub: "validasi · instruksi terkunci" },
   { x: 150, y: 236, w: 220, h: 56, label: "Claude", sub: "Haiku 5.5 ⇢ cadangan Gemini" },
   { x: 150, y: 344, w: 220, h: 56, label: "Pena & stabilo", sub: "cek fakta · Zod" },
 ];
 const HASIL = [
-  { x: 20, label: "4 struk" },
-  { x: 190, label: "Postingan IG" },
+  { x: 20, label: "4 tulisan" },
+  { x: 190, label: "Postingan Instagram" },
   { x: 360, label: "Kalender 7 hari" },
 ];
 
@@ -84,7 +84,13 @@ export default function AlurWicara() {
           {HASIL.map((h) => (
             <g key={h.label} className={`aw-node aw-hasil${aktif === 4 ? " nyala" : ""}`}>
               <rect x={h.x} y="460" width="140" height="48" rx="8" />
-              <text x={h.x + 70} y="489" textAnchor="middle" className="aw-label kecil">{h.label}</text>
+              {h.label.length > 16 ? (
+                <text x={h.x + 70} y="481" textAnchor="middle" className="aw-label kecil">
+                  {h.label.split(" ").map((k, i) => <tspan key={k} x={h.x + 70} dy={i ? 16 : 0}>{k}</tspan>)}
+                </text>
+              ) : (
+                <text x={h.x + 70} y="489" textAnchor="middle" className="aw-label kecil">{h.label}</text>
+              )}
             </g>
           ))}
         </svg>

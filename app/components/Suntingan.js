@@ -21,7 +21,7 @@ function cariKlaim(teks) {
 }
 
 export function detik(ms) {
-  return (ms / 1000).toLocaleString("id-ID", { minimumFractionDigits: 1, maximumFractionDigits: 1 }) + " dtk";
+  return (ms / 1000).toLocaleString("id-ID", { minimumFractionDigits: 1, maximumFractionDigits: 1 }) + " detik";
 }
 
 // Draf dipecah jadi baris; tiap potongan diberi jenis: fakta (dipakai di hasil), klaim (dicoret), atau biasa.

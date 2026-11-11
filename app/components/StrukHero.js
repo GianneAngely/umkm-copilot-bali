@@ -13,7 +13,7 @@ export default function StrukHero() {
           <div className="nota-kepala" data-n="baris">
             <span className="nota-toko">WARUNG<br />BU MADE</span>
             <div>
-              <b>DRAF COPY</b>
+              <b>DRAF TULISAN</b>
               <span>No. 0142 · Gianyar, Bali</span>
             </div>
           </div>

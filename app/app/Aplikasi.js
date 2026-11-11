@@ -20,12 +20,15 @@ const HISTORY_KEY = "umkm-copilot-riwayat";
 const EMPTY = { nama: "", kategori: "Kuliner", keunggulan: "", modal: "", target: "lokal" };
 const FOTO_KATEGORI = { Kuliner: "/foto/kuliner.jpg", Kerajinan: "/foto/kerajinan.jpg", Fashion: "/foto/fesyen.jpg", "Oleh-oleh": "/foto/oleh-oleh.jpg", Lainnya: "/foto/pasar.jpg" };
 const DAPAT = [
-  ["01", "Deskripsi", "singkat dan bercerita"],
-  ["02", "Caption", "plus hashtag"],
-  ["03", "Saran harga", "dari modal Anda"],
-  ["04", "Versi Inggris", "untuk wisatawan"],
-  ["05", "Gambar IG", "feed dan story"],
-  ["06", "Kalender 7 hari", "dengan hari raya Bali"],
+  ["01", "Deskripsi produk", "singkat dan bercerita"],
+  ["02", "Caption", "lengkap dengan tagar"],
+  ["03", "Saran harga", "dihitung dari modal Anda"],
+  ["04", "Versi bahasa Inggris", "untuk wisatawan"],
+  ["05", "Postingan Instagram", "untuk feed dan Story"],
+  ["06", "Profil Instagram", "bio, nama, dan sorotan"],
+  ["07", "Foto Studio", "foto Anda dirapikan"],
+  ["08", "Kalender 7 hari", "dengan hari raya Bali"],
+  ["09", "Balasan chat", "lima template WhatsApp"],
 ];
 
 function loadHistory() {
@@ -243,7 +246,7 @@ export default function Aplikasi() {
               <div className="kosong-app">
                 <p className="ka-judul">Belum ada tulisan.</p>
                 <p>Lima tulisan terakhir akan tersimpan di peramban ini setelah Anda menekan Sunting dan tulis.</p>
-                <button type="button" className="btn-hijau" onClick={notaBaru}>Tulis copy pertama</button>
+                <button type="button" className="btn-hijau" onClick={notaBaru}>Tulis draf pertama</button>
               </div>
             )}
           </section>
@@ -274,7 +277,7 @@ export default function Aplikasi() {
               <FotoKeForm onIsi={isiDariFoto} onFoto={(u) => { setFoto(u); setFotoStudio(""); }} />
             </div>
             <form className="kertas-form" onSubmit={submit}>
-              <p className="kf-kepala"><span>DRAF COPY</span><span>atau ketik sendiri</span></p>
+              <p className="kf-kepala"><span>DRAF TULISAN</span><span>atau ketik sendiri</span></p>
               <label className="field" data-tur="nama">
                 <span className="field-label">Nama produk</span>
                 <input ref={namaRef} name="nama" value={form.nama} onChange={update} required maxLength={100}
@@ -340,7 +343,7 @@ export default function Aplikasi() {
               {!r && !loading && (
                 <div className="kertas-hasil kosong-app kosong-v2">
                   <p className="kf-kepala"><span>HASIL</span><span>BELUM ADA</span></p>
-                  <p className="ka-judul">Satu draf, enam hasil siap pakai.</p>
+                  <p className="ka-judul">Satu draf, sembilan hasil siap pakai.</p>
                   <p className="ka-sub">Wicara mencoret klaim kosong di draf Anda, menandai fakta dengan stabilo, lalu menulis semuanya dari fakta itu.</p>
                   <ul className="dapat">
                     {DAPAT.map(([n, t, k]) => (
@@ -416,7 +419,7 @@ export default function Aplikasi() {
                   <Section title="DESKRIPSI BERCERITA" text={r.deskripsi_cerita}>
                     <p className="body"><Stabilo text={r.deskripsi_cerita} fakta={fakta} /></p>
                   </Section>
-                  <Section title="CAPTION + HASHTAG" text={captionFull}>
+                  <Section title="CAPTION DAN TAGAR" text={captionFull}>
                     <p className="body"><Stabilo text={r.caption} fakta={fakta} /></p>
                     <ul className="chips">
                       {r.hashtags.map((t, i) => <li key={i}>{t}</li>)}
@@ -426,7 +429,7 @@ export default function Aplikasi() {
                     <p className="price">{rupiah(r.harga.min)} – {rupiah(r.harga.max)}</p>
                     <p className="body"><Stabilo text={r.harga.alasan} fakta={fakta} /></p>
                   </Section>
-                  <Section title="ENGLISH" text={englishText}>
+                  <Section title="VERSI BAHASA INGGRIS" text={englishText}>
                     <p className="body" lang="en"><Stabilo text={r.english.description} fakta={fakta} /></p>
                     <p className="body" lang="en"><Stabilo text={r.english.caption} fakta={fakta} /></p>
                   </Section>
@@ -436,7 +439,7 @@ export default function Aplikasi() {
                     <FotoStudio foto={foto} onHasil={setFotoStudio} />
                   </section>
                   <section className="kartu-fitur" aria-label="Postingan Instagram" data-tur="ig">
-                    {!foto && !fotoStudio && <p className="ig-catat">Pratinjau memakai foto suasana kategori. Unggah foto produk Anda di kartu Isi dari foto, gambarnya langsung berganti.</p>}
+                    {!foto && !fotoStudio && <p className="ig-catat">Pratinjau memakai foto suasana kategori. Unggah foto produk Anda di kartu Isi dari foto, gambarnya akan langsung berganti.</p>}
                     <PostinganIG hasil={r} foto={fotoStudio || foto || fotoProduk(faktaForm || form)} namaProduk={faktaForm?.nama || form.nama} />
                   </section>
                   <section className="kartu-fitur" aria-label="Kalender konten 7 hari" data-tur="kalender">

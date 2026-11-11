@@ -234,11 +234,11 @@ export default function FotoStudio({ foto, onHasil }) {
             </p>
             {saran.masalah.length > 0 && (
               <>
-                <p className={s.label}>Yang perlu dibenahi</p>
+                <p className={s.label}>Perlu dibenahi</p>
                 <ul className={s.studioDaftar}>{saran.masalah.map((m, i) => <li key={i}>{m}</li>)}</ul>
               </>
             )}
-            <p className={s.label}>Yang sudah dirapikan</p>
+            <p className={s.label}>Sudah dirapikan</p>
             <p className={s.studioAtur}>
               Cahaya {persen(saran.perbaikan.kecerahan)} · kontras {persen(saran.perbaikan.kontras)} · warna{" "}
               {persen(saran.perbaikan.saturasi)} · hangat {persen(saran.perbaikan.kehangatan)}
@@ -250,7 +250,7 @@ export default function FotoStudio({ foto, onHasil }) {
                 <ul className={s.studioDaftar}>{saran.tips_foto_ulang.map((t, i) => <li key={i}>{t}</li>)}</ul>
               </>
             )}
-            <button type="button" className={s.tombol} onClick={unduh}>Unduh JPG</button>
+            <button type="button" className={s.tombol} onClick={unduh}>Unduh foto</button>
           </div>
         </div>
       )}
