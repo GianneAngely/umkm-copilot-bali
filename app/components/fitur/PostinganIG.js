@@ -33,8 +33,9 @@ function rupiah(n) {
 function teksHarga(harga, hasil) {
   if (typeof harga === "string" && harga) return harga;
   const h = harga && typeof harga === "object" ? harga : hasil?.harga;
-  if (!h) return "";
-  if (h.min && h.max && h.min !== h.max) return `${rupiah(h.min)} – ${rupiah(h.max)}`;
+  // min = max = 0 berarti saran harga belum dihitung (modal tidak diisi): baris harga tidak digambar.
+  if (!h || !(h.min > 0) || !(h.max > 0)) return "";
+  if (h.min !== h.max) return `${rupiah(h.min)} – ${rupiah(h.max)}`;
   return rupiah(h.min || h.max);
 }
 
@@ -189,7 +190,7 @@ function gambar(ctx, ukuran, template, data, img, font) {
   const tinggiTeks =
     namaBaris.length * namaUkuran * 1.08 + 18 +
     capBaris.length * capUkuran * 1.4 + 26 +
-    (story ? 130 : 96) +
+    (template !== "cap" && data.harga ? (story ? 130 : 96) : story ? 40 : 28) +
     tagBaris.length * tagUkuran * 1.45 + 10;
 
   let py = story ? 150 : m;
