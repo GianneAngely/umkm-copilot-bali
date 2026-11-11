@@ -3,6 +3,7 @@
 import { useState } from "react";
 import s from "./fitur.module.css";
 import { mintaJson } from "../../../lib/klien";
+import { acaraDalamRentang } from "../../../lib/hari-raya-bali";
 
 const LABEL_FORMAT = { feed: "Feed", story: "Story", reels: "Reels" };
 
@@ -16,6 +17,24 @@ function tanggalPendek(iso) {
     month: "short",
     timeZone: "UTC",
   });
+}
+
+const HARI = ["Min", "Sen", "Sel", "Rab", "Kam", "Jum", "Sab"];
+
+// Pratinjau minggu sebelum AI dipanggil: tanggal dan hari raya dari data kalender yang sama.
+function pratinjauMinggu(mulai) {
+  if (!mulai) return [];
+  const awal = new Date(`${mulai}T00:00:00Z`);
+  if (Number.isNaN(awal.getTime())) return [];
+  const hari = Array.from({ length: 7 }, (_, i) => {
+    const d = new Date(awal.getTime() + i * 86400000);
+    return { tanggal: d.toISOString().slice(0, 10), hari: HARI[d.getUTCDay()], angka: d.getUTCDate() };
+  });
+  const acara = acaraDalamRentang(hari[0].tanggal, hari[6].tanggal);
+  return hari.map((h) => ({
+    ...h,
+    acara: acara.filter((a) => (a.tanggal ? a.tanggal === h.tanggal : a.mulai <= h.tanggal && a.selesai >= h.tanggal)),
+  }));
 }
 
 /**
@@ -61,6 +80,18 @@ export default function KalenderKonten({ produk, ringkasan, tanggalMulai }) {
           </button>
         </div>
       </div>
+
+      {!data && (
+        <ol className={`${s.minggu} ${memuat ? s.mingguMemuat : ""}`} aria-label="Tujuh hari yang akan diisi">
+          {pratinjauMinggu(mulai).map((h) => (
+            <li key={h.tanggal} className={h.acara.some((a) => a.jenis === "hari-raya") ? s.mingguRaya : h.acara.length ? s.mingguLibur : ""}>
+              <span>{h.hari}</span>
+              <b>{h.angka}</b>
+              {h.acara.length > 0 && <small>{h.acara[0].nama}</small>}
+            </li>
+          ))}
+        </ol>
+      )}
 
       <div aria-live="polite">
         {memuat && (

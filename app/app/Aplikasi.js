@@ -3,7 +3,8 @@
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import Icon from "../components/Icon";
-import { Stabilo, buatFakta, hitungFakta } from "../components/Stabilo";
+import { Stabilo, buatFakta } from "../components/Stabilo";
+import { LembarSuntingan, StepperAI, detik, namaModel } from "../components/Suntingan";
 import { CopyButton, Section, rupiah } from "../components/Struk";
 import { CONTOH } from "../data/contoh";
 import FotoKeForm from "../components/fitur/FotoKeForm";
@@ -15,6 +16,16 @@ import { mintaJson } from "../../lib/klien";
 const KATEGORI = ["Kuliner", "Kerajinan", "Fashion", "Oleh-oleh", "Lainnya"];
 const HISTORY_KEY = "umkm-copilot-riwayat";
 const EMPTY = { nama: "", kategori: "Kuliner", keunggulan: "", modal: "", target: "lokal" };
+const FOTO_KATEGORI = { Kuliner: "/foto/kuliner.jpg", Kerajinan: "/foto/kerajinan.jpg", Fashion: "/foto/fesyen.jpg", "Oleh-oleh": "/foto/oleh-oleh.jpg", Lainnya: "/foto/pasar.jpg" };
+const DAPAT = [
+  ["01", "Deskripsi", "singkat dan bercerita"],
+  ["02", "Caption", "plus hashtag"],
+  ["03", "Saran harga", "dari modal Anda"],
+  ["04", "Versi Inggris", "untuk wisatawan"],
+  ["05", "Gambar IG", "feed dan story"],
+  ["06", "Kalender 7 hari", "dengan hari raya Bali"],
+];
+const namaModelTunggu = "CLAUDE · CADANGAN GEMINI";
 
 function loadHistory() {
   try {
@@ -59,7 +70,8 @@ export default function Aplikasi() {
   const [faktaForm, setFaktaForm] = useState(null);
   const [tampil, setTampil] = useState("nota");
   const [foto, setFoto] = useState("");
-  const [alat, setAlat] = useState("ig");
+  const [proses, setProses] = useState({ mulai: 0, selesai: 0 });
+  const [putar, setPutar] = useState(0);
   const resultsRef = useRef(null);
   const namaRef = useRef(null);
 
@@ -89,8 +101,19 @@ export default function Aplikasi() {
     setLoading(true);
     setError("");
     setContohGalat(null);
+    const mulai = performance.now();
+    setProses({ mulai, selesai: 0 });
+    // Bawa stepper ke layar kalau kolom hasil sedang di luar pandangan.
+    requestAnimationFrame(() => {
+      const el = resultsRef.current;
+      if (el && (el.getBoundingClientRect().top < 0 || el.getBoundingClientRect().top > innerHeight * 0.6)) {
+        el.scrollIntoView({ behavior: "smooth", block: "start" });
+      }
+    });
     try {
       const json = await mintaJson("/api/generate", form);
+      setProses({ mulai, selesai: performance.now() });
+      setPutar((n) => n + 1);
       setData(json);
       const others = history.filter((h) => h.form.nama !== form.nama);
       const next = [{ form, ...json, at: Date.now() }, ...others].slice(0, 5);
@@ -108,7 +131,9 @@ export default function Aplikasi() {
 
   function openHistory(item) {
     setForm(item.form);
-    setData({ mode: item.mode, result: item.result });
+    setProses({ mulai: 0, selesai: 0 });
+    setPutar(0);
+    setData({ mode: item.mode, model: item.model, result: item.result });
   }
 
   // Tampilan saja: pindah menu, membuka riwayat, atau memuat contoh ke formulir.
@@ -149,16 +174,13 @@ export default function Aplikasi() {
     : "";
 
   const fakta = buatFakta(faktaForm);
-  const jumlahFakta = r
-    ? hitungFakta([r.deskripsi_singkat, r.deskripsi_cerita, r.caption, r.harga.alasan, englishText], fakta)
-    : 0;
 
   const status = loading
     ? ["sibuk", "Sedang menyunting"]
     : data?.mode === "mock"
       ? ["contoh", "Mode contoh"]
       : data?.mode === "ai"
-        ? ["aktif", data.model ? `AI aktif · ${data.model}` : "AI aktif"]
+        ? ["aktif", data.model ? `AI aktif · ${namaModel(data.model)}` : "AI aktif"]
         : ["siap", "Siap menerima tulisan"];
 
   const judul = { nota: "Tulisan baru", riwayat: "Riwayat tulisan", contoh: "Contoh produk" }[tampil];
@@ -243,7 +265,7 @@ export default function Aplikasi() {
               <FotoKeForm onIsi={isiDariFoto} onFoto={setFoto} />
             </div>
             <form className="kertas-form" onSubmit={submit}>
-              <p className="kf-kepala"><span>DRAF COPY</span><span>5 ISIAN</span></p>
+              <p className="kf-kepala"><span>DRAF COPY</span><span>atau ketik sendiri</span></p>
               <label className="field" data-tur="nama">
                 <span className="field-label">Nama produk</span>
                 <input ref={namaRef} name="nama" value={form.nama} onChange={update} required maxLength={100}
@@ -268,7 +290,8 @@ export default function Aplikasi() {
               <label className="field" data-tur="keunggulan">
                 <span className="field-label">Bahan atau keunggulan</span>
                 <textarea name="keunggulan" value={form.keunggulan} onChange={update} rows={4}
-                  maxLength={500} placeholder="Contoh: susu sapi asli, tanpa pengawet, tahan 7 hari" />
+                  maxLength={500} placeholder="Tulis apa adanya. Contoh: pie susu enak murah, susu sapi asli, tahan 7 hari" />
+                <span className="field-bantu">Klaim seperti &ldquo;enak&rdquo; atau &ldquo;terbaik&rdquo; boleh ditulis. Nanti dicoret kalau tidak ada buktinya.</span>
               </label>
               <fieldset className="field" data-tur="target">
                 <legend className="field-label">Pembelinya kebanyakan</legend>
@@ -283,9 +306,8 @@ export default function Aplikasi() {
                   </label>
                 </div>
               </fieldset>
-              <button type="submit" className="btn-hijau btn-blok" disabled={loading} data-tur="buat">
-                {loading && <span className="spinner" aria-hidden="true" />}
-                {loading ? "Sedang menyunting..." : "Sunting dan tulis ↗"}
+              <button type="submit" className="btn-hijau btn-blok btn-sunting" disabled={loading} data-tur="buat">
+                {loading ? <><span className="spinner" aria-hidden="true" />AI sedang menyunting...</> : <>Sunting dan tulis <span aria-hidden="true">↗</span></>}
               </button>
               {error && (
                 <div className="galat" role="alert">
@@ -307,51 +329,75 @@ export default function Aplikasi() {
 
             <div className="hasil" ref={resultsRef} aria-live="polite" aria-busy={loading}>
               {!r && !loading && (
-                <div className="kertas-hasil kosong-app">
-                  <p className="kf-kepala"><span>STRUK PROMOSI</span><span>BELUM DICETAK</span></p>
-                  <p className="ka-judul">Struknya tercetak di sini.</p>
-                  <ol className="ka-langkah">
-                    <li><span>01</span>Isi nama dan keunggulan produk</li>
-                    <li><span>02</span>Tekan Sunting dan tulis</li>
-                    <li><span>03</span>Salin per bagian, atau sekaligus</li>
-                  </ol>
-                  <p className="ka-pilih">Belum ada ide? Klik salah satu contoh:</p>
-                  <ul className="ka-nota">
+                <div className="kertas-hasil kosong-app kosong-v2">
+                  <p className="kf-kepala"><span>HASIL</span><span>BELUM ADA</span></p>
+                  <p className="ka-judul">Satu draf, enam hasil siap pakai.</p>
+                  <p className="ka-sub">Wicara mencoret klaim kosong di draf Anda, menandai fakta dengan stabilo, lalu menulis semuanya dari fakta itu.</p>
+                  <ul className="dapat">
+                    {DAPAT.map(([n, t, k]) => (
+                      <li key={n}><span>{n}</span><b>{t}</b><small>{k}</small></li>
+                    ))}
+                  </ul>
+                  <p className="ka-pilih">Coba langsung dengan contoh produk:</p>
+                  <ul className="contoh-foto">
                     {CONTOH.map((c) => (
                       <li key={c.id}>
                         <button type="button" onClick={() => muatContoh(c)}>
-                          <span className="kn-kat">{c.form.kategori.toUpperCase()}</span>
-                          <b>{c.form.nama}</b>
-                          <span className="kn-isi">{c.form.keunggulan}</span>
-                          <span className="kn-muat">Pakai contoh ini →</span>
+                          <span className="cf-gambar">
+                            <img src={FOTO_KATEGORI[c.form.kategori]} alt="" loading="lazy" />
+                            <span className="kn-kat">{c.form.kategori.toUpperCase()}</span>
+                          </span>
+                          <span className="cf-isi">
+                            <b>{c.form.nama}</b>
+                            <span className="kn-isi">{c.form.keunggulan}</span>
+                            <span className="kn-muat">Pakai contoh ini →</span>
+                          </span>
                         </button>
                       </li>
                     ))}
                   </ul>
+                  <p className="cf-kredit">Foto suasana per kategori dari Pexels, bukan foto produk contoh.</p>
                 </div>
               )}
-              {!r && loading && (
-                <div className="kertas-hasil cetak" role="status">
-                  <p className="kf-kepala"><span>STRUK PROMOSI</span><span>MENCETAK</span></p>
-                  <p className="cetak-catat"><span className="spinner" aria-hidden="true" />Pena merah sedang menyunting tulisan Anda...</p>
-                  <div className="pena-sunting" aria-hidden="true">
-                    {[form.nama, ...String(form.keunggulan || "").split(/[,;\n]/)].map((b) => b.trim()).filter(Boolean).slice(0, 4).map((b, i) => (
-                      <p key={i} style={{ "--i": i }}><span>{b}</span><i /></p>
-                    ))}
-                    <svg className="pena-ikon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round"><path d="M4 20h4L19 9a2.8 2.8 0 0 0-4-4L4 16z" /><path d="M13.5 6.5l4 4" /></svg>
+              {loading && (
+                <div className="memuat" role="status">
+                  <div className="kertas-hasil kartu-proses">
+                    <p className="kf-kepala"><span>WICARA SEDANG BEKERJA</span><span>{namaModelTunggu}</span></p>
+                    <StepperAI mulai={proses.mulai} selesai={null} />
+                    <div className="pena-sunting" aria-hidden="true">
+                      {[form.nama, ...String(form.keunggulan || "").split(/[,;\n]/)].map((b) => b.trim()).filter(Boolean).slice(0, 4).map((b, i) => (
+                        <p key={i} style={{ "--i": i }}><span>{b}</span><i /></p>
+                      ))}
+                      <svg className="pena-ikon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round"><path d="M4 20h4L19 9a2.8 2.8 0 0 0-4-4L4 16z" /><path d="M13.5 6.5l4 4" /></svg>
+                    </div>
                   </div>
-                  {[0, 1, 2].map((i) => <span key={i} className="cetak-baris" style={{ "--i": i }} />)}
+                  {[0, 1, 2].map((i) => (
+                    <div key={i} className="skel" aria-hidden="true" style={{ "--i": i }}>
+                      <span className="skel-judul" /><span /><span /><span className="pendek" />
+                    </div>
+                  ))}
                 </div>
               )}
-              {r && (
-                <div className={loading ? "tumpuk is-stale" : "tumpuk"}>
-                  <div className="hasil-atas" data-tur="hasil">
-                    <p className="hasil-fakta"><mark className="stabilo">{jumlahFakta} fakta</mark> dari isian Anda dipakai</p>
+              {r && !loading && (
+                <div className="tumpuk">
+                  <div className="ringkasan" data-tur="hasil">
+                    <div className="rk-kiri">
+                      <p className="rk-meta">
+                        <span className={data.mode === "ai" ? "lencana-model" : "lencana-model contoh"}>
+                          <i aria-hidden="true" />{data.mode === "ai" ? namaModel(data.model) || "AI" : "Mode contoh"}
+                        </span>
+                        {proses.selesai && <span className="rk-waktu">{detik(proses.selesai - proses.mulai)}</span>}
+                      </p>
+                      <StepperAI mulai={1} selesai={2} ringkas />
+                    </div>
                     <CopyButton text={semuaText} label="Salin semua" className="copy-utama" />
                   </div>
                   {data.mode === "mock" && (
-                    <p className="notice">MODE CONTOH · API key belum dipasang, jadi hasil di bawah adalah contoh statis.</p>
+                    <p className="notice">MODE CONTOH · AI tidak dipanggil, jadi hasil di bawah adalah contoh statis.</p>
                   )}
+                  <LembarSuntingan form={faktaForm || form} r={r} fakta={fakta} Stabilo={Stabilo} putar={putar} />
+
+                  <h2 className="sub-hasil"><span>4 tulisan siap salin</span><small>Stabilo kuning = fakta dari isian Anda</small></h2>
                   <Section title="DESKRIPSI SINGKAT" text={r.deskripsi_singkat}>
                     <p className="body"><Stabilo text={r.deskripsi_singkat} fakta={fakta} /></p>
                   </Section>
@@ -373,19 +419,14 @@ export default function Aplikasi() {
                     <p className="body" lang="en"><Stabilo text={r.english.caption} fakta={fakta} /></p>
                   </Section>
 
-                  <section className="alat-lanjut" aria-label="Alat lanjutan">
-                    <div className="alat-tab" role="tablist" aria-label="Alat lanjutan">
-                      <button type="button" role="tab" id="tab-ig" aria-controls="panel-ig" aria-selected={alat === "ig"} onClick={() => setAlat("ig")} data-tur="ig">Postingan IG</button>
-                      <button type="button" role="tab" id="tab-kal" aria-controls="panel-kal" aria-selected={alat === "kal"} onClick={() => setAlat("kal")} data-tur="kalender">Kalender 7 hari</button>
-                    </div>
-                    <div className="alat-panel" role="tabpanel" id="panel-ig" aria-labelledby="tab-ig" hidden={alat !== "ig"}>
-                      <PostinganIG hasil={r} foto={foto} namaProduk={faktaForm?.nama || form.nama} />
-                    </div>
-                    <div className="alat-panel" role="tabpanel" id="panel-kal" aria-labelledby="tab-kal" hidden={alat !== "kal"}>
-                      <KalenderKonten
-                        produk={{ nama: faktaForm?.nama || form.nama, kategori: faktaForm?.kategori || form.kategori, target: faktaForm?.target || form.target }}
-                        ringkasan={r.deskripsi_singkat} />
-                    </div>
+                  <h2 className="sub-hasil"><span>Siap diunggah</span><small>Dibuat dari tulisan di atas</small></h2>
+                  <section className="kartu-fitur" aria-label="Postingan Instagram" data-tur="ig">
+                    <PostinganIG hasil={r} foto={foto} namaProduk={faktaForm?.nama || form.nama} />
+                  </section>
+                  <section className="kartu-fitur" aria-label="Kalender konten 7 hari" data-tur="kalender">
+                    <KalenderKonten
+                      produk={{ nama: faktaForm?.nama || form.nama, kategori: faktaForm?.kategori || form.kategori, target: faktaForm?.target || form.target }}
+                      ringkasan={r.deskripsi_singkat} />
                   </section>
                 </div>
               )}

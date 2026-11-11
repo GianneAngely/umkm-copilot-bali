@@ -331,6 +331,7 @@ function slug(teks) {
 export default function PostinganIG({ hasil, foto, namaProduk, harga }) {
   const [template, setTemplate] = useState("nota");
   const [siap, setSiap] = useState(false);
+  const [diunduh, setDiunduh] = useState("");
   const kanvas = { feed: useRef(null), story: useRef(null) };
 
   const data = {
@@ -375,6 +376,8 @@ export default function PostinganIG({ hasil, foto, namaProduk, harga }) {
       a.href = url;
       a.download = `postingan-${slug(namaProduk)}-${ukuran}.png`;
       a.click();
+      setDiunduh(ukuran);
+      setTimeout(() => setDiunduh(""), 1600);
       setTimeout(() => URL.revokeObjectURL(url), 1000);
     }, "image/png");
   }
@@ -384,7 +387,10 @@ export default function PostinganIG({ hasil, foto, namaProduk, harga }) {
   return (
     <div className={s.ig}>
       <div className={s.igKepala}>
-        <p className={s.label}>Postingan Instagram</p>
+        <div>
+          <p className={s.label}>Postingan Instagram</p>
+          <p className={s.bantu}>Gambar feed dan story langsung jadi dari caption dan harga di atas.</p>
+        </div>
         <div className={s.pilihan} role="radiogroup" aria-label="Template">
           {TEMPLATE.map((t) => (
             <button
@@ -412,8 +418,8 @@ export default function PostinganIG({ hasil, foto, namaProduk, harga }) {
               aria-label={`Pratinjau postingan ${u.label} untuk ${namaProduk || "produk"}`}
             />
             <figcaption>
-              <button type="button" className={s.tombolGaris} disabled={!siap} onClick={() => unduh(ukuran)}>
-                Unduh PNG {u.label}
+              <button type="button" className={`${s.tombolGaris} ${diunduh === ukuran ? s.terunduh : ""}`} disabled={!siap} onClick={() => unduh(ukuran)}>
+                {diunduh === ukuran ? "✓ Terunduh" : `Unduh PNG ${u.label}`}
               </button>
             </figcaption>
           </figure>

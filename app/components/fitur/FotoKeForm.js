@@ -37,10 +37,23 @@ export default function FotoKeForm({ onIsi, onFoto }) {
   const [error, setError] = useState("");
   const [info, setInfo] = useState(null);
   const [contoh, setContoh] = useState(null);
+  const [seret, setSeret] = useState(false);
 
-  async function pilih(e) {
+  function pilih(e) {
     const file = e.target.files?.[0];
     e.target.value = "";
+    proses(file);
+  }
+
+  // Foto yang diseret ke kartu diproses sama seperti foto dari tombol.
+  function jatuh(e) {
+    e.preventDefault();
+    setSeret(false);
+    const file = [...(e.dataTransfer?.files || [])].find((f) => f.type.startsWith("image/"));
+    if (file && !memuat) proses(file);
+  }
+
+  async function proses(file) {
     if (!file) return;
     setError("");
     setInfo(null);
@@ -73,23 +86,31 @@ export default function FotoKeForm({ onIsi, onFoto }) {
   }
 
   return (
-    <div className={s.foto}>
+    <div
+      className={`${s.foto} ${seret ? s.fotoSeret : ""} ${memuat ? s.fotoMemuat : ""}`}
+      onDragOver={(e) => { e.preventDefault(); setSeret(true); }}
+      onDragLeave={(e) => { if (!e.currentTarget.contains(e.relatedTarget)) setSeret(false); }}
+      onDrop={jatuh}
+    >
       <div className={s.fotoBaris}>
         {pratinjau ? (
           <img className={s.pratinjau} src={pratinjau} alt="Foto produk yang dipilih" />
         ) : (
-          <div className={s.pratinjauKosong} aria-hidden="true">foto</div>
+          <div className={s.pratinjauKosong} aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round"><path d="M4 8h3l2-3h6l2 3h3v11H4z" /><circle cx="12" cy="13" r="3.5" /></svg>
+          </div>
         )}
         <div className={s.fotoAksi}>
-          <p className={s.label}>Isi dari foto</p>
-          <p className={s.bantu}>AI membaca foto produk lalu mengisi nama, kategori, dan keunggulan.</p>
+          <p className={s.fotoJudul}>Isi dari foto <span className={s.lencana}>AI membaca gambar</span></p>
+          <p className={s.bantu}>Potret produknya. AI mengisi nama, kategori, dan keunggulan yang terlihat, Anda tinggal memeriksa.</p>
           <div className={s.tombolBaris}>
             <button type="button" className={s.tombol} disabled={memuat} onClick={() => kamera.current.click()}>
               Ambil foto
             </button>
             <button type="button" className={s.tombolGaris} disabled={memuat} onClick={() => galeri.current.click()}>
-              Pilih dari galeri
+              Pilih foto
             </button>
+            <span className={s.seretTeks}>atau seret foto ke sini</span>
           </div>
         </div>
       </div>

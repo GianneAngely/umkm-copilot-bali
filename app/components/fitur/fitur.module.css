@@ -47,26 +47,37 @@
 
 /* ---------- Isi dari foto ---------- */
 .foto {
-  padding: 14px;
-  border: 1.5px dashed var(--garis);
+  position: relative;
+  padding: 18px;
+  border: 2px dashed color-mix(in srgb, var(--kunyit-tua) 70%, transparent);
   border-radius: 12px;
-  background: var(--kertas-hi);
+  background: color-mix(in srgb, var(--stabilo) 30%, var(--kertas-hi));
   color: var(--tinta);
+  box-shadow: var(--angkat-kecil);
+  transition: border-color 0.2s, background-color 0.2s, transform 0.2s var(--ease);
 }
-.fotoBaris { display: flex; gap: 14px; align-items: flex-start; }
+.fotoSeret { border-color: var(--tinta); background: color-mix(in srgb, var(--stabilo) 60%, var(--kertas-hi)); transform: scale(1.01); }
+.fotoMemuat { border-style: solid; }
+.fotoBaris { display: flex; gap: 16px; align-items: flex-start; }
+.fotoJudul { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 10px; margin: 0; font: 700 1.2rem/1.2 var(--display); }
+.lencana { padding: 3px 8px; border-radius: 99px; background: var(--tinta); color: var(--kertas); font: 600 0.62rem/1.2 var(--mono); letter-spacing: 0.08em; text-transform: uppercase; }
+.seretTeks { align-self: center; font: 400 0.75rem/1.3 var(--mono); color: var(--tinta-3); }
+@media (pointer: coarse) { .seretTeks { display: none; } }
 .fotoAksi { min-width: 0; flex: 1; }
 .pratinjau, .pratinjauKosong {
-  width: 84px; height: 84px; flex: none;
+  width: 92px; height: 92px; flex: none;
   border-radius: 8px;
   object-fit: cover;
   border: 1px solid var(--garis-soft);
 }
 .pratinjauKosong {
   display: grid; place-items: center;
-  background: var(--kertas-2);
-  color: var(--tinta-3);
-  font-family: var(--mono); font-size: 0.75rem; text-transform: uppercase;
+  background: var(--kertas-hi);
+  color: var(--kunyit-teks);
+  border: 1.5px solid color-mix(in srgb, var(--kunyit-tua) 40%, transparent);
 }
+.pratinjauKosong svg { width: 40px; height: 40px; }
+@media (max-width: 400px) { .pratinjau, .pratinjauKosong { width: 64px; height: 64px; } .pratinjauKosong svg { width: 30px; height: 30px; } }
 .catatan, .catatanContoh {
   margin-top: 12px;
   padding: 10px 12px;
@@ -145,3 +156,22 @@
 .kal .catatanContoh { margin-top: 14px; }
 
 .model { display: block; margin-top: 6px; font-family: var(--mono); font-size: 0.72rem; color: var(--tinta-3); }
+
+/* ---------- Revisi final: pratinjau minggu, unduh ---------- */
+.minggu { list-style: none; display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 6px; margin: 16px 0 0; padding: 0; }
+.minggu li { display: flex; flex-direction: column; align-items: center; gap: 2px; min-width: 0; padding: 10px 4px; border: 1.5px solid var(--garis-soft); border-radius: 8px; background: var(--kertas-hi); text-align: center; }
+.minggu span { font: 400 0.68rem/1 var(--mono); text-transform: uppercase; color: var(--tinta-3); }
+.minggu b { font: 800 1.15rem/1.2 var(--sans); }
+.minggu small { max-width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 0.66rem; font-weight: 700; }
+.mingguRaya { background: var(--kunyit) !important; border-color: var(--kunyit) !important; color: #173b2f; }
+.mingguRaya span { color: #173b2f; }
+.mingguLibur { background: color-mix(in srgb, var(--tinta) 9%, var(--kertas-hi)) !important; }
+.mingguMemuat li { animation: denyut-hari 1s ease-in-out infinite alternate; }
+.mingguMemuat li:nth-child(2) { animation-delay: 0.1s; } .mingguMemuat li:nth-child(3) { animation-delay: 0.2s; }
+.mingguMemuat li:nth-child(4) { animation-delay: 0.3s; } .mingguMemuat li:nth-child(5) { animation-delay: 0.4s; }
+.mingguMemuat li:nth-child(6) { animation-delay: 0.5s; } .mingguMemuat li:nth-child(7) { animation-delay: 0.6s; }
+@keyframes denyut-hari { to { opacity: 0.45; } }
+@media (max-width: 420px) { .minggu small { display: none; } .minggu li { padding: 8px 2px; } }
+.terunduh { background: var(--tinta) !important; border-color: var(--tinta) !important; color: var(--kertas) !important; animation: pop 0.35s var(--ease); }
+@keyframes pop { 40% { transform: scale(1.05); } }
+@media (prefers-reduced-motion: reduce) { .mingguMemuat li, .terunduh { animation: none; } .foto { transition: none; } }

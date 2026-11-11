@@ -10,15 +10,16 @@ const KUNCI = "wicara-tur-dilihat";
 // klik: tur lanjut sendiri saat bagian yang terang ditekan.
 // tunggu: tunggu elemen muncul (hasil baru ada setelah tombol ditekan).
 const LANGKAH = [
-  { id: "foto", judul: "Isi dari foto (boleh dilewati)", teks: "Punya foto produk? Tekan Ambil foto atau Pilih dari galeri. Formulir akan terisi sendiri." },
+  { id: "foto", judul: "Isi dari foto (boleh dilewati)", teks: "Punya foto produk? Tekan Ambil foto atau Pilih foto, atau seret fotonya ke kotak ini. Formulir akan terisi sendiri." },
   { id: "nama", judul: "Nama produk", teks: "Ketik nama produkmu di sini. Contohnya: Pie Susu Bu Made." },
   { id: "kategori", judul: "Kategori", teks: "Pilih jenis produkmu, misalnya Kuliner atau Kerajinan." },
   { id: "keunggulan", judul: "Bahan atau keunggulan", teks: "Tulis bahan atau kelebihan produkmu. Makin jelas, makin bagus hasilnya." },
   { id: "target", judul: "Pembelinya siapa?", teks: "Pilih yang paling sering membeli: warga lokal atau wisatawan." },
-  { id: "buat", judul: "Buat tulisannya", teks: "Tekan tombol ini. AI akan menyusun deskripsi, caption, dan saran harga.", klik: true },
-  { id: "hasil", judul: "Hasilnya sudah jadi", teks: "Tekan Salin semua, lalu tempel di Instagram, WhatsApp, atau marketplace.", tunggu: true },
-  { id: "ig", judul: "Gambar postingan Instagram", teks: "Tekan tab ini untuk membuat gambar postingan, lalu unduh PNG-nya.", klik: true },
-  { id: "kalender", judul: "Kalender 7 hari", teks: "Tekan tab ini. AI menyusun rencana posting seminggu, termasuk hari raya Bali.", klik: true },
+  { id: "buat", judul: "Buat tulisannya", teks: "Tekan tombol ini. Langkah kerja AI tampil satu per satu sampai hasilnya jadi.", klik: true },
+  { id: "hasil", judul: "Hasilnya sudah jadi", teks: "Di sini terlihat model AI yang dipakai dan lama prosesnya. Tekan Salin semua, lalu tempel di Instagram, WhatsApp, atau marketplace.", tunggu: true },
+  { id: "suntingan", judul: "Lembar suntingan", teks: "Tekan Draf Anda untuk melihat klaim kosong yang dicoret pena merah dan fakta Anda yang distabilo. Angkanya dihitung langsung dari isian dan hasil.", tunggu: true },
+  { id: "ig", judul: "Gambar postingan Instagram", teks: "Gambar feed dan story sudah jadi. Pilih template, lalu unduh PNG-nya.", tunggu: true },
+  { id: "kalender", judul: "Kalender 7 hari", teks: "Tekan Susun kalender. AI menyusun rencana posting seminggu, termasuk hari raya Bali.", tunggu: true },
   { id: "riwayat", judul: "Riwayat", teks: "Tulisan yang pernah dibuat tersimpan di sini. Tekan untuk membukanya lagi." },
 ];
 
