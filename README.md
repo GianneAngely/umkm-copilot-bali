@@ -28,7 +28,7 @@ Pengguna utama Wicara adalah pemilik atau pengelola UMKM di Bali yang berjualan 
 
 ## Key Features
 
-Semua fitur di bawah sudah berfungsi di situs live. Lama tunggu diukur di https://umkm-copilot-bali.vercel.app pada 12 November 2026 pukul 13.50 WITA, dengan Claude Haiku 5.5 sebagai model utama.
+Semua fitur di bawah sudah berfungsi di situs live. Lama tunggu diukur di https://umkm-copilot-bali.vercel.app pada 12 November 2026 siang, dengan Claude Haiku 5.5 sebagai model utama.
 
 | Fitur | Hasil | Lama tunggu |
 | --- | --- | --- |
