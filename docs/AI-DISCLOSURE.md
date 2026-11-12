@@ -21,6 +21,7 @@ Disusun mengikuti Lampiran C Panduan Peserta AI Web Innovation Challenge, Bali D
 ## Menjaga fakta dan klaim
 
 - Instruksi sistem melarang AI menambah fakta di luar isian pengguna (asal-usul, sejarah, cara membuat, rasa atau kemasan yang tidak disebut, kelangkaan stok, promo, garansi, testimoni, angka) dan melarang kata klaim kosong dari daftar di `lib/klaim.js`, termasuk di tagar dan teks bahasa Inggris.
+- Khusus kalender, instruksi meminta hari raya Bali ditulis dengan hormat tanpa promosi ramai di hari suci, melarang sarana upacara seperti canang, banten, atau sesajen dijadikan properti atau latar foto produk, dan melarang menyebut produk dipakai untuk upacara kecuali tertulis di isian. Aturan ini berupa instruksi, bukan pemeriksaan otomatis di server.
 - Kalau bahan atau keunggulan tidak diisi, server memastikan hanya ada satu penanda `[isi sendiri: bahan atau keunggulan]` di deskripsi singkat dan membuang kalimat yang membicarakan data yang belum ada.
 - Server memeriksa hasil generate, profil, balasan, dan kalender terhadap daftar itu. Kalau ada kata klaim, server meminta ulang sekali dengan pesan koreksi. Kalau masih ada, hasil dikembalikan apa adanya.
 - Lembar suntingan di aplikasi memakai daftar yang sama dan menampilkan jumlah "klaim ditambahkan" kepada pengguna. Pemeriksaan berbasis daftar kata ini tidak menangkap semua kalimat karangan, jadi pengguna tetap diminta membaca ulang sebelum mengunggah.
