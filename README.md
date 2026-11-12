@@ -215,6 +215,8 @@ https://umkm-copilot-bali.vercel.app (beranda) dan https://umkm-copilot-bali.ver
 
 Tidak diperlukan. Aplikasi bisa dipakai tanpa login.
 
+Ini keputusan desain: halaman pendaftaran dapat menjadi hambatan bagi pelaku UMKM yang belum terbiasa dengan teknologi, jadi Wicara langsung bisa dipakai. Riwayat tersimpan di peramban pengguna. Akun dan penyimpanan riwayat lintas perangkat ada di rencana pengembangan.
+
 ## Known Limitations
 
 - Pemeriksaan klaim berbasis daftar kata. Kata di luar daftar dan kalimat karangan tanpa kata klaim (misalnya gambaran rasa atau kemasan yang tidak diisi) masih mungkin lolos, jadi hasil tetap perlu dibaca ulang sebelum diunggah.
