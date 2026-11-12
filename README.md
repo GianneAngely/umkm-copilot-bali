@@ -105,7 +105,7 @@ Lima pertanyaan yang paling sering masuk: harga, stok, cara pesan, ongkir dan pe
 
 ![Kalender konten tujuh hari](docs/readme/kalender-7-hari.png)
 
-*Tiga hari pertama dari rencana seminggu: ide posting, format (Feed, Story, atau Reels), caption singkat, dan alasannya.*
+*Rencana seminggu mulai 11 Januari 2027: ide posting, format (Feed, Story, atau Reels), caption singkat, dan alasannya, dengan label Penampahan Galungan, Hari Raya Galungan, dan Umanis Galungan yang diambil dari data bersumber di `lib/hari-raya-bali.js`.*
 
 Server menyisipkan hari raya Bali, libur nasional, dan libur sekolah yang jatuh di rentang tanggal itu ke prompt, jadi AI tidak menebak tanggal hari raya sendiri. Data tanggalnya ada di `lib/hari-raya-bali.js` beserta sumbernya.
 
